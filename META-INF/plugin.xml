@@ -1,0 +1,52 @@
+<idea-plugin version="2">
+  <id>com.yourcompany.unique.plugin.id</id>
+  <name>Plugin display name here</name>
+  <version>1.0</version>
+  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+  <description><![CDATA[
+
+      The sosie analyzer is a productivity tool to easily navigate
+      through all transformations created by the sosie generator.<br>
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      26/08/2014. Creation of the plugin
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="131"/>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+      <toolWindow id="Sosie analyzer panel" anchor="right" factoryClass="fr.inria.diversify.analyzerPlugin.MainToolWin">
+      </toolWindow>
+  </extensions>
+
+  <application-components>
+    <!-- Add your application components here -->
+  </application-components>
+
+  <project-components>
+    <!-- Add your project components here -->
+  </project-components>
+
+  <actions>
+    <!-- Add your actions here -->
+      <action id="SosieAnalyzer 0.1" class="fr.inria.diversify.analyzerPlugin.SosieAnalyzerAction" text="Sosie Analyzer"
+              description="The sosie analyzer is a productivity tool to easily navigate through all transformations created by the sosie generator">
+          <add-to-group group-id="ToolsMenu" anchor="first"/>
+      </action>
+  </actions>
+
+</idea-plugin>
