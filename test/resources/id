@@ -1,0 +1,9 @@
+1 0 POT
+2 1 POT
+3 org.tests.assert1 ASSERT
+8 org.easymock.tests.ArgumentToStringTest.setUp TEST
+4 org.tests.assert2 ASSERT
+5 org.tests.assert3 ASSERT
+6 org.tests.assert4 ASSERT
+9 org.easymock.tests.ArgumentToStringTest.testThaTest TEST
+11 org.easymock.tests.ArgumentToStringTest.testThaTestAnother TEST

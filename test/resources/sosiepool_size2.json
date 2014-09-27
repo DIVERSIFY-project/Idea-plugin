@@ -1,0 +1,38 @@
+[
+    {
+        "failures": [ ],
+        "variableMapping": { },
+        "name": "replaceRandom",
+        "tindex": 0,
+        "transplant": {
+            "sourceCode": "final org.easymock.internal.RuntimeExceptionWrapper org.easymock.internal.RuntimeExceptionWrapper",
+            "position": "org.easymock.internal.MocksControl:114",
+            "type": "CtLocalVariableImpl"
+        },
+        "type": "adrStmt",
+        "transplantationPoint": {
+            "sourceCode": "org.easymock.internal.MethodSerializationWrapper.java.util.Map<java.lang.String, java.lang.Class<?>>.put(java.lang.Double.java.lang.Class<java.lang.Double>.getName(), java.lang.Double.java.lang.Class<java.lang.Double>)",
+            "position": "org.easymock.internal.MethodSerializationWrapper:40",
+            "type": "CtInvocationImpl"
+        },
+        "status": 0
+    },
+    {
+        "failures": [ ],
+        "variableMapping": { },
+        "name": "replaceRandom",
+        "tindex": 1,
+        "transplant": {
+            "sourceCode": "return true",
+            "position": "org.easymock.internal.ExpectedInvocation:85",
+            "type": "CtReturnImpl"
+        },
+        "type": "adrStmt",
+        "transplantationPoint": {
+            "sourceCode": "return true",
+            "position": "org.easymock.internal.RecordState:318",
+            "type": "CtReturnImpl"
+        },
+        "status": 0
+    }
+]
