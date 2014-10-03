@@ -1,7 +1,5 @@
 package fr.inria.diversify.analyzerPlugin;
 
-import com.google.common.collect.ImmutableCollection;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +9,8 @@ import java.util.Set;
 public class TestRepresentation extends CodePosition {
 
     private HashSet<AssertRepresentation> asserts;
+
+    private long endTime;
 
     public TestRepresentation() {
         asserts = new HashSet<AssertRepresentation>();
@@ -43,5 +43,18 @@ public class TestRepresentation extends CodePosition {
     @Override
     public String getSource() {
         return getPosition();
+    }
+
+
+    /**
+     * Millis when the test ends. help to identify multi-threaded TP calls in different log files
+     * @return
+     */
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 }

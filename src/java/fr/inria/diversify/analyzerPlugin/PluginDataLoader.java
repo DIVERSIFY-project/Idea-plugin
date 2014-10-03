@@ -1,5 +1,6 @@
 package fr.inria.diversify.analyzerPlugin;
 
+import org.apache.xmlbeans.impl.xb.ltgfmt.Code;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -220,6 +221,9 @@ public class PluginDataLoader {
         HashSet<TransformationRepresentation> tcpThisTest = new HashSet<TransformationRepresentation>(); //Transplant point reached in this test
         HashMap<String, AssertRepresentation> assertsThisTest = new HashMap<String, AssertRepresentation>();
 
+        //Code positions not having a parent Test.
+        ArrayList<CodePosition> orphans = new ArrayList<CodePosition>();
+
         for (File f : new File(logDir).listFiles()) {
             if (f.getName().startsWith("log")) {
                 try {
@@ -243,22 +247,26 @@ public class PluginDataLoader {
                             currentTest = new TestRepresentation();
                             currentTest.fromLogString(l);
 
+                            if (lineData.length > 2) {
+                                currentTest.setRegisterTime(Integer.parseInt(lineData[2]));
+                            }
+
                             testExecutedCount++; //Count total test executions
-                            if (tcpThisTest.size() > 0 ) {
+                            if (tcpThisTest.size() > 0) {
                                 testExecutedCoveringATPCount++;
-                                if ( !coveringTests.contains(currentTest.toString())) {
+                                if (!coveringTests.contains(currentTest.toString())) {
                                     //Count declared test covering at least a TP
                                     coveringTests.add(currentTest.toString());
                                 }
-                                for ( String ar : assertsThisTest.keySet() ) {
+                                for (String ar : assertsThisTest.keySet()) {
                                     //Count total assertions declared covering a test
-                                    if ( !coveringAsserts.contains(ar.toString()) ){
+                                    if (!coveringAsserts.contains(ar.toString())) {
                                         coveringAsserts.add(ar.toString());
                                     }
                                 }
                             }
 
-                            if ( !declaredTest.contains(currentTest) ) {
+                            if (!declaredTest.contains(currentTest)) {
                                 declaredTest.add(currentTest);
                             }
 
@@ -266,20 +274,26 @@ public class PluginDataLoader {
                             assertsThisTest.clear();
                         } else {
                             if (lineData[0].equals(TP)) {
-                                if (currentTest != null) {
-                                    //Obtain the TP by its position
-                                    Integer index = Integer.parseInt(idMap.get(Integer.parseInt(lineData[1])));
-                                    TransformationRepresentation r = indexedRepresentations.get(index);
-                                    r.incHits(1);
-                                    totalPotsHitsCount++;
-                                    if (!tcpThisTest.contains(r)) {
-                                        tcpThisTest.add(r);
-                                    }
+                                TestRepresentation test = currentTest;
+                                if (test == null) {
+                                    //Find the test by time of execution
+                                    test = findTest(lineData);
+                                }
 
+                                //Obtain the TP by its position
+                                Integer index = Integer.parseInt(idMap.get(Integer.parseInt(lineData[1])));
+                                TransformationRepresentation r = indexedRepresentations.get(index);
+                                r.incHits(1);
+                                totalPotsHitsCount++;
+                                if (!tcpThisTest.contains(r)) {
+                                    tcpThisTest.add(r);
+                                }
+
+                                if (test != null) {
                                     //Counts the test hit
-                                    r.addTestHit(currentTest, 1);
+                                    r.addTestHit(test, 1);
                                 } else {
-                                    errors.add(new LoadingException(iteration, fileName, "Unexpected Transplantation point"));
+                                    orphans.add(r);
                                 }
                             } else if (lineData[0].equals("SA")) {
                                 assertionsExecutedCount++;
@@ -323,6 +337,8 @@ public class PluginDataLoader {
                                         t.addAssertHit(ar, hits - 1);
                                     }
                                 }
+                            } else if (lineData[0].equals("TE")) {
+                                currentTest.setEndTime(Integer.parseInt(lineData[1]));
                             }
                         }
                     }
@@ -337,7 +353,6 @@ public class PluginDataLoader {
         //testExecutedCount
 
 
-
         //assertionsDeclared
         asserstDeclaredCoveringATPCount = coveringAsserts.size();
 
@@ -345,6 +360,10 @@ public class PluginDataLoader {
         //assertionsExecutedCoveringCount
 
         return representations.values();
+    }
+
+    private TestRepresentation findTest(String[] lineData) {
+        return null;
     }
 
     private void registerSimpleAssertion() {
