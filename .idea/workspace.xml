@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7e77bbc8-2758-4aed-807f-4334e9151d84" name="Default" comment="" />
+    <list default="true" id="7e77bbc8-2758-4aed-807f-4334e9151d84" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ClassifierFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/CodeFragmentMock.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ExceptionByException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByLiteral.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/TransformClasifier.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/VarDeclarationAndTPHasDelete.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/resources/logthread1" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/CodePosition.java" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/CodePosition.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.form" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.form" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatterTest.java" afterPath="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatterTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataLoader.java" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataLoader.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentation.java" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java" afterPath="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/resources/logMain_123456" afterPath="$PROJECT_DIR$/test/resources/logMain_123456" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="SosieAnalyzer.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,29 +49,121 @@
       <file leaf-file-name="MainToolWin.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2820" max-vertical-offset="15240">
-              <caret line="213" column="50" selection-start-line="213" selection-start-column="50" selection-end-line="213" selection-end-column="50" />
+            <state vertical-scroll-proportion="-11.857142" vertical-offset="6648" max-vertical-offset="20640">
+              <caret line="349" column="0" selection-start-line="349" selection-start-column="0" selection-end-line="349" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2402#2403#0" expanded="true" />
+                <element signature="e#2434#2435#0" expanded="true" />
+                <element signature="e#2479#2480#0" expanded="true" />
+                <element signature="e#2514#2515#0" expanded="true" />
+                <element signature="e#2552#2553#0" expanded="true" />
+                <element signature="e#2586#2587#0" expanded="true" />
+                <element signature="e#2641#2642#0" expanded="true" />
+                <element signature="e#2687#2688#0" expanded="true" />
+                <element signature="e#3385#3386#0" expanded="true" />
+                <element signature="e#3427#3428#0" expanded="true" />
+                <element signature="e#5261#5778#0" expanded="true" />
+                <element signature="e#5418#5743#0" expanded="true" />
+                <element signature="e#5720#5721#0" expanded="true" />
+                <element signature="e#5763#5764#0" expanded="true" />
+                <element signature="e#6000#6504#0" expanded="true" />
+                <element signature="e#6157#6469#0" expanded="true" />
+                <element signature="e#6446#6447#0" expanded="true" />
+                <element signature="e#6489#6490#0" expanded="true" />
+                <element signature="e#6658#7178#0" expanded="true" />
+                <element signature="e#6815#7143#0" expanded="true" />
+                <element signature="e#7120#7121#0" expanded="true" />
+                <element signature="e#7163#7164#0" expanded="true" />
+                <element signature="e#7334#7858#0" expanded="true" />
+                <element signature="e#7491#7823#0" expanded="true" />
+                <element signature="e#7800#7801#0" expanded="true" />
+                <element signature="e#7843#7844#0" expanded="true" />
+                <element signature="e#8019#8551#0" expanded="true" />
+                <element signature="e#8176#8516#0" expanded="true" />
+                <element signature="e#8493#8494#0" expanded="true" />
+                <element signature="e#8536#8537#0" expanded="true" />
+                <element signature="e#8717#9249#0" expanded="true" />
+                <element signature="e#8874#9214#0" expanded="true" />
+                <element signature="e#9191#9192#0" expanded="true" />
+                <element signature="e#9234#9235#0" expanded="true" />
+                <element signature="e#9377#9672#0" expanded="true" />
+                <element signature="e#9657#9658#0" expanded="true" />
+                <element signature="e#9776#10257#0" expanded="true" />
+                <element signature="e#10242#10243#0" expanded="true" />
+                <element signature="e#10450#10886#0" expanded="true" />
+                <element signature="e#10871#10872#0" expanded="true" />
+                <element signature="e#11943#11944#0" expanded="true" />
+                <element signature="e#12008#12009#0" expanded="true" />
+                <element signature="e#15765#15909#0" expanded="true" />
+                <element signature="e#15898#15899#0" expanded="true" />
+                <element signature="e#15956#16115#0" expanded="true" />
+                <element signature="e#16104#16105#0" expanded="true" />
+                <element signature="e#26171#26201#0" expanded="true" />
+                <element signature="e#37059#37060#0" expanded="true" />
+                <element signature="e#37101#37102#0" expanded="true" />
+                <element signature="e#37142#37143#0" expanded="true" />
+                <element signature="e#37178#37179#0" expanded="true" />
+                <element signature="e#37218#37219#0" expanded="true" />
+                <element signature="e#37253#37254#0" expanded="true" />
+                <element signature="e#37337#37338#0" expanded="true" />
+                <element signature="e#37383#37384#0" expanded="true" />
+                <element signature="e#37545#37546#0" expanded="true" />
+                <element signature="e#37595#37596#0" expanded="true" />
+                <element signature="e#37728#37729#0" expanded="true" />
+                <element signature="e#37771#37772#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StatementByLiteral.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByLiteral.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="415" max-vertical-offset="1040">
+              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#552#553#0" expanded="true" />
+                <element signature="e#587#588#0" expanded="true" />
+                <element signature="e#642#643#0" expanded="true" />
+                <element signature="e#688#689#0" expanded="true" />
+                <element signature="e#1269#1270#0" expanded="true" />
+                <element signature="e#1324#1325#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QueryVisitor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../spoon-master/src/main/java/spoon/reflect/visitor/QueryVisitor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="940">
+              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainToolWinTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/MainToolWinTest.java">
+      <file leaf-file-name="ClassifierFactory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ClassifierFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="866" max-vertical-offset="1880">
-              <caret line="96" column="38" selection-start-line="96" selection-start-column="38" selection-end-line="96" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
+              <caret line="18" column="49" selection-start-line="18" selection-start-column="49" selection-end-line="18" selection-end-column="49" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logMain_123456" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/resources/logMain_123456">
+      <file leaf-file-name="VarDeclarationAndTPHasDelete.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/VarDeclarationAndTPHasDelete.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2503477" vertical-offset="0" max-vertical-offset="719">
-              <caret line="9" column="66" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="66" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="1060">
+              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+              <folding>
+                <element signature="e#1810#1811#0" expanded="true" />
+                <element signature="e#1884#1885#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -61,40 +171,19 @@
       <file leaf-file-name="PluginDataFormatterTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatterTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2134" max-vertical-offset="5640">
-              <caret line="16" column="67" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="67" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5780">
+              <caret line="153" column="0" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainToolWin.form" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.form">
-          <provider selected="true" editor-type-id="ui-designer">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IdeEventQueue.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/ide/IdeEventQueue.class">
+      <file leaf-file-name="Transplant.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2880" max-vertical-offset="3980">
-              <caret line="144" column="16" selection-start-line="144" selection-start-column="16" selection-end-line="144" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.19448946" vertical-offset="0" max-vertical-offset="2080">
+              <caret line="11" column="84" selection-start-line="11" selection-start-column="84" selection-end-line="11" selection-end-column="84" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PluginDataLoader.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataLoader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5523" max-vertical-offset="8780">
-              <caret line="290" column="0" selection-start-line="290" selection-start-column="0" selection-end-line="290" selection-end-column="0" />
-              <folding>
-                <element signature="e#7177#7191#0" expanded="true" />
-                <element signature="e#13907#13908#0" expanded="true" />
-                <element signature="e#13934#13935#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -102,34 +191,32 @@
       <file leaf-file-name="TransformationRepresentation.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6620">
-              <caret line="17" column="53" selection-start-line="17" selection-start-column="53" selection-end-line="17" selection-end-column="53" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CodePosition.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/CodePosition.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="820">
-              <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestRepresentation.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TestRepresentation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="67" max-vertical-offset="1060">
-              <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6660">
+              <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
               <folding>
-                <element signature="e#1161#1162#0" expanded="true" />
-                <element signature="e#1191#1192#0" expanded="true" />
-                <element signature="e#1235#1236#0" expanded="true" />
-                <element signature="e#1273#1274#0" expanded="true" />
+                <element signature="e#776#777#0" expanded="true" />
+                <element signature="e#836#837#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ExceptionByException.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ExceptionByException.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="223" max-vertical-offset="960">
+              <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TransformClasifier.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/TransformClasifier.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="25" max-vertical-offset="900">
+              <caret line="27" column="52" selection-start-line="27" selection-start-column="52" selection-end-line="27" selection-end-column="52" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -141,15 +228,12 @@
       <setting name="OPEN_NEW_TAB" value="true" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/MainToolWin.java" />
-        <option value="$PROJECT_DIR$/src/MainToolWinFactory.java" />
-        <option value="$PROJECT_DIR$/src/fr/inria/diversify/MainToolWinFactory.java" />
-        <option value="$PROJECT_DIR$/META-INF/plugin.xml" />
-        <option value="$PROJECT_DIR$/src/fr/inria/diversify/MainToolWin.form" />
-        <option value="$PROJECT_DIR$/src/fr/inria/diversify/MainToolWin.java" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/SosieAnalyzerAction.java" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/LightTransformation.java" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatter.java" />
@@ -159,7 +243,6 @@
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/LoadingException.java" />
         <option value="$PROJECT_DIR$/test/resources/sosiepool_size2.json" />
         <option value="$PROJECT_DIR$/test/resources/multisosiefile_size2.json" />
-        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/CodePosition.java" />
         <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentationTest.java" />
         <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/CodePositionsTest.java" />
         <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/FactoryLoadingTest.java" />
@@ -170,22 +253,38 @@
         <option value="$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/factories/SpoonMetaFactory.java" />
         <option value="$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/transformation/AbstractTransformation.java" />
         <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/MaintToolWinTestIntellijEnv.java" />
-        <option value="$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/codeFragment/CodeFragment.java" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/DlgGlobalValues.java" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/DlgGlobalValues.form" />
-        <option value="$PROJECT_DIR$/test/resources/logMain_123456" />
-        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.form" />
         <option value="$PROJECT_DIR$/test/resources/id" />
-        <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatterTest.java" />
         <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/MainToolWinTest.java" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/AssertRepresentation.java" />
-        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java" />
-        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentation.java" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransplantNodeRenderer.java" />
         <option value="$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/diversification/InputConfiguration.java" />
-        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TestRepresentation.java" />
+        <option value="$PROJECT_DIR$/test/resources/logMain_123456" />
+        <option value="$PROJECT_DIR$/test/resources/logthread1" />
         <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataLoader.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/staticClasifiers/ExceptionByAnotherException.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/staticClasifiers/ExceptionByAnotherException.java" />
+        <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/CodeFragmentMock.java" />
+        <option value="$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/codeFragment/CodeFragment.java" />
+        <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/clasifiers/ExceptionByExceptionTest.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/SosieClasifier.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.form" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/CodePosition.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/Clasifiers.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/BoolStatementByConstant.java" />
+        <option value="$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatterTest.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentation.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/TransformClasifier.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByConstant.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ParentHasDelete.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ClassifierFactory.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByLiteral.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/VarDeclarationAndTPHasDelete.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ExceptionByException.java" />
+        <option value="$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java" />
       </list>
     </option>
   </component>
@@ -198,7 +297,7 @@
     <option name="width" value="1928" />
     <option name="height" value="1164" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -225,6 +324,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -256,10 +356,6 @@
               <option name="myItemId" value="test" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -323,9 +419,34 @@
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SosieAnalyzer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SosieAnalyzer" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="analyzerPlugin" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="clasifiers" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -364,6 +485,9 @@
     <key name="CreateClassDialog.RecentsKey">
       <recent name="fr.inria.diversify.analyzerPlugin" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="fr.inria.diversify.analyzerPlugin" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\MarcelStuff\projects\DIVERSE\SosieAnalyzer\src\java" />
       <recent name="C:\MarcelStuff\projects\DIVERSE\SosieAnalyzer\src\images" />
@@ -371,67 +495,8 @@
       <recent name="C:\MarcelStuff\projects\DIVERSE\SosieAnalyzer\test\resources" />
       <recent name="C:\MarcelStuff\projects\DIVERSE\SosieAnalyzer\src\java\fr\inria\diversify\analyzerPlugin" />
     </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="fr.inria.diversify.analyzerPlugin" />
-    </key>
   </component>
-  <component name="RunManager" selected="JUnit.PluginDataFormatterTest">
-    <configuration default="false" name="PluginDataFormatterTest.reportProjects" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SosieAnalyzer" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fr.inria.diversify.analyzerPlugin" />
-      <option name="MAIN_CLASS_NAME" value="fr.inria.diversify.analyzerPlugin.PluginDataFormatterTest" />
-      <option name="METHOD_NAME" value="reportProjects" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method />
-    </configuration>
-    <configuration default="false" name="fr.inria.diversify.analyzerPlugin in SosieAnalyzer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="SosieAnalyzer" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fr.inria.diversify.analyzerPlugin" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
-      <ConfigurationWrapper RunnerId="Run" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Plugin.SosieAnalyzer">
     <configuration default="false" name="PluginDataFormatterTest.testScattered (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SosieAnalyzer" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -455,7 +520,9 @@
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
     <configuration default="false" name="MainToolWinTest.testPerformTransformation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
@@ -502,7 +569,63 @@
       </option>
       <envs />
       <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="All in SosieAnalyzer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SosieAnalyzer" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="PluginDataFormatterTest.reportProjects" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SosieAnalyzer" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="fr.inria.diversify.analyzerPlugin" />
+      <option name="MAIN_CLASS_NAME" value="fr.inria.diversify.analyzerPlugin.PluginDataFormatterTest" />
+      <option name="METHOD_NAME" value="reportProjects" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -541,19 +664,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -579,6 +689,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -652,19 +775,19 @@
     </configuration>
     <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Plugin.SosieAnalyzer" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest.reportProjects" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.fr.inria.diversify.analyzerPlugin in SosieAnalyzer" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest.testScattered (1)" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.MainToolWinTest.testPerformTransformation" />
-      <item index="5" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest.testScattered (1)" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.MainToolWinTest.testPerformTransformation" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.All in SosieAnalyzer" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest.reportProjects" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.MainToolWinTest.testPerformTransformation" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.fr.inria.diversify.analyzerPlugin in SosieAnalyzer" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest.reportProjects" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.All in SosieAnalyzer" />
         <item index="3" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest.testScattered (1)" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.PluginDataFormatterTest.reportProjects" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.MainToolWinTest.testPerformTransformation" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -690,29 +813,29 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="-4" width="1928" height="1164" extended-state="6" />
+    <frame x="-4" y="-4" width="1928" height="1164" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2510661" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25066668" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32853025" sideWeight="0.82005143" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43996158" sideWeight="0.82005143" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22807017" sideWeight="0.17930591" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="ASM" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3237272" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22750643" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2272" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32904884" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21173333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26032662" sideWeight="0.82179487" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15458423" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35830933" sideWeight="0.82179487" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15413333" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -747,25 +870,25 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java</url>
-          <line>334</line>
+          <line>474</line>
           <properties />
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java</url>
-          <line>534</line>
+          <line>692</line>
           <properties />
           <option name="timeStamp" value="141" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java</url>
-          <line>31</line>
+          <line>69</line>
           <properties />
           <option name="timeStamp" value="157" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java</url>
-          <line>44</line>
+          <line>82</line>
           <properties />
           <option name="timeStamp" value="163" />
         </line-breakpoint>
@@ -781,11 +904,47 @@
           <properties />
           <option name="timeStamp" value="182" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataLoader.java</url>
+          <line>280</line>
+          <properties />
+          <option name="timeStamp" value="190" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataLoader.java</url>
+          <line>287</line>
+          <properties />
+          <option name="timeStamp" value="193" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByLiteral.java</url>
+          <line>36</line>
+          <properties />
+          <option name="timeStamp" value="212" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByLiteral.java</url>
+          <line>34</line>
+          <properties />
+          <option name="timeStamp" value="213" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByLiteral.java</url>
+          <line>22</line>
+          <properties />
+          <option name="timeStamp" value="214" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByLiteral.java</url>
+          <line>17</line>
+          <properties />
+          <option name="timeStamp" value="215" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="184" />
+      <option name="time" value="216" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -793,60 +952,14 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java">
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="16440">
-          <caret line="254" column="0" selection-start-line="254" selection-start-column="0" selection-end-line="254" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/diversification/InputConfiguration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="4020">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/diversification/InputProgram.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5100" max-vertical-offset="8700">
-          <caret line="255" column="16" selection-start-line="255" selection-start-column="16" selection-end-line="255" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/factories/SpoonMetaFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1080">
-          <caret line="18" column="19" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatterTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="320" max-vertical-offset="5880">
-          <caret line="16" column="67" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/transformation/ast/ASTReplace.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="832" max-vertical-offset="2760">
-          <caret line="73" column="78" selection-start-line="73" selection-start-column="78" selection-end-line="73" selection-end-column="78" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransplantNodeRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="800" max-vertical-offset="1500">
-          <caret line="40" column="22" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="7400" max-vertical-offset="7660">
+          <caret line="370" column="51" selection-start-line="370" selection-start-column="51" selection-end-line="370" selection-end-column="51" />
+          <folding>
+            <element signature="e#776#777#0" expanded="true" />
+            <element signature="e#836#837#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -862,23 +975,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="7400" max-vertical-offset="7660">
           <caret line="370" column="51" selection-start-line="370" selection-start-column="51" selection-end-line="370" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/MainToolWinTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1920" max-vertical-offset="2160">
-          <caret line="96" column="38" selection-start-line="96" selection-start-column="38" selection-end-line="96" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="7400" max-vertical-offset="7660">
-          <caret line="370" column="51" selection-start-line="370" selection-start-column="51" selection-end-line="370" selection-end-column="51" />
-          <folding />
+          <folding>
+            <element signature="e#776#777#0" expanded="true" />
+            <element signature="e#836#837#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -928,13 +1028,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="860">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/codeFragment/CodeFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1475" max-vertical-offset="3720">
-          <caret line="108" column="0" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -995,14 +1088,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/transformation/ast/ASTTransformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1277" max-vertical-offset="2120">
-          <caret line="102" column="0" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/out/test/SosieAnalyzer/easymock-light-3.2/src/main/java_mod/org/easymock/internal/RecordState.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21308981" vertical-offset="0" max-vertical-offset="6980">
@@ -1021,17 +1106,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2628" max-vertical-offset="3480">
           <caret line="141" column="0" selection-start-line="141" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="746" max-vertical-offset="1440">
-          <caret line="90" column="30" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
-          <folding>
-            <element signature="e#1918#1919#0" expanded="false" />
-            <element signature="e#1961#1962#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1081,18 +1155,113 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/transformation/ast/ASTReplace.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39528024" vertical-offset="832" max-vertical-offset="2760">
-          <caret line="70" column="90" selection-start-line="70" selection-start-column="90" selection-end-line="70" selection-end-column="90" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/ide/IdeEventQueue.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2641" max-vertical-offset="3960">
           <caret line="144" column="16" selection-start-line="144" selection-start-column="16" selection-end-line="144" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TestRepresentation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="61" max-vertical-offset="1060">
+          <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/MainToolWinTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1161" max-vertical-offset="1880">
+          <caret line="96" column="0" selection-start-line="96" selection-start-column="0" selection-end-line="96" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/resources/logMain_123456">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/resources/logthread1">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="719">
+          <caret line="0" column="5" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5704" max-vertical-offset="10280">
+          <caret line="287" column="0" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#709#710#0" expanded="true" />
+            <element signature="e#785#786#0" expanded="true" />
+            <element signature="e#2580#2581#0" expanded="true" />
+            <element signature="e#2631#2632#0" expanded="true" />
+            <element signature="e#2797#2798#0" expanded="true" />
+            <element signature="e#2844#2845#0" expanded="true" />
+            <element signature="e#6099#6107#0" expanded="true" />
+            <element signature="e#6162#6170#0" expanded="true" />
+            <element signature="e#6397#6414#0" expanded="true" />
+            <element signature="e#7192#7222#0" expanded="true" />
+            <element signature="e#7341#7371#0" expanded="true" />
+            <element signature="e#7478#7488#0" expanded="true" />
+            <element signature="e#14544#14545#0" expanded="true" />
+            <element signature="e#14571#14572#0" expanded="true" />
+            <element signature="e#15380#15381#0" expanded="true" />
+            <element signature="e#15420#15421#0" expanded="true" />
+            <element signature="e#15595#15596#0" expanded="true" />
+            <element signature="e#15635#15636#0" expanded="true" />
+            <element signature="e#15776#15777#0" expanded="true" />
+            <element signature="e#15830#15831#0" expanded="true" />
+            <element signature="e#15960#15961#0" expanded="true" />
+            <element signature="e#15989#15990#0" expanded="true" />
+            <element signature="e#16034#16035#0" expanded="true" />
+            <element signature="e#16072#16073#0" expanded="true" />
+            <element signature="e#16115#16116#0" expanded="true" />
+            <element signature="e#16156#16157#0" expanded="true" />
+            <element signature="e#16198#16199#0" expanded="true" />
+            <element signature="e#16239#16240#0" expanded="true" />
+            <element signature="e#16272#16273#0" expanded="true" />
+            <element signature="e#16304#16305#0" expanded="true" />
+            <element signature="e#16349#16350#0" expanded="true" />
+            <element signature="e#16392#16393#0" expanded="true" />
+            <element signature="e#16447#16448#0" expanded="true" />
+            <element signature="e#16501#16502#0" expanded="true" />
+            <element signature="e#16553#16554#0" expanded="true" />
+            <element signature="e#16604#16605#0" expanded="true" />
+            <element signature="e#16721#16722#0" expanded="true" />
+            <element signature="e#16756#16757#0" expanded="true" />
+            <element signature="e#16803#16804#0" expanded="true" />
+            <element signature="e#16849#16850#0" expanded="true" />
+            <element signature="e#16901#16902#0" expanded="true" />
+            <element signature="e#16952#16953#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="421" max-vertical-offset="1340">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/CodeFragmentMock.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="620">
+          <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/transformation/ast/ASTReplace.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1894" max-vertical-offset="2760">
+          <caret line="126" column="55" selection-start-line="126" selection-start-column="55" selection-end-line="126" selection-end-column="55" />
           <folding />
         </state>
       </provider>
@@ -1102,75 +1271,181 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java">
+    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/transformation/ast/ASTTransformation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2820" max-vertical-offset="15240">
-          <caret line="213" column="50" selection-start-line="213" selection-start-column="50" selection-end-line="213" selection-end-column="50" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="209" max-vertical-offset="2160">
+          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatterTest.java">
+    <entry file="file://$PROJECT_DIR$/../sosies-generator/src/main/java/fr/inria/diversify/codeFragment/CodeFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2134" max-vertical-offset="5640">
-          <caret line="16" column="67" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="67" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2769" max-vertical-offset="3760">
+          <caret line="175" column="0" selection-start-line="175" selection-start-column="0" selection-end-line="175" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/CodePosition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
-          <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="760">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TestRepresentation.java">
+    <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/PluginDataFormatterTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="67" max-vertical-offset="1060">
-          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
-          <folding>
-            <element signature="e#1161#1162#0" expanded="true" />
-            <element signature="e#1191#1192#0" expanded="true" />
-            <element signature="e#1235#1236#0" expanded="true" />
-            <element signature="e#1273#1274#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/PluginDataLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5523" max-vertical-offset="8780">
-          <caret line="290" column="0" selection-start-line="290" selection-start-column="0" selection-end-line="290" selection-end-column="0" />
-          <folding>
-            <element signature="e#7177#7191#0" expanded="true" />
-            <element signature="e#13907#13908#0" expanded="true" />
-            <element signature="e#13934#13935#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5780">
+          <caret line="153" column="0" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/TransformationRepresentation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6620">
-          <caret line="17" column="53" selection-start-line="17" selection-start-column="53" selection-end-line="17" selection-end-column="53" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6660">
+          <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
+          <folding>
+            <element signature="e#776#777#0" expanded="true" />
+            <element signature="e#836#837#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/TransformClasifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="25" max-vertical-offset="900">
+          <caret line="27" column="52" selection-start-line="27" selection-start-column="52" selection-end-line="27" selection-end-column="52" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/fr/inria/diversify/analyzerPlugin/MainToolWinTest.java">
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ClassifierFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1150" max-vertical-offset="1880">
-          <caret line="96" column="38" selection-start-line="96" selection-start-column="38" selection-end-line="96" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
+          <caret line="18" column="49" selection-start-line="18" selection-start-column="49" selection-end-line="18" selection-end-column="49" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/resources/logMain_123456">
+    <entry file="file://$PROJECT_DIR$/../spoon-master/src/main/java/spoon/reflect/visitor/QueryVisitor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2503477" vertical-offset="0" max-vertical-offset="719">
-          <caret line="9" column="66" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="66" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="940">
+          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/VarDeclarationAndTPHasDelete.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="1060">
+          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+          <folding>
+            <element signature="e#1810#1811#0" expanded="true" />
+            <element signature="e#1884#1885#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/StatementByLiteral.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="415" max-vertical-offset="1040">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#552#553#0" expanded="true" />
+            <element signature="e#587#588#0" expanded="true" />
+            <element signature="e#642#643#0" expanded="true" />
+            <element signature="e#688#689#0" expanded="true" />
+            <element signature="e#1269#1270#0" expanded="true" />
+            <element signature="e#1324#1325#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/clasifiers/ExceptionByException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="223" max-vertical-offset="960">
+          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/MainToolWin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.857142" vertical-offset="6648" max-vertical-offset="20640">
+          <caret line="349" column="0" selection-start-line="349" selection-start-column="0" selection-end-line="349" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2402#2403#0" expanded="true" />
+            <element signature="e#2434#2435#0" expanded="true" />
+            <element signature="e#2479#2480#0" expanded="true" />
+            <element signature="e#2514#2515#0" expanded="true" />
+            <element signature="e#2552#2553#0" expanded="true" />
+            <element signature="e#2586#2587#0" expanded="true" />
+            <element signature="e#2641#2642#0" expanded="true" />
+            <element signature="e#2687#2688#0" expanded="true" />
+            <element signature="e#3385#3386#0" expanded="true" />
+            <element signature="e#3427#3428#0" expanded="true" />
+            <element signature="e#5261#5778#0" expanded="true" />
+            <element signature="e#5418#5743#0" expanded="true" />
+            <element signature="e#5720#5721#0" expanded="true" />
+            <element signature="e#5763#5764#0" expanded="true" />
+            <element signature="e#6000#6504#0" expanded="true" />
+            <element signature="e#6157#6469#0" expanded="true" />
+            <element signature="e#6446#6447#0" expanded="true" />
+            <element signature="e#6489#6490#0" expanded="true" />
+            <element signature="e#6658#7178#0" expanded="true" />
+            <element signature="e#6815#7143#0" expanded="true" />
+            <element signature="e#7120#7121#0" expanded="true" />
+            <element signature="e#7163#7164#0" expanded="true" />
+            <element signature="e#7334#7858#0" expanded="true" />
+            <element signature="e#7491#7823#0" expanded="true" />
+            <element signature="e#7800#7801#0" expanded="true" />
+            <element signature="e#7843#7844#0" expanded="true" />
+            <element signature="e#8019#8551#0" expanded="true" />
+            <element signature="e#8176#8516#0" expanded="true" />
+            <element signature="e#8493#8494#0" expanded="true" />
+            <element signature="e#8536#8537#0" expanded="true" />
+            <element signature="e#8717#9249#0" expanded="true" />
+            <element signature="e#8874#9214#0" expanded="true" />
+            <element signature="e#9191#9192#0" expanded="true" />
+            <element signature="e#9234#9235#0" expanded="true" />
+            <element signature="e#9377#9672#0" expanded="true" />
+            <element signature="e#9657#9658#0" expanded="true" />
+            <element signature="e#9776#10257#0" expanded="true" />
+            <element signature="e#10242#10243#0" expanded="true" />
+            <element signature="e#10450#10886#0" expanded="true" />
+            <element signature="e#10871#10872#0" expanded="true" />
+            <element signature="e#11943#11944#0" expanded="true" />
+            <element signature="e#12008#12009#0" expanded="true" />
+            <element signature="e#15765#15909#0" expanded="true" />
+            <element signature="e#15898#15899#0" expanded="true" />
+            <element signature="e#15956#16115#0" expanded="true" />
+            <element signature="e#16104#16105#0" expanded="true" />
+            <element signature="e#26171#26201#0" expanded="true" />
+            <element signature="e#37059#37060#0" expanded="true" />
+            <element signature="e#37101#37102#0" expanded="true" />
+            <element signature="e#37142#37143#0" expanded="true" />
+            <element signature="e#37178#37179#0" expanded="true" />
+            <element signature="e#37218#37219#0" expanded="true" />
+            <element signature="e#37253#37254#0" expanded="true" />
+            <element signature="e#37337#37338#0" expanded="true" />
+            <element signature="e#37383#37384#0" expanded="true" />
+            <element signature="e#37545#37546#0" expanded="true" />
+            <element signature="e#37595#37596#0" expanded="true" />
+            <element signature="e#37728#37729#0" expanded="true" />
+            <element signature="e#37771#37772#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/fr/inria/diversify/analyzerPlugin/Transplant.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.19448946" vertical-offset="0" max-vertical-offset="2080">
+          <caret line="11" column="84" selection-start-line="11" selection-start-column="84" selection-end-line="11" selection-end-column="84" />
           <folding />
         </state>
       </provider>

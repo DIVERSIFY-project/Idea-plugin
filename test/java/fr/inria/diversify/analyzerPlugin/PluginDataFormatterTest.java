@@ -45,7 +45,7 @@ public class PluginDataFormatterTest {
         assertEquals(1, ar.get(1).getAsserts().size());
 
         //Hits
-        assertEquals(6, ar.get(0).getHits());
+        assertEquals(7, ar.get(0).getHits());
         assertEquals(1, ar.get(1).getHits());
 
         //Test the counting of the ids founds
@@ -126,6 +126,7 @@ public class PluginDataFormatterTest {
 
     @Test
     public void reportProjects() throws Exception {
+        /*
         PluginDataLoader formatter1 = reportBenoitNumbers("COMMON COLLECTION",
                 "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\single-sosies-pools\\NonRep-Indexed\\commons-collections-index-non-rep.json",
                 "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\instrumented\\commons-collections-trunk\\log"
@@ -135,15 +136,21 @@ public class PluginDataFormatterTest {
                 "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\single-sosies-pools\\NonRep-Indexed\\commons-math-index-non-rep.json",
                 "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\instrumented\\commons-math-trunk\\log"
         );
-
+*/
         PluginDataLoader formatter3 = reportBenoitNumbers("EASY MOCK",
                 "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\single-sosies-pools\\easymock3.2-non-rep-index.json",
                 "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\instrumented\\easymock-light-3.2\\log"
         );
 
+        PluginDataLoader formatter4 = reportBenoitNumbers("LANG",
+                "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\single-sosies-pools\\NonRep-Indexed\\commons-lang-index-non-rep.json",
+                "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\instrumented\\commons-lang-trunk\\log"
+        );
+
+
         reportAll(
-                new String[]{"COLL", "MATH", "EASY"},
-                new PluginDataLoader[]{formatter1, formatter2, formatter3});
+                new String[]{"EASY", "LANG"},
+                new PluginDataLoader[]{formatter3, formatter4});
 
     }
 

@@ -8,22 +8,60 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ *
+ * Representation of the Transplant containing necessary data for the plugin to work
+ *
 * Created by marodrig on 15/09/2014.
 */
 public class Transplant extends CodePosition {
+
+    public enum Visibility {show, hide, unclassified}
+
+    /**
+     * Visibility of the the Transplant in the plugin IDE
+     */
+    private Visibility visibility = Visibility.show;
+
+    /**
+     * Spoon type of the transplant (CtBlock, CtThrowImpl...)
+     */
     private String spoonType;
 
+    /**
+     * Type of the transplant, for example: Replace, add, delete, replaceSteroids, etc.
+     */
     private String type;
 
+    /**
+     * Index of the transplant. Kind of an I.D.
+     */
     private int index;
 
-    //Transformation that this transplant and its TP belongs to
+    /**
+     * Transformation that this transplant and its TP belongs to
+     */
     private Transformation transformation;
 
     //Indicates if the transformation is applied or not.
     private boolean transformationApplied = false;
+
+    /**
+     * Variable map that applies the transformation of the transplant
+     */
     private String variableMap;
+
+    /**
+     *
+     */
     private TransformationRepresentation transplantationPoint;
+
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
+    }
+
+    public Visibility getVisibility() {
+        return visibility;
+    }
 
     public String getSpoonType() {
         return spoonType;

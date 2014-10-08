@@ -42,4 +42,5 @@ public class CodePosition {
     public void setRegisterTime(long registerTime) {
         this.registerTime = registerTime;
     }
+
 }

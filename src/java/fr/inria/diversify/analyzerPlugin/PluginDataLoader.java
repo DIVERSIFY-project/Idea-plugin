@@ -18,6 +18,20 @@ import java.util.*;
  */
 public class PluginDataLoader {
 
+    private class EntryLog implements Comparable {
+        long millis;
+
+        public String position;
+
+        int executions = 1;
+        public String type;
+
+        @Override
+        public int compareTo(Object o) {
+            return (int) ((((EntryLog) o).millis - millis) * -1);
+        }
+    }
+
     static private String TP = "S";
 
     static private String NEW_TEST = "NewTest";
@@ -222,8 +236,9 @@ public class PluginDataLoader {
         HashMap<String, AssertRepresentation> assertsThisTest = new HashMap<String, AssertRepresentation>();
 
         //Code positions not having a parent Test.
-        ArrayList<CodePosition> orphans = new ArrayList<CodePosition>();
+        ArrayList<EntryLog> entries = new ArrayList<EntryLog>();
 
+        //Collect all the entry logs in different files to sort them by execution time
         for (File f : new File(logDir).listFiles()) {
             if (f.getName().startsWith("log")) {
                 try {
@@ -232,9 +247,12 @@ public class PluginDataLoader {
 
                     BufferedReader logReader = new BufferedReader(new FileReader(f));
                     String l;
-                    TestRepresentation currentTest = null;
-
                     while ((l = logReader.readLine()) != null) {
+
+                        //We try to modify the current log as little as possible...
+                        //Jump over all known non important lines
+                        if (l.equals("$$$")) continue;
+
                         iteration++;
                         String[] lineData;
                         if (l.endsWith("$$$")) {
@@ -243,108 +261,124 @@ public class PluginDataLoader {
                             lineData = l.split(";");
                         }
 
-                        if (lineData[0].equals(NEW_TEST)) {
-                            currentTest = new TestRepresentation();
-                            currentTest.fromLogString(l);
-
-                            if (lineData.length > 2) {
-                                currentTest.setRegisterTime(Integer.parseInt(lineData[2]));
-                            }
-
-                            testExecutedCount++; //Count total test executions
-                            if (tcpThisTest.size() > 0) {
-                                testExecutedCoveringATPCount++;
-                                if (!coveringTests.contains(currentTest.toString())) {
-                                    //Count declared test covering at least a TP
-                                    coveringTests.add(currentTest.toString());
-                                }
-                                for (String ar : assertsThisTest.keySet()) {
-                                    //Count total assertions declared covering a test
-                                    if (!coveringAsserts.contains(ar.toString())) {
-                                        coveringAsserts.add(ar.toString());
-                                    }
-                                }
-                            }
-
-                            if (!declaredTest.contains(currentTest)) {
-                                declaredTest.add(currentTest);
-                            }
-
-                            tcpThisTest.clear();
-                            assertsThisTest.clear();
+                        EntryLog e = new EntryLog();
+                        e.type = lineData[0];
+                        e.position = lineData[1];
+                        if (lineData[0].equals(NEW_TEST) || lineData[0].equals(TP) || lineData[0].equals("SA")) {
+                            e.millis = Long.parseLong(lineData[2]);
+                        } else if (lineData[0].equals("TPC") || lineData[0].equals("ASC")) {
+                            e.executions = Integer.parseInt(lineData[2]);
+                            e.millis = Long.parseLong(lineData[3]);
+                        } else if (lineData[0].equals("TE")) {
+                            e.millis = Long.parseLong(lineData[1]);
                         } else {
-                            if (lineData[0].equals(TP)) {
-                                TestRepresentation test = currentTest;
-                                if (test == null) {
-                                    //Find the test by time of execution
-                                    test = findTest(lineData);
-                                }
+                            //Ignore ill formed strings
+                            continue;
+                        }
+                        entries.add(e);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                    //errors.add(new LoadingException(iteration, fileName, e));
+                }
+            }
+        }
 
-                                //Obtain the TP by its position
-                                Integer index = Integer.parseInt(idMap.get(Integer.parseInt(lineData[1])));
-                                TransformationRepresentation r = indexedRepresentations.get(index);
-                                r.incHits(1);
-                                totalPotsHitsCount++;
-                                if (!tcpThisTest.contains(r)) {
-                                    tcpThisTest.add(r);
-                                }
+        //Sort them by registration moment
+        Collections.sort(entries);
+        TestRepresentation currentTest = null;
+        for (EntryLog el : entries) {
+            try {
+                if (el.type.equals(NEW_TEST)) {
+                    currentTest = new TestRepresentation();
+                    currentTest.setPosition(el.position);
+                    currentTest.setRegisterTime(el.millis);
 
-                                if (test != null) {
-                                    //Counts the test hit
-                                    r.addTestHit(test, 1);
-                                } else {
-                                    orphans.add(r);
-                                }
-                            } else if (lineData[0].equals("SA")) {
-                                assertionsExecutedCount++;
-
-                                String pos = idMap.get(Integer.parseInt(lineData[1]));
-
-                                AssertRepresentation ar = new AssertRepresentation(pos);
-                                assertsThisTest.put(pos, ar);
-                                currentTest.getAsserts().add(ar);
-                                //Include this assert in the asserts of all TP in the log
-                                for (TransformationRepresentation t : tcpThisTest) {
-                                    t.addAssertHit(ar, 1);
-                                }
-
-                                //Count asserts covering at least one TP
-                                if (tcpThisTest.size() > 0) {
-                                    assertionsExecutedCoveringCount++;
-                                }
-
-                            } else if (lineData[0].equals("TPC")) {
-                                Integer index = Integer.parseInt(idMap.get(Integer.parseInt(lineData[1])));
-                                TransformationRepresentation r = indexedRepresentations.get(index);
-                                int k = Integer.parseInt(lineData[2]);
-                                totalPotsHitsCount += k;
-                                r.incHits(k);
-                            } else if (lineData[0].equals("ASC")) {
-                                String pos = idMap.get(Integer.parseInt(lineData[1]));
-                                AssertRepresentation ar = assertsThisTest.get(pos);
-                                int hits = Integer.parseInt(lineData[2]);
-
-                                assertionsExecutedCount += hits;
-
-                                //Count asserts covering at least one TP
-                                if (tcpThisTest.size() > 0) {
-                                    assertionsExecutedCoveringCount += hits;
-                                }
-
-                                for (TransformationRepresentation t : tcpThisTest) {
-                                    //Don't add asserts hits to TP that don't have them
-                                    if (t.getAssertHits(ar) > 0) {
-                                        t.addAssertHit(ar, hits - 1);
-                                    }
-                                }
-                            } else if (lineData[0].equals("TE")) {
-                                currentTest.setEndTime(Integer.parseInt(lineData[1]));
+                    testExecutedCount++; //Count total test executions
+                    if (tcpThisTest.size() > 0) {
+                        testExecutedCoveringATPCount++;
+                        if (!coveringTests.contains(currentTest.toString())) {
+                            //Count declared test covering at least a TP
+                            coveringTests.add(currentTest.toString());
+                        }
+                        for (String ar : assertsThisTest.keySet()) {
+                            //Count total assertions declared covering a test
+                            if (!coveringAsserts.contains(ar.toString())) {
+                                coveringAsserts.add(ar.toString());
                             }
                         }
                     }
-                } catch (Exception e) {
-                    errors.add(new LoadingException(iteration, fileName, e));
+
+                    if (!declaredTest.contains(currentTest)) {
+                        declaredTest.add(currentTest);
+                    }
+
+                    tcpThisTest.clear();
+                    assertsThisTest.clear();
+                } else {
+                    if (el.type.equals(TP)) {
+                        TestRepresentation test = currentTest;
+                        //Obtain the TP by its position
+                        Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
+                        TransformationRepresentation r = indexedRepresentations.get(index);
+                        r.incHits(1);
+                        totalPotsHitsCount++;
+                        if (!tcpThisTest.contains(r)) {
+                            tcpThisTest.add(r);
+                        }
+
+                        if (test != null) {
+                            //Counts the test hit
+                            r.addTestHit(test, 1);
+                        }
+                    } else if (el.type.equals("SA")) {
+                        assertionsExecutedCount++;
+
+                        String pos = idMap.get(Integer.parseInt(el.position));
+
+                        AssertRepresentation ar = new AssertRepresentation(pos);
+                        assertsThisTest.put(pos, ar);
+                        currentTest.getAsserts().add(ar);
+                        //Include this assert in the asserts of all TP in the log
+                        for (TransformationRepresentation t : tcpThisTest) {
+                            t.addAssertHit(ar, 1);
+                        }
+
+                        //Count asserts covering at least one TP
+                        if (tcpThisTest.size() > 0) {
+                            assertionsExecutedCoveringCount++;
+                        }
+
+                    } else if (el.type.equals("TPC")) {
+                        Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
+                        TransformationRepresentation r = indexedRepresentations.get(index);
+                        int k = el.executions;
+                        totalPotsHitsCount += k;
+                        r.incHits(k);
+                    } else if (el.type.equals("ASC")) {
+                        String pos = idMap.get(Integer.parseInt(el.position));
+                        AssertRepresentation ar = assertsThisTest.get(pos);
+                        int hits = el.executions;
+
+                        assertionsExecutedCount += hits;
+
+                        //Count asserts covering at least one TP
+                        if (tcpThisTest.size() > 0) {
+                            assertionsExecutedCoveringCount += hits;
+                        }
+
+                        for (TransformationRepresentation t : tcpThisTest) {
+                            //Don't add asserts hits to TP that don't have them
+                            if (t.getAssertHits(ar) > 0) {
+                                t.addAssertHit(ar, hits - 1);
+                            }
+                        }
+                    } else if (el.type.equals("TE")) {
+                        currentTest.setEndTime(el.millis);
+                    }
                 }
+            } catch (Exception e) {
+                errors.add(e);
             }
         }
 

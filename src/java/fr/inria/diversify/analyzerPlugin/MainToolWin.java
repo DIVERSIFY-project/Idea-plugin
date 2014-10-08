@@ -3,12 +3,12 @@ package fr.inria.diversify.analyzerPlugin;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.LocalFsFinder;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.ui.JBCheckboxMenuItem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -19,6 +19,8 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
+import fr.inria.diversify.analyzerPlugin.clasifiers.ClassifierFactory;
+import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
 import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
 import fr.inria.diversify.codeFragment.CodeFragment;
 import fr.inria.diversify.diversification.InputConfiguration;
@@ -43,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by marodrig on 26/08/2014.
@@ -51,7 +54,10 @@ public class MainToolWin implements ToolWindowFactory {
 
     private static String TEMP_MOD = "_mod";
 
+    private static String UNCLASSIFIED_TEXT = "Unclassified";
+
     private boolean throwErrors;
+
     private InputConfiguration inputConfiguration;
 
     public Tree getTreeTests() {
@@ -68,6 +74,25 @@ public class MainToolWin implements ToolWindowFactory {
 
     public void setThrowErrors(boolean throwErrors) {
         this.throwErrors = throwErrors;
+    }
+
+    private HashMap<String, Boolean> filterVisible;
+
+    private List<TransformClasifier> classifiers;
+
+    protected List<TransformClasifier> getClassifiers() {
+        if (classifiers == null) {
+            classifiers = buildClasifiers();
+        }
+        return classifiers;
+    }
+
+    protected HashMap<String, Boolean> getFilterVisible() {
+        if (filterVisible == null) {
+            filterVisible = new HashMap<String, Boolean>();
+            filterVisible.put(UNCLASSIFIED_TEXT, true);
+        }
+        return filterVisible;
     }
 
     private class NodeData {
@@ -107,9 +132,28 @@ public class MainToolWin implements ToolWindowFactory {
     //Current code position shown in the Test tree
     private CodePosition currentCodePosition = null;
 
+    PopUpTransformations popUpTransformations;
+
     class PopUpTransformations extends JPopupMenu {
 
+        private JMenuItem applyItem;
+
+        private Collection<JMenuItem> showItems;
+
+        public void updateItemsEnableStatus() {
+            CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
+            TransformationRepresentation tr = getTPOfItem();
+            applyItem.setEnabled(data != null && data instanceof Transplant);
+            applyItem.setText(applyItem.isEnabled() && tr.isTransplantApplied((Transplant) data) ? "Remove transplant" : "Apply transplant");
+            for (JMenuItem item : showItems) {
+                item.setEnabled(formatter.getPotsTotalHitCount() > 0);
+            }
+        }
+
         public PopUpTransformations() {
+
+            showItems = new ArrayList<JMenuItem>();
+
             JMenuItem anItem = new JMenuItem("Sort alphabetically");
             add(new JMenuItem("Sort alphabetically"));
             anItem.addActionListener(new ActionListener() {
@@ -126,6 +170,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by hits");
+            showItems.add(anItem);
             anItem.setEnabled(formatter.getPotsTotalHitCount() > 0);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
@@ -142,7 +187,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by tests");
-            anItem.setEnabled(formatter.getPotsTotalHitCount() > 0);
+            showItems.add(anItem);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -158,7 +203,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by asserts");
-            anItem.setEnabled(formatter.getPotsTotalHitCount() > 0);
+            showItems.add(anItem);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -174,7 +219,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by asserts hits");
-            anItem.setEnabled(formatter.getPotsTotalHitCount() > 0);
+            showItems.add(anItem);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -190,7 +235,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by total transplants");
-            anItem.setEnabled(formatter.getPotsTotalHitCount() > 0);
+            showItems.add(anItem);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -216,11 +261,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
             add(anItem);
 
-            CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
-            TransformationRepresentation tr = getTPOfItem(getTreeTransformations());
             anItem = new JMenuItem();
-            anItem.setEnabled(data != null && data instanceof Transplant);
-            anItem.setText(anItem.isEnabled() && tr.isTransplantApplied((Transplant) data) ? "Remove transplant" : "Apply transplant");
             anItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -232,11 +273,105 @@ public class MainToolWin implements ToolWindowFactory {
                     }
                 }
             });
+            applyItem = anItem;
             add(anItem);
+
+
+            addSeparator();
+            JMenu subMenu = new JMenu("Show");
+            add(subMenu);
+            ItemListener il = new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    JBCheckboxMenuItem ei = (JBCheckboxMenuItem) e.getSource();
+                    if (getFilterVisible().get(ei.getText()) != ei.isSelected()) {
+                        getFilterVisible().put(ei.getText(), ei.isSelected());
+                        filter();
+                    }
+                }
+            };
+
+            for (TransformClasifier tc : getClassifiers()) {
+                final JBCheckboxMenuItem checkItem = new JBCheckboxMenuItem(tc.getDescription());
+                getFilterVisible().put(tc.getDescription(), true);
+                subMenu.add(checkItem);
+                checkItem.setState(true);
+                checkItem.addItemListener(il);
+            }
+            JBCheckboxMenuItem checkItem = new JBCheckboxMenuItem(UNCLASSIFIED_TEXT);
+            subMenu.add(checkItem);
+            checkItem.addItemListener(il);
+            checkItem.setSelected(true);
+
+            subMenu.addSeparator();
+
+            JMenuItem item = new JMenuItem("Show All");
+            item.setSelected(true);
+            subMenu.add(item);
+
+            item = new JMenuItem("Hide All");
+            item.setSelected(true);
+            subMenu.add(item);
+
         }
     }
 
-    private TransformationRepresentation getTPOfItem(Tree treeTransformations) {
+    /**
+     * Returns all the classifiers we know. It's hard coded. No fancy auto-detection methods
+     *
+     * @return
+     */
+    private List<TransformClasifier> buildClasifiers() {
+        return new ClassifierFactory().buildClassifiers();
+    }
+
+    /**
+     * Filter the code positions by classifications
+     */
+    private void filter() {
+
+        try {
+            String pomPath = project.getBasePath() + File.separator + "pom.xml";
+            String srcDir = getSrcCodePath();
+
+            int min = Integer.MAX_VALUE;
+            int max = Integer.MIN_VALUE;
+
+            Collection<TransformationRepresentation> reps = formatter.getRepresentations();
+            for (TransformationRepresentation p : reps) {
+                for (Transplant transplant : p.getTransplants()) {
+                    transplant.setVisibility(Transplant.Visibility.unclassified);
+                    for (TransformClasifier c : getClassifiers()) {
+                        getTransplantTransformation(transplant, pomPath, srcDir);
+                        float v = c.value(transplant);
+                        if (v != 0) {
+                            if (getFilterVisible().get(c.getDescription())) {
+                                transplant.setVisibility(Transplant.Visibility.show);
+                            } else {
+                                transplant.setVisibility(Transplant.Visibility.hide);
+                                break;
+                            }
+                        }
+                    }
+                    if (transplant.getVisibility() == Transplant.Visibility.unclassified) {
+                        Transplant.Visibility vis = getFilterVisible().get(UNCLASSIFIED_TEXT) ?
+                                Transplant.Visibility.show : Transplant.Visibility.hide;
+                        transplant.setVisibility(vis);
+                    }
+                }
+            }
+            showTransformations(reps);
+        } catch (IOException e) {
+            complain("Cannot perform weighting", e);
+        }
+    }
+
+    /**
+     * Gets the transplantation point (TP) of an item. The item could be a TransformationRepresentation or a Transplant
+     *
+     * @return
+     */
+    private TransformationRepresentation getTPOfItem() {
         CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
         if (data instanceof TransformationRepresentation) return (TransformationRepresentation) data;
         if (data instanceof Transplant) {
@@ -246,7 +381,12 @@ public class MainToolWin implements ToolWindowFactory {
         return null;
     }
 
-
+    /**
+     * Creates the tool window content
+     *
+     * @param project
+     * @param toolWindow
+     */
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         this.project = project;
@@ -378,8 +518,11 @@ public class MainToolWin implements ToolWindowFactory {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.isPopupTrigger()) {
-                    PopUpTransformations menu = new PopUpTransformations();
-                    menu.show(e.getComponent(), e.getX(), e.getY());
+                    if (popUpTransformations == null) {
+                        popUpTransformations = new PopUpTransformations();
+                    }
+                    popUpTransformations.updateItemsEnableStatus();
+                    popUpTransformations.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
 
@@ -452,12 +595,11 @@ public class MainToolWin implements ToolWindowFactory {
      * This is delayed since obtaining the Transformation object itself is expensive. So a TransformationRepresentation
      * is used until the actual Transformation is needed
      *
-     * @param parentTP TransformationRepresentation to create the Trasnformation from
-     * @param t        Possible transplant (Deletes don't have) in the Transformation
+     * @param t Possible transplant (Deletes don't have) in the Transformation
      * @return A transformation
      */
-    private Transformation getTransformation(TransformationRepresentation parentTP,
-                                             Transplant t) {
+    private Transformation getTransformation(Transplant t) {
+        TransformationRepresentation parentTP = t.getTransplantationPoint();
         //All transformations has a TP so get it!
         CodeFragment pot = getCodeFragmentFromInputProgram(parentTP.getPosition(), parentTP.getSource());
         if (pot == null) return null;
@@ -493,6 +635,26 @@ public class MainToolWin implements ToolWindowFactory {
     }
 
     /**
+     * Obtains the Transformation of a given Transplant
+     *
+     * @param transplant Transplant for which we want to obtain the Transformation
+     * @return
+     */
+    private Transformation getTransplantTransformation(Transplant transplant,
+                                                       String pomPath, String srcDir) throws IOException {
+        Transformation transf = transplant.getTransformation();
+        if (transf == null) { //don't search twice
+            if (inputProgram == null) initInputProgram(pomPath, srcDir); //Init input program if still null
+            //Build a transformation object from the Tree
+            transf = getTransformation(transplant);
+            transplant.setTransformation(transf);
+            //Return if none find. At this point someone has already complain if something went wrong
+            if (transf == null) return null;
+        }
+        return transplant.getTransformation();
+    }
+
+    /**
      * Performs the transplant on the code in the selected transformations
      */
     public void performCurrentSelectedTransformation(String pomPath, String srcDir) throws IOException {
@@ -510,15 +672,7 @@ public class MainToolWin implements ToolWindowFactory {
             //obtain transplant we want to apply
             Transplant transplant = (Transplant) data;
 
-            Transformation transf = transplant.getTransformation();
-            if (transf == null) { //don't search twice
-                if (inputProgram == null) initInputProgram(pomPath, srcDir); //Init input program if still null
-                //Build a transformation object from the Tree
-                transf = getTransformation(tp, transplant);
-                transplant.setTransformation(transf);
-                //Return if none find. At this point someone has already complain if something went wrong
-                if (transf == null) return;
-            }
+            getTransplantTransformation(transplant, pomPath, srcDir);
 
             try {
                 //Applies or restores the transformation
@@ -531,12 +685,23 @@ public class MainToolWin implements ToolWindowFactory {
     }
 
 
+    /**
+     * Sorts the transformations by a given comparator
+     *
+     * @param comparator Comparator to sort
+     */
     private void sortAndShowTransformations(Comparator<TransformationRepresentation> comparator) {
         ArrayList<TransformationRepresentation> ta = new ArrayList<TransformationRepresentation>(formatter.getRepresentations());
         Collections.sort(ta, comparator);
         showTransformations(ta);
     }
 
+    /**
+     * Gets the user object (CodePosition) of the selected component of a tree
+     *
+     * @param tree Tree for which we want to extract the CodePosition of the selected node
+     * @return A CodePosition object contained in the node
+     */
     private CodePosition getDataOfSelectedTransformationItem(Tree tree) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                 tree.getLastSelectedPathComponent();
@@ -545,9 +710,9 @@ public class MainToolWin implements ToolWindowFactory {
 
 
     /**
-     * Show properties of the transformation represented by that node
+     * Show properties of the transformation represented by the CodePosition passed as parameter
      *
-     * @param data User data of the node
+     * @param data CodePosition for which we want to know the properties
      */
     private void showProperties(CodePosition data) {
         //Show the properties in the table
@@ -598,7 +763,7 @@ public class MainToolWin implements ToolWindowFactory {
     /**
      * Seek the code position
      *
-     * @param data: Code position to seek
+     * @param data:             Code position to seek
      * @param includeMethodName Tells if the methodName is included
      */
     private void seekCodePosition(CodePosition data, Boolean includeMethodName) {
@@ -607,7 +772,7 @@ public class MainToolWin implements ToolWindowFactory {
 
         String[] p = data.getPosition().split(":");
         String className = p[0];
-        if ( includeMethodName ) {
+        if (includeMethodName) {
             className = className.substring(0, className.lastIndexOf('.'));
         }
 
@@ -639,7 +804,7 @@ public class MainToolWin implements ToolWindowFactory {
     }
 
     /**
-     * Loads the Virtual file
+     * Loads a Virtual file
      *
      * @return A Virtual file or null in case the user cancels
      */
@@ -659,9 +824,14 @@ public class MainToolWin implements ToolWindowFactory {
         //Returns if the user cancels
         if (fv == null) return;
         loadTransformations(fv.getCanonicalPath());
-        //if ( fv.getParent(). )
     }
 
+    /**
+     * Shows an error box
+     *
+     * @param error Message of the error
+     * @param e     Exception that caused the error
+     */
     private void complain(String error, Exception e) {
         if (isThrowErrors()) {
             throw new RuntimeException(error, e);
@@ -674,9 +844,9 @@ public class MainToolWin implements ToolWindowFactory {
     }
 
     /**
-     * Shows the test in the test tree of a given code position
+     * Shows the test representations belonging to a code position in  the Test Representation Tree
      *
-     * @param cp
+     * @param cp Code position to which the test wants to be shown
      */
     public void showTests(CodePosition cp) {
         treeTests.setModel(null);
@@ -695,18 +865,29 @@ public class MainToolWin implements ToolWindowFactory {
         }
     }
 
+    /**
+     * Actually showns the transformation in the transformation Tree
+     *
+     * @param representations All transformation representation found so far
+     */
     private void showTransformations(Collection<TransformationRepresentation> representations) {
         int tpCount = 0;
         int tCount = 0;
+
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Transformations");
         DefaultTreeModel model = new DefaultTreeModel(root);
         for (TransformationRepresentation tp : representations) {
-            tpCount++;
+
             DefaultMutableTreeNode rep = new DefaultMutableTreeNode(tp);
-            model.insertNodeInto(rep, root, root.getChildCount());
             for (Transplant t : tp.getTransplants()) {
-                tCount++;
-                model.insertNodeInto(new DefaultMutableTreeNode(t), rep, rep.getChildCount());
+                if (t.getVisibility() == Transplant.Visibility.show) {
+                    tCount++;
+                    rep.insert(new DefaultMutableTreeNode(t), rep.getChildCount());
+                }
+            }
+            if (rep.getChildCount() > 0) {
+                tpCount++;
+                model.insertNodeInto(rep, root, root.getChildCount());
             }
         }
         treeTransformations.setModel(model);
@@ -714,6 +895,11 @@ public class MainToolWin implements ToolWindowFactory {
                 tpCount + " | Pot hits: " + formatter.getPotsTotalHitCount());
     }
 
+    /**
+     * Loads the transformatios from file and shows it in the Transformation Tree
+     *
+     * @param resourcePath Path where the transformation file lies
+     */
     public void loadTransformations(String resourcePath) {
 
         formatter = new PluginDataLoader();
@@ -721,6 +907,7 @@ public class MainToolWin implements ToolWindowFactory {
             //Disable load instru button
             btnLoadInstu.setEnabled(false);
             showTransformations(formatter.fromJSON(resourcePath));
+            initInputProgram(project.getBasePath() + File.separator + "pom.xml", getSrcCodePath());
             //Disable load instru button
             btnLoadInstu.setEnabled(true);
         } catch (IOException e) {
@@ -790,15 +977,30 @@ public class MainToolWin implements ToolWindowFactory {
         btnLoadInstu.setEnabled(false);
     }
 
+    /**
+     * Handler for the btnLoadInstrumentationResult
+     *
+     * @param e
+     */
     private void doBtnLoadInstrumentationResultClick(ActionEvent e) {
         loadInstrumentationResultsToTree();
     }
 
 
+    /**
+     * Handler for the btnLoadTransf
+     *
+     * @param e
+     */
     private void doBtnLoadTransfClick(ActionEvent e) {
         loadTransformationsToTree();
     }
 
+    /**
+     * Gets the sorce code path of the current module
+     *
+     * @return Source code path for the current module
+     */
     private String getSrcCodePath() {
 
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Represents the data of the transformation needed for the plugin
+ * Represents Transplantation point. Contains the data of the transformation needed for the plugin
  * <p/>
  * Created by marodrig on 04/09/2014.
  */
