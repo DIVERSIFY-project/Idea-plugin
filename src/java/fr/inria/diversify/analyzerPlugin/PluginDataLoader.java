@@ -96,6 +96,7 @@ public class PluginDataLoader {
      * Brute hits on TP. I.E. the sum of all hits over all TPs
      */
     private long totalPotsHitsCount;
+
     private int testExecutedCoveringATPCount;
 
 
@@ -112,20 +113,23 @@ public class PluginDataLoader {
         return representations.values();
     }
 
-    private JSONArray readJSONFromFile(BufferedReader reader) throws IOException, JSONException {
+    private JSONObject readJSONFromFile(BufferedReader reader) throws IOException, JSONException {
         StringBuilder sb = new StringBuilder();
-        String line = null;
+        String line;
         while ((line = reader.readLine()) != null) {
             sb.append(line);
         }
 
+        JSONObject result = new JSONObject();
+
         try {
             sourceJSONArray = new JSONArray(sb.toString());
+            result.put("transformations", sourceJSONArray);
         } catch (JSONException e) {
-            JSONObject object = new JSONObject(sb.toString());
-            sourceJSONArray = object.getJSONArray("transformations");
+            result = new JSONObject(sb.toString());
+            sourceJSONArray = result.getJSONArray("transformations");
         }
-        return sourceJSONArray;
+        return result;
     }
 
     /**
@@ -135,7 +139,15 @@ public class PluginDataLoader {
      */
     public Collection<TransformationRepresentation> fromJSON(String path) throws IOException, JSONException {
 
-        JSONArray jsonArray = readJSONFromFile(new BufferedReader(new FileReader(path)));
+        JSONObject jsonObject = readJSONFromFile(new BufferedReader(new FileReader(path)));
+        JSONArray transformations = jsonObject.getJSONArray("transformations");
+        JSONObject tags;
+        if ( jsonObject.has("tags") ) {
+            tags = jsonObject.getJSONObject("tags");
+        } else {
+            tags = new JSONObject();
+        }
+
 
         errors.clear();
 
@@ -148,20 +160,19 @@ public class PluginDataLoader {
         totalTransformations = 0;
         totalPots = 0;
 
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < transformations.length(); i++) {
             try {
-                JSONObject jt = jsonArray.getJSONObject(i);
+                JSONObject jt = transformations.getJSONObject(i);
                 String pos = jt.getJSONObject("transplantationPoint").getString("position");
                 Integer index = jt.getInt("tindex");
 
                 if (representations.containsKey(pos)) {
-                    representations.get(pos).appendTransplant(jt);
+                    representations.get(pos).appendTransplant(jt, tags);
                     indexedRepresentations.put(index, representations.get(pos));
-
                     totalTransformations++;
                 } else {
                     TransformationRepresentation tr = new TransformationRepresentation();
-                    tr.fromJSONObject(jt);
+                    tr.fromJSONObject(jt, tags);
                     representations.put(pos, tr);
                     indexedRepresentations.put(index, tr);
 
@@ -173,7 +184,6 @@ public class PluginDataLoader {
                 errors.add(e);
             }
         }
-
         return representations.values();
     }
 

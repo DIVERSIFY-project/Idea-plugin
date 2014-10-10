@@ -1,8 +1,8 @@
 package fr.inria.diversify.analyzerPlugin;
 
-import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.transformation.ast.ASTTransformation;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -98,14 +98,14 @@ public class TransformationRepresentation extends CodePosition {
     /**
      * Initializes the representation from the JSON object
      */
-    public void fromJSONObject(JSONObject object) throws JSONException {
+    public void fromJSONObject(JSONObject object, JSONObject tags) throws JSONException {
         JSONObject tp = object.getJSONObject("transplantationPoint");
         setSource(tp.getString("sourceCode"));
         setPosition(tp.getString("position"));
         setSpoonTransformationType(tp.getString("type"));
         setType(object.getString("name"));
 
-        appendTransplant(object);
+        appendTransplant(object, tags);
 
     }
 
@@ -199,9 +199,10 @@ public class TransformationRepresentation extends CodePosition {
     /**
      * Extract the transplant out of the JSON object and appends it to the list of TP over this point
      *
-     * @param jt
+     * @param jt JSON with the transformation
+     * @param tags Array with the tags to every transformation
      */
-    public void appendTransplant(JSONObject jt) throws JSONException {
+    public void appendTransplant(JSONObject jt, JSONObject tags) throws JSONException {
         if (jt.has("transplant")) {
             JSONObject tp = jt.getJSONObject("transplant");
             Transplant t = new Transplant();
@@ -210,6 +211,10 @@ public class TransformationRepresentation extends CodePosition {
             t.setSpoonType(tp.getString("type"));
             t.setIndex(jt.getInt("tindex"));
             t.setType(jt.getString("name"));
+            String sIndex = String.valueOf(t.getIndex());
+            if ( tags.has(sIndex) ) {
+                t.setTags(tags.getString(sIndex));
+            }
             if (jt.has("variableMapping")) {
                 t.setVariableMap(jt.getJSONObject("variableMapping").toString());
             }
@@ -218,9 +223,30 @@ public class TransformationRepresentation extends CodePosition {
         } else {
             Transplant delete = new Transplant();
             delete.setType("delete");
+            delete.setIndex(jt.getInt("tindex"));
             delete.setTransplantationPoint(this);
             transplants.add(delete);
         }
+    }
+
+    /**
+     * Convert the tags of all transplant into a JSON ArrayList.
+     * This is used to store all tags that annotates the Transplants of this TP
+     *
+     * @return a JSONObject ArrayList with the Transformations serialized
+     * @param representations
+     */
+    public static JSONObject tagsToJSON(Collection<TransformationRepresentation> representations) throws JSONException {
+
+        JSONObject result = new JSONObject();
+        for ( TransformationRepresentation r : representations ) {
+            for (Transplant t : r.getTransplants()) {
+                if ( !(t.getTags() == null || t.getTags().isEmpty()) ) {
+                    result.put(String.valueOf(t.getIndex()), t.getTags());
+                }
+            }
+        }
+        return result;
     }
 
     public String getSpoonTransformationType() {

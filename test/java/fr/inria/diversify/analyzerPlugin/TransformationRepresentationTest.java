@@ -41,7 +41,7 @@ public class TransformationRepresentationTest {
         JSONObject transformation = createTransformation(s1, s2);
 
         TransformationRepresentation representation = new TransformationRepresentation();
-        representation.fromJSONObject(transformation);
+        representation.fromJSONObject(transformation, new JSONObject());
 
         assertEquals("the.position:33", representation.getPosition());
         assertEquals("replace", representation.getType());
@@ -58,7 +58,7 @@ public class TransformationRepresentationTest {
         JSONObject transformation = createTransformation(snippet, null);
 
         TransformationRepresentation representation = new TransformationRepresentation();
-        representation.fromJSONObject(transformation);
+        representation.fromJSONObject(transformation, new JSONObject());
         assertEquals("the.position:33", representation.getPosition());
         assertEquals("replace", representation.getType());
     }

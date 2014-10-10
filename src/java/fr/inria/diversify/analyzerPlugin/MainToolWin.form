@@ -40,6 +40,13 @@
               <toolTipText value="Loads instrumentation information"/>
             </properties>
           </component>
+          <component id="c325f" class="javax.swing.JButton" binding="btnSave">
+            <constraints/>
+            <properties>
+              <text value="Save"/>
+              <toolTipText value="Save metadata"/>
+            </properties>
+          </component>
         </children>
       </toolbar>
       <splitpane id="d43c3">
@@ -83,7 +90,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <scrollpane id="a31bf" class="com.intellij.ui.components.JBScrollPane" binding="tblTransfScroll">
+                  <scrollpane id="a31bf" class="com.intellij.ui.components.JBScrollPane">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>

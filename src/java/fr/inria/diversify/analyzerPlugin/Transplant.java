@@ -3,6 +3,8 @@ package fr.inria.diversify.analyzerPlugin;
 import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.transformation.ast.ASTTransformation;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +16,14 @@ import java.io.IOException;
 * Created by marodrig on 15/09/2014.
 */
 public class Transplant extends CodePosition {
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 
     public enum Visibility {show, hide, unclassified}
 
@@ -36,6 +46,11 @@ public class Transplant extends CodePosition {
      * Index of the transplant. Kind of an I.D.
      */
     private int index;
+
+    /**
+     * A coma separated set of tags to identify the transplant.
+     */
+    private String tags;
 
     /**
      * Transformation that this transplant and its TP belongs to

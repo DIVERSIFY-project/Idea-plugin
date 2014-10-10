@@ -14,6 +14,9 @@ public class ClassifierFactory {
      */
     public List<TransformClasifier> buildClassifiers() {
         ArrayList<TransformClasifier> clasifiers = new ArrayList<TransformClasifier>();
+        clasifiers.add(new TagedStrong());
+        clasifiers.add(new TagedMedium());
+        clasifiers.add(new TagedWeak());
         clasifiers.add(new ExceptionByException());
         clasifiers.add(new VarDeclarationAndTPHasDelete());
         clasifiers.add(new StatementByLiteral());
