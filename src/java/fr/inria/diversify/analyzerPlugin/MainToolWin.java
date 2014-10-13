@@ -84,6 +84,8 @@ public class MainToolWin implements ToolWindowFactory {
 
     private String transfJSONPath;
 
+    private boolean showClassifIntersection = false;
+
     protected List<TransformClasifier> getClassifiers() {
         if (classifiers == null) {
             classifiers = buildClasifiers();
@@ -121,11 +123,45 @@ public class MainToolWin implements ToolWindowFactory {
 
     class PopUpTransformations extends JPopupMenu {
 
+        private final JBCheckboxMenuItem showIfAtLeast;
+
         private JMenuItem applyItem;
 
         private JMenuItem gotoThisPosition;
 
-        private Collection<JMenuItem> showItems;
+        private Collection<JMenuItem> sortItems;
+
+        //Avoid some events to fire up momentary
+        private boolean batchChange = false;
+
+        private class ChangeAllVisibilityListener implements ActionListener {
+
+            public boolean changeTo;
+
+            public JMenu menu;
+
+            public ChangeAllVisibilityListener(JMenu menu, boolean changeTo) {
+                super();
+                this.menu = menu;
+                this.changeTo = changeTo;
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                batchChange = true;
+                for (int i = 0; i < menu.getItemCount(); i++) {
+                    JMenuItem item = menu.getItem(i);
+                    if (item != null) {
+                        item.setSelected(changeTo);
+                        if (item instanceof JBCheckboxMenuItem) filterVisible.put(item.getText(), changeTo);
+                    }
+                }
+                showIfAtLeast.setSelected(!changeTo);
+                showClassifIntersection = !changeTo;
+                batchChange = false;
+                filter();
+            }
+        }
 
         public void updateItemsEnableStatus() {
             CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
@@ -133,14 +169,14 @@ public class MainToolWin implements ToolWindowFactory {
             TransformationRepresentation tr = getTPOfItem();
             applyItem.setEnabled(tr != null && data != null && data instanceof Transplant);
             applyItem.setText(applyItem.isEnabled() && tr.isTransplantApplied((Transplant) data) ? "Remove transplant" : "Apply transplant");
-            for (JMenuItem item : showItems) {
+            for (JMenuItem item : sortItems) {
                 item.setEnabled(formatter.getPotsTotalHitCount() > 0);
             }
         }
 
         public PopUpTransformations() {
 
-            showItems = new ArrayList<JMenuItem>();
+            sortItems = new ArrayList<JMenuItem>();
 
             JMenuItem anItem = new JMenuItem("Sort alphabetically");
             add(anItem);
@@ -158,7 +194,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by hits");
-            showItems.add(anItem);
+            sortItems.add(anItem);
             anItem.setEnabled(formatter.getPotsTotalHitCount() > 0);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
@@ -175,7 +211,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by tests");
-            showItems.add(anItem);
+            sortItems.add(anItem);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -191,7 +227,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by asserts");
-            showItems.add(anItem);
+            sortItems.add(anItem);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -207,7 +243,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by asserts hits");
-            showItems.add(anItem);
+            sortItems.add(anItem);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -223,7 +259,7 @@ public class MainToolWin implements ToolWindowFactory {
             });
 
             anItem = new JMenuItem("Sort by total transplants");
-            showItems.add(anItem);
+            sortItems.add(anItem);
             add(anItem);
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -273,6 +309,7 @@ public class MainToolWin implements ToolWindowFactory {
             ItemListener il = new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
+                    if (batchChange) return;
                     JBCheckboxMenuItem ei = (JBCheckboxMenuItem) e.getSource();
                     if (getFilterVisible().get(ei.getText()) != ei.isSelected()) {
                         getFilterVisible().put(ei.getText(), ei.isSelected());
@@ -294,16 +331,28 @@ public class MainToolWin implements ToolWindowFactory {
             checkItem.addItemListener(il);
 
             subMenu.addSeparator();
+            showIfAtLeast = new JBCheckboxMenuItem("Show intersection");
+            showIfAtLeast.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (batchChange) return;
+                    showClassifIntersection = showIfAtLeast.isSelected();
+                    filter();
+                }
+            });
+            subMenu.add(showIfAtLeast);
 
+            subMenu.addSeparator();
             JMenuItem item = new JMenuItem("Show All");
-            item.setSelected(true);
+            item.addActionListener(new ChangeAllVisibilityListener(subMenu, true));
             subMenu.add(item);
 
             item = new JMenuItem("Hide All");
-            item.setSelected(true);
+            item.addActionListener(new ChangeAllVisibilityListener(subMenu, false));
             subMenu.add(item);
         }
     }
+
 
     /**
      * Returns all the classifiers we know. It's hard coded. No fancy auto-detection methods
@@ -333,9 +382,10 @@ public class MainToolWin implements ToolWindowFactory {
                         if (v != 0) {
                             if (getFilterVisible().get(c.getDescription())) {
                                 transplant.setVisibility(Transplant.Visibility.show);
+                                if (showClassifIntersection) break;
                             } else {
                                 transplant.setVisibility(Transplant.Visibility.hide);
-                                break;
+                                if (!showClassifIntersection) break;
                             }
                         }
                     }
@@ -359,7 +409,7 @@ public class MainToolWin implements ToolWindowFactory {
      */
     private TransformationRepresentation getTPOfItem() {
         CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
-        if ( data != null ) {
+        if (data != null) {
             if (data instanceof TransformationRepresentation) return (TransformationRepresentation) data;
             if (data instanceof Transplant) {
                 return ((Transplant) data).getTransplantationPoint();
@@ -1031,6 +1081,7 @@ public class MainToolWin implements ToolWindowFactory {
         for (ContentEntry ce : contentEntries) {
             for (SourceFolder sf : ce.getSourceFolders()) {
                 if (!sf.isTestSource()) {
+                    if (sf.getFile() == null) complain("Cannot find file", null);
                     return sf.getFile().getPath();
                 }
             }

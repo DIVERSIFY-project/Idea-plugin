@@ -20,6 +20,8 @@ public class ClassifierFactory {
         clasifiers.add(new ExceptionByException());
         clasifiers.add(new VarDeclarationAndTPHasDelete());
         clasifiers.add(new StatementByLiteral());
+        clasifiers.add(new BlockSubstitution());
+        clasifiers.add(new StatementSubstitution());
         return clasifiers;
     }
 
