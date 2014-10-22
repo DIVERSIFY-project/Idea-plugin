@@ -186,7 +186,7 @@ public class MainToolWin implements ToolWindowFactory {
                     sortAndShowTransformations(new Comparator<TransformationRepresentation>() {
                         @Override
                         public int compare(TransformationRepresentation o1, TransformationRepresentation o2) {
-                            return (o1.getSource().compareTo(o2.getSource())) * -1;
+                            return (o1.toString().compareTo(o2.toString())) * -1;
                         }
                     });
 

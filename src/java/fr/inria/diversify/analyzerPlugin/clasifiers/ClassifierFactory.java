@@ -21,7 +21,9 @@ public class ClassifierFactory {
         clasifiers.add(new VarDeclarationAndTPHasDelete());
         clasifiers.add(new StatementByLiteral());
         clasifiers.add(new BlockSubstitution());
-        clasifiers.add(new StatementSubstitution());
+        clasifiers.add(new SingleStatementSubstitution());
+        clasifiers.add(new DeleteSubstitution());
+        clasifiers.add(new AssignNotUsedLocally());
         return clasifiers;
     }
 

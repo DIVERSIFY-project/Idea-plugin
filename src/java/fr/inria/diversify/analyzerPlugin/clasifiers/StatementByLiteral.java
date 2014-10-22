@@ -3,26 +3,18 @@ package fr.inria.diversify.analyzerPlugin.clasifiers;
 import fr.inria.diversify.analyzerPlugin.Transplant;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import spoon.reflect.code.CtLiteral;
+import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.visitor.Filter;
+import spoon.reflect.visitor.filter.TypeFilter;
 
 /**
- * Gives little weight to a statement exchanged by a literal
+ * Gives little weight to a statement exchanged by other containing a literal
  *
  * Created by marodrig on 08/10/2014.
  */
 public class StatementByLiteral extends TransformClasifier {
 
-    private static Filter<CtLiteral> filter = new Filter<CtLiteral>() {
-        @Override
-        public boolean matches(CtLiteral element) {
-            return true;
-        }
-
-        @Override
-        public Class<?> getType() {
-            return CtLiteral.class;
-        }
-    };
+    protected static TypeFilter filter = new TypeFilter(CtLiteral.class);
 
     @Override
     protected boolean canClassify(Transplant transplant) {
