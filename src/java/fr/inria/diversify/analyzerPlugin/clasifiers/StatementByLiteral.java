@@ -14,6 +14,11 @@ import spoon.reflect.visitor.filter.TypeFilter;
  */
 public class StatementByLiteral extends TransformClasifier {
 
+    @Override
+    public boolean isUserFilter() {
+        return false;
+    }
+
     protected static TypeFilter filter = new TypeFilter(CtLiteral.class);
 
     @Override
@@ -34,5 +39,10 @@ public class StatementByLiteral extends TransformClasifier {
     @Override
     public String getDescription() {
         return "Replacement contains a literal";
+    }
+
+    @Override
+    public int getWeight() {
+        return MEDIUM;
     }
 }

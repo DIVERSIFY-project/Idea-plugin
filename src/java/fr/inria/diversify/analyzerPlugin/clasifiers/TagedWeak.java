@@ -7,4 +7,10 @@ public class TagedWeak extends TagedTransform {
     public TagedWeak() {
         tagClassification = "weak";
     }
+
+
+    @Override
+    public int getWeight() {
+        return WEAK;
+    }
 }

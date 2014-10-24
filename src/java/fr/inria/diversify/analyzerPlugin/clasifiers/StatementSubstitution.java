@@ -16,8 +16,6 @@ import spoon.reflect.visitor.filter.TypeFilter;
  */
 public abstract class StatementSubstitution extends TransformClasifier {
 
-    protected int WEIGHT = -1;
-
     protected static TypeFilter blockFilter = new TypeFilter(CtMethod.class);
 
     @Override
@@ -25,6 +23,4 @@ public abstract class StatementSubstitution extends TransformClasifier {
         //The sosie transformation is inside the Transplant UI representation
         return (transplant.getTransformation() instanceof ASTReplace);
     }
-
-
 }

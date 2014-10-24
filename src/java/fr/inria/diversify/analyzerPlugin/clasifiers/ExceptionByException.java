@@ -16,7 +16,10 @@ import spoon.reflect.declaration.CtElement;
  */
 public class ExceptionByException extends TransformClasifier {
 
-    private int WEIGHT = -5;
+    @Override
+    public boolean isUserFilter() {
+        return false;
+    }
 
     @Override
     protected boolean canClassify(Transplant transplant) {
@@ -35,7 +38,7 @@ public class ExceptionByException extends TransformClasifier {
 
         if ((ctTP instanceof CtThrow && ctT instanceof CtThrow) ||
                 (spoonT.contains("CtThrow") && spoonTP.contains("CtThrow"))) {
-            return WEIGHT;
+            return getWeight();
         } else {
             return 0;
         }
@@ -44,5 +47,10 @@ public class ExceptionByException extends TransformClasifier {
     @Override
     public String getDescription() {
         return "Exceptions substituted by another exception";
+    }
+
+    @Override
+    public int getWeight() {
+        return WEAK;
     }
 }

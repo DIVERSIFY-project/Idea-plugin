@@ -13,6 +13,12 @@ import spoon.reflect.declaration.CtElement;
  * Created by marodrig on 13/10/2014.
  */
 public class SingleStatementSubstitution extends StatementSubstitution {
+
+    @Override
+    public boolean isUserFilter() {
+        return false;
+    }
+
     @Override
     protected int calculateValue(Transplant transplant) {
         ASTReplace replace = (ASTReplace) transplant.getTransformation();
@@ -21,7 +27,7 @@ public class SingleStatementSubstitution extends StatementSubstitution {
 
         if (cf.getElements(blockFilter).size() == 0 &&
                 !(cf instanceof CtLocalVariable || cf instanceof CtNewClass)) {
-            return WEIGHT;
+            return getWeight();
         }
 
         return 0;
@@ -30,5 +36,10 @@ public class SingleStatementSubstitution extends StatementSubstitution {
     @Override
     public String getDescription() {
         return "Statement substitution";
+    }
+
+    @Override
+    public int getWeight() {
+        return MEDIUM;
     }
 }

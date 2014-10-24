@@ -20,7 +20,10 @@ import spoon.reflect.declaration.CtElement;
  */
 public class VarDeclarationAndTPHasDelete extends TransformClasifier {
 
-    private int WEIGHT = -4;
+    @Override
+    public boolean isUserFilter() {
+        return false;
+    }
 
     @Override
     protected boolean canClassify(Transplant transplant) {
@@ -39,7 +42,7 @@ public class VarDeclarationAndTPHasDelete extends TransformClasifier {
             TransformationRepresentation tr = transplant.getTransplantationPoint();
             for ( Transplant t : tr.getTransplants() ) {
                 if ( t.getType().equals("delete") ) {
-                    return WEIGHT;
+                    return getWeight();
                 }
             }
         }
@@ -50,5 +53,10 @@ public class VarDeclarationAndTPHasDelete extends TransformClasifier {
     @Override
     public String getDescription() {
         return "Transplant is var declaration. Parent has delete.";
+    }
+
+    @Override
+    public int getWeight() {
+        return WEAK;
     }
 }

@@ -1,5 +1,6 @@
 package fr.inria.diversify.analyzerPlugin;
 
+import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
 import fr.inria.diversify.transformation.ast.ASTTransformation;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
@@ -199,7 +200,7 @@ public class TransformationRepresentation extends CodePosition {
     /**
      * Extract the transplant out of the JSON object and appends it to the list of TP over this point
      *
-     * @param jt JSON with the transformation
+     * @param jt   JSON with the transformation
      * @param tags Array with the tags to every transformation
      */
     public void appendTransplant(JSONObject jt, JSONObject tags) throws JSONException {
@@ -212,7 +213,7 @@ public class TransformationRepresentation extends CodePosition {
             t.setIndex(jt.getInt("tindex"));
             t.setType(jt.getString("name"));
             String sIndex = String.valueOf(t.getIndex());
-            if ( tags.has(sIndex) ) {
+            if (tags.has(sIndex)) {
                 t.setTags(tags.getString(sIndex));
             }
             if (jt.has("variableMapping")) {
@@ -233,15 +234,15 @@ public class TransformationRepresentation extends CodePosition {
      * Convert the tags of all transplant into a JSON ArrayList.
      * This is used to store all tags that annotates the Transplants of this TP
      *
-     * @return a JSONObject ArrayList with the Transformations serialized
      * @param representations
+     * @return a JSONObject ArrayList with the Transformations serialized
      */
     public static JSONObject tagsToJSON(Collection<TransformationRepresentation> representations) throws JSONException {
 
         JSONObject result = new JSONObject();
-        for ( TransformationRepresentation r : representations ) {
+        for (TransformationRepresentation r : representations) {
             for (Transplant t : r.getTransplants()) {
-                if ( !(t.getTags() == null || t.getTags().isEmpty()) ) {
+                if (!(t.getTags() == null || t.getTags().isEmpty())) {
                     result.put(String.valueOf(t.getIndex()), t.getTags());
                 }
             }
@@ -394,10 +395,12 @@ public class TransformationRepresentation extends CodePosition {
 
     /**
      * Returns the applied transplant over the transplantation point
+     *
      * @return A Transplant or null of none applied
      */
     public Transplant getAppliedTransplant() {
         if (appliedTransformIndex == -1) return null;
         return transplants.get(appliedTransformIndex);
     }
+
 }

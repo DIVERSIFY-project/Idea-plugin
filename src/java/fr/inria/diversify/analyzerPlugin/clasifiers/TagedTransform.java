@@ -7,6 +7,11 @@ import fr.inria.diversify.analyzerPlugin.Transplant;
  */
 public abstract class TagedTransform extends TransformClasifier {
 
+    @Override
+    public boolean isUserFilter() {
+        return true;
+    }
+
     //The tag we are looking for
     protected String tagClassification;
 
@@ -21,7 +26,7 @@ public abstract class TagedTransform extends TransformClasifier {
         String[] tags = transform.getTags().split(",");
         for (String tag : tags ) {
             if ( tag.toLowerCase().contains(tagClassification) ) {
-                return 5;
+                return getWeight();
             }
         }
         return 0;

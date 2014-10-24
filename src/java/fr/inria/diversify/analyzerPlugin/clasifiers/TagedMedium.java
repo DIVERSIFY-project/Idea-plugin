@@ -7,4 +7,9 @@ public class TagedMedium extends TagedTransform {
     public TagedMedium() {
         tagClassification = "medium";
     }
+
+    @Override
+    public int getWeight() {
+        return MEDIUM;
+    }
 }

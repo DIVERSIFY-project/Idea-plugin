@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  *
@@ -16,6 +17,8 @@ import java.io.IOException;
 * Created by marodrig on 15/09/2014.
 */
 public class Transplant extends CodePosition {
+
+    private HashMap<String, Float> classificationMap;
 
     public String getTags() {
         return tags;
@@ -69,6 +72,38 @@ public class Transplant extends CodePosition {
      *
      */
     private TransformationRepresentation transplantationPoint;
+
+    /**
+     * Stores the last classification weight assigned to this transplant by the last filter operation
+     * @param functionName Name of the function assignment weight
+     * @param weight Weight assigned by the function
+     */
+    public void setClassification(String functionName, float weight) {
+        if ( classificationMap == null ) {
+            classificationMap = new HashMap<String, Float>();
+        }
+        classificationMap.put(functionName, weight);
+    }
+
+    /**
+     *  indicates in the classification function passed as parameters has already classified this transplant
+     * @param functionName   function to classify the transplant
+     * @return true if the function has already classified the transplant
+     */
+    public boolean isAlreadyClassified(String functionName) {
+        return classificationMap != null && classificationMap.containsKey(functionName);
+    }
+
+    /**
+     * Obtains the classification value assigned to this transplant by the function passed as parameters
+     * @param functionName  classification function  name
+     */
+    public float getClassification(String functionName) {
+        if ( classificationMap == null ) {
+            classificationMap = new HashMap<String, Float>();
+        }
+        return classificationMap.containsKey(functionName) ? classificationMap.get(functionName) : 0;
+    }
 
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;

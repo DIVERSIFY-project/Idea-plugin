@@ -10,12 +10,16 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.SourceFolder;
 import com.intellij.openapi.ui.JBCheckboxMenuItem;
+import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
@@ -375,10 +379,24 @@ public class MainToolWin implements ToolWindowFactory {
             Collection<TransformationRepresentation> reps = formatter.getRepresentations();
             for (TransformationRepresentation p : reps) {
                 for (Transplant transplant : p.getTransplants()) {
+                    try {
+                        getTransplantTransformation(transplant, pomPath, srcDir);
+                    } catch (RuntimeException rex) {
+                        //Skip this transplant
+                        softComplain(rex.getMessage());
+                        p.getTransplants().remove(transplant);
+                        break;
+                    }
                     transplant.setVisibility(Transplant.Visibility.unclassified);
                     for (TransformClasifier c : getClassifiers()) {
-                        getTransplantTransformation(transplant, pomPath, srcDir);
-                        float v = c.value(transplant);
+                        float v;
+                        if (transplant.isAlreadyClassified(c.getDescription())) {
+                            v = transplant.getClassification(c.getDescription());
+                        } else {
+                            v = c.value(transplant);
+                            transplant.setClassification(c.getDescription(), v);
+                        }
+
                         if (v != 0) {
                             if (getFilterVisible().get(c.getDescription())) {
                                 transplant.setVisibility(Transplant.Visibility.show);
@@ -400,6 +418,19 @@ public class MainToolWin implements ToolWindowFactory {
         } catch (IOException e) {
             complain("Cannot perform weighting", e);
         }
+    }
+
+    /**
+     * Complain softly by creating a balloon text instead of a message box
+     * @param message
+     */
+    private void softComplain(String message) {
+        JBPopupFactory.getInstance()
+                .createHtmlTextBalloonBuilder("Warning: " + message, MessageType.WARNING, null)
+                .setFadeoutTime(7500)
+                .createBalloon()
+                .show(RelativePoint.getCenterOf(treeTransformations),
+                        Balloon.Position.atRight);
     }
 
     /**
@@ -586,25 +617,11 @@ public class MainToolWin implements ToolWindowFactory {
 
     private void doBtnSave() {
         try {
-            BufferedReader r = new BufferedReader(new FileReader(transfJSONPath));
-            String line;
-            StringBuilder sb = new StringBuilder();
-            while ((line = r.readLine()) != null) {
-                sb.append(line);
-            }
-            JSONObject parentObject;
-            JSONArray sourceJSONArray;
-            try {
-                sourceJSONArray = new JSONArray(sb.toString());
-                parentObject = new JSONObject();
-                parentObject.put("transformations", sourceJSONArray);
-            } catch (JSONException e) {
-                parentObject = new JSONObject(sb.toString());
-            }
-            parentObject.put("tags", TransformationRepresentation.tagsToJSON(formatter.getRepresentations()));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(transfJSONPath));
-            parentObject.write(bw);
-            bw.close();
+            PluginDataExport  exports = new PluginDataExport();
+            exports.setOriginalJSONFIle(transfJSONPath);
+            exports.setClasifiers(classifiers);
+            exports.setRepresentations(formatter.getRepresentations());
+            exports.save(transfJSONPath);
         } catch (JSONException e1) {
             complain("Cannot save. Error when creating the ", e1);
         } catch (IOException e2) {
@@ -655,7 +672,7 @@ public class MainToolWin implements ToolWindowFactory {
 
         CodeFragment cf = inputProgram.getCodeFragment(position, source);
         if (cf == null) {
-            complain("Unable to find code fragment with position '" + position + "' and source '" + source + "'", null);
+            throw new RuntimeException("Unable to find code fragment with position '" + position + "' and source '" + source + "'");
         }
         return cf;
     }

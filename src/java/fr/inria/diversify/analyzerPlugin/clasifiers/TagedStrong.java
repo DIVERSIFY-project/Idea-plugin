@@ -7,4 +7,9 @@ public class TagedStrong extends TagedTransform {
     public TagedStrong() {
         tagClassification = "strong";
     }
+
+    @Override
+    public int getWeight() {
+        return 10;
+    }
 }

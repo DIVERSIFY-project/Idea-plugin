@@ -26,6 +26,13 @@ import java.util.List;
  */
 public class AssignNotUsedLocally extends TransformClasifier {
 
+    //Take into consideration control flow and also not only the deletion but also the replacements!!!!!!
+
+    @Override
+    public boolean isUserFilter() {
+        return false;
+    }
+
     protected int WEIGHT = 10;
 
     static ReferenceFilter<CtReference> refFilter = new ReferenceFilter<CtReference>() {
@@ -160,5 +167,10 @@ public class AssignNotUsedLocally extends TransformClasifier {
     @Override
     public String getDescription() {
         return "Variable/field assign not used locally";
+    }
+
+    @Override
+    public int getWeight() {
+        return STRONG;
     }
 }

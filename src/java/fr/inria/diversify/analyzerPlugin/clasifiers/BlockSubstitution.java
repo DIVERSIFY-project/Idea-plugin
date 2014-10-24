@@ -17,13 +17,18 @@ import spoon.reflect.declaration.CtElement;
 public class BlockSubstitution extends StatementSubstitution {
 
     @Override
+    public boolean isUserFilter() {
+        return false;
+    }
+
+    @Override
     protected int calculateValue(Transplant transplant) {
         ASTReplace replace = (ASTReplace) transplant.getTransformation();
 
         CtElement cf = replace.getTransplant().getCtCodeFragment();
 
         if ( cf.getElements(blockFilter).size() > 0 ) {
-            return WEIGHT;
+            return getWeight();
         }
 
         return 0;
@@ -32,5 +37,10 @@ public class BlockSubstitution extends StatementSubstitution {
     @Override
     public String getDescription() {
         return "Block substitution";
+    }
+
+    @Override
+    public int getWeight() {
+        return MEDIUM;
     }
 }
