@@ -1,19 +1,20 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
+import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
 import fr.inria.diversify.analyzerPlugin.model.Transplant;
 import fr.inria.diversify.transformation.ast.ASTReplace;
-import spoon.reflect.code.CtThrow;
+import spoon.reflect.code.CtLocalVariable;
+import spoon.reflect.code.CtNewClass;
 import spoon.reflect.declaration.CtElement;
 
-
 /**
- * Gives negative weight to the transformations changing exceptions for exception.
+ * Gives a bad weight to Transplant declaring a local variable
  * <p/>
- * Exceptions substituted by another are probably never checked.
+ * These bad weight are given because most probably the transplant has no importance at all
  * <p/>
- * Created by marodrig on 06/10/2014.
+ * Created by marodrig on 07/10/2014.
  */
-public class ExceptionByException extends TransformClasifier {
+public class LocalVarDeclaration extends TransformClasifier {
 
     @Override
     public boolean isUserFilter() {
@@ -30,22 +31,19 @@ public class ExceptionByException extends TransformClasifier {
     protected int calculateValue(Transplant transplant) {
         ASTReplace replace = (ASTReplace) transplant.getTransformation();
 
-        CtElement ctTP = replace.getTransplantationPoint().getCtCodeFragment();
-        CtElement ctT = replace.getTransplant().getCtCodeFragment();
-        String spoonTP = transplant.getSpoonType();
-        String spoonT = transplant.getTransplantationPoint().getSpoonTransformationType();
+        CtElement cf = replace.getTransplant().getCtCodeFragment();
 
-        if ((ctTP instanceof CtThrow && ctT instanceof CtThrow) ||
-                (spoonT.contains("CtThrow") && spoonTP.contains("CtThrow"))) {
+        //CtNewClass example : Map<String, Int> a = new HashMap<String, Int>();
+        if (cf instanceof CtLocalVariable || cf instanceof CtNewClass) {
             return getWeight();
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
     @Override
     public String getDescription() {
-        return "Exceptions substituted by another exception";
+        return "Transplant is var declaration. Parent has delete.";
     }
 
     @Override

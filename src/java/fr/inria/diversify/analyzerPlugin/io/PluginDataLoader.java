@@ -1,6 +1,9 @@
-package fr.inria.diversify.analyzerPlugin;
+package fr.inria.diversify.analyzerPlugin.io;
 
-import org.apache.xmlbeans.impl.xb.ltgfmt.Code;
+import fr.inria.diversify.analyzerPlugin.model.AssertRepresentation;
+import fr.inria.diversify.analyzerPlugin.LoadingException;
+import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

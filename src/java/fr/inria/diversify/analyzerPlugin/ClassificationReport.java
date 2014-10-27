@@ -29,6 +29,12 @@ public class ClassificationReport {
             this.weight = weight;
             this.id = id;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            ClassificationFunctionStats cfs = (ClassificationFunctionStats) o;
+            return cfs.id.equals(id) && cfs.description.equals(description) && weight == weight;
+        }
     }
 
     //Reads an object from a file
@@ -110,10 +116,8 @@ public class ClassificationReport {
                         fileNames.add(listOfFiles[i].getName());
                     } catch (JSONException ex) {
                         if (ex.getMessage().contains("JSONObject text must begin with")) {
-                            continue; //its okay
-                        } else {
-                            throw ex;
-                        }
+                            continue; //its okay. This may happen depending on the format of the file
+                        } else throw ex;
                     }
                     if (readed.has("classifications")) {
                         //obtain  all classification functions from this file
@@ -123,7 +127,10 @@ public class ClassificationReport {
                         while (itr.hasNext()) {
                             String k = (String) itr.next();
                             JSONObject o = classObject.getJSONObject(k);
-                            listClass.add(new ClassificationFunctionStats(o.getString("index"), k, o.getInt("weight")));
+                            String index = o.getString("index");
+                            ClassificationFunctionStats cfs =
+                                    new ClassificationFunctionStats(index, k, o.getInt("weight"));
+                            if (!listClass.contains(cfs)) listClass.add(cfs);
                         }
                     }
                 }
@@ -144,31 +151,31 @@ public class ClassificationReport {
             //Create the table
             classTable = new int[listClass.size()][contents.size() * 3];
 
-
             for (int j = 0; j < contents.size(); j++) {
-                Arrays.fill(classTable[j], 0);
-                Arrays.fill(classTable[j + 1], 0);
-                Arrays.fill(classTable[j + 2], 0);
-
+                int k = j * 3;
                 JSONArray repClass = contents.get(j).getJSONArray("transformationClass");
                 int i = 0;
                 while (i < repClass.length()) {
                     i++;//int id = repClass.getInt(i++);
-                    int index = getClassIndex(listClass, repClass.getString(i++));
+                    int index = getClassIndex(listClass, repClass.getString(i++)); //Gets the id of the class function
                     int slot = getSlot(repClass.getString(i++));
-                    classTable[index][j + slot]++;
+                    classTable[index][k + slot]++; //Gets the type of the transformation
                 }
             }
 
+
             //Print the table in html format
             for (int i = 0; i < classTable.length; i++) {
-                out.append("<tr>");
+                if (listClass.get(i).weight < 5) out.append("<tr bgcolor=#FFDDDD>");
+                else if (listClass.get(i).weight < 10) out.append("<tr bgcolor=#DDFFDD>");
+                else out.append("<tr bgcolor=#DDDDFF>");
                 out.append("<td>").append(listClass.get(i).description).append("</td>");
                 for (int j = 0; j < classTable[i].length; j++) {
                     out.append("<td>").append(classTable[i][j]).append("</td>");
                 }
                 out.append("</tr>");
             }
+
             out.append("</table>");
             out.append("</body>");
             out.append("</html>");

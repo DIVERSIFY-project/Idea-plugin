@@ -1,12 +1,10 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.TransformationRepresentation;
-import fr.inria.diversify.analyzerPlugin.Transplant;
-import fr.inria.diversify.transformation.Transformation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.Transplant;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import spoon.reflect.code.CtLocalVariable;
 import spoon.reflect.code.CtNewClass;
-import spoon.reflect.code.CtThrow;
 import spoon.reflect.declaration.CtElement;
 
 /**

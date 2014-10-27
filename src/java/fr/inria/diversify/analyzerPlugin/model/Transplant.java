@@ -1,13 +1,7 @@
-package fr.inria.diversify.analyzerPlugin;
+package fr.inria.diversify.analyzerPlugin.model;
 
 import fr.inria.diversify.transformation.Transformation;
-import fr.inria.diversify.transformation.ast.ASTTransformation;
-import org.apache.commons.io.FileUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 /**

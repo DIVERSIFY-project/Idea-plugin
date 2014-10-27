@@ -1,9 +1,7 @@
-package fr.inria.diversify.analyzerPlugin;
+package fr.inria.diversify.analyzerPlugin.model;
 
-import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
 import fr.inria.diversify.transformation.ast.ASTTransformation;
 import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

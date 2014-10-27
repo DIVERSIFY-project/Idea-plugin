@@ -1,5 +1,7 @@
-package fr.inria.diversify.analyzerPlugin;
+package fr.inria.diversify.analyzerPlugin.io;
 
+import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.Transplant;
 import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
 import org.json.JSONArray;
 import org.json.JSONException;

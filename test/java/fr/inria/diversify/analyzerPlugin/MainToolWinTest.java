@@ -1,16 +1,10 @@
 package fr.inria.diversify.analyzerPlugin;
 
-import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
-import fr.inria.diversify.diversification.InputProgram;
-import fr.inria.diversify.factories.SpoonMetaFactory;
-import org.junit.Assert;
-import org.junit.Ignore;
+import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 import org.junit.Test;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-
-import java.io.File;
 
 import static org.junit.Assert.*;
 

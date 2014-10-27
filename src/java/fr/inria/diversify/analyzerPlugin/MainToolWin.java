@@ -25,6 +25,9 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.io.PluginDataExport;
+import fr.inria.diversify.analyzerPlugin.io.PluginDataLoader;
+import fr.inria.diversify.analyzerPlugin.model.*;
 import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
 import fr.inria.diversify.codeFragment.CodeFragment;
 import fr.inria.diversify.diversification.InputConfiguration;
@@ -617,7 +620,7 @@ public class MainToolWin implements ToolWindowFactory {
 
     private void doBtnSave() {
         try {
-            PluginDataExport  exports = new PluginDataExport();
+            PluginDataExport exports = new PluginDataExport();
             exports.setOriginalJSONFIle(transfJSONPath);
             exports.setClasifiers(classifiers);
             exports.setRepresentations(formatter.getRepresentations());

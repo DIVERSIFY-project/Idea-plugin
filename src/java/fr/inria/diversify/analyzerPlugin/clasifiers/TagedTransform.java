@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.Transplant;
 
 /**
  * Created by marodrig on 10/10/2014.

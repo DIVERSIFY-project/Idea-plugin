@@ -1,5 +1,8 @@
 package fr.inria.diversify.analyzerPlugin;
 
+import fr.inria.diversify.analyzerPlugin.io.PluginDataLoader;
+import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
 import org.junit.Test;
 
 import java.util.*;

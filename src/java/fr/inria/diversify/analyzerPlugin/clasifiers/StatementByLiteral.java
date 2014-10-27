@@ -1,10 +1,8 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.Transplant;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import spoon.reflect.code.CtLiteral;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.visitor.Filter;
 import spoon.reflect.visitor.filter.TypeFilter;
 
 /**

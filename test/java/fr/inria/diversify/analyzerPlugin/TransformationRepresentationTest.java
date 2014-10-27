@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin;
 
-import fr.inria.diversify.analyzerPlugin.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;

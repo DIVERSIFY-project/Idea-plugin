@@ -14,16 +14,42 @@ public class ClassifierFactory {
      */
     public List<TransformClasifier> buildClassifiers() {
         ArrayList<TransformClasifier> clasifiers = new ArrayList<TransformClasifier>();
+
+
+
+        //clasifiers.add(new AssignNotUsedLocally());
+        //clasifiers.add(new StatementByLiteral());
+        //clasifiers.add(new BlockSubstitution());
+        //clasifiers.add(new SingleStatementSubstitution());
+        //clasifiers.add(new DeleteSubstitution());
+
+        //Strong classifiers
         clasifiers.add(new TagedStrong());
+
+
+        //Medium classifiers
         clasifiers.add(new TagedMedium());
+        clasifiers.add(new ReturnAdd());
+        clasifiers.add(new ReturnReplace());
+        clasifiers.add(new ReturnDelete());
+
+        clasifiers.add(new MethodCallAdd());
+        clasifiers.add(new MethodCallReplace());
+        clasifiers.add(new MethodCallDelete());
+
+        clasifiers.add(new BlockAdd());
+        clasifiers.add(new BlockReplace());
+        clasifiers.add(new BlockDelete());
+
+        clasifiers.add(new FieldAssignmentAdd());
+        clasifiers.add(new FieldAssignmentReplace());
+        clasifiers.add(new FieldAssignmentDelete());
+
+        //Weak classifiers
         clasifiers.add(new TagedWeak());
+        clasifiers.add(new LocalVarDeclaration());
         clasifiers.add(new ExceptionByException());
-        clasifiers.add(new VarDeclarationAndTPHasDelete());
-        clasifiers.add(new StatementByLiteral());
-        clasifiers.add(new BlockSubstitution());
-        clasifiers.add(new SingleStatementSubstitution());
-        clasifiers.add(new DeleteSubstitution());
-        clasifiers.add(new AssignNotUsedLocally());
+
         return clasifiers;
     }
 

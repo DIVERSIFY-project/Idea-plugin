@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin;
+package fr.inria.diversify.analyzerPlugin.model;
 
 import java.util.HashSet;
 import java.util.Set;

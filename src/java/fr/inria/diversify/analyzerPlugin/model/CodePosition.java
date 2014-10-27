@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin;
+package fr.inria.diversify.analyzerPlugin.model;
 
 /**
  * Created by marodrig on 04/09/2014.

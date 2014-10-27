@@ -1,10 +1,14 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.TransformationRepresentation;
-import fr.inria.diversify.analyzerPlugin.Transplant;
-import fr.inria.diversify.transformation.Transformation;
+import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import spoon.reflect.code.CtAssignment;
+import spoon.reflect.code.CtFieldAccess;
+import spoon.reflect.declaration.CtElement;
+import spoon.reflect.visitor.QueryVisitor;
+import spoon.reflect.visitor.filter.TypeFilter;
 
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Assigns a numeric value to a transform to weight it according to a trait. Higher values goes to transform conforming
@@ -56,4 +60,37 @@ public abstract class TransformClasifier {
     public abstract String getDescription();
 
     public abstract int getWeight();
+
+    /**
+     * Returns all the field assignments in e
+     * @param e
+     * @return
+     */
+    protected List<CtElement> getFieldAssignments(CtElement e) {
+        ArrayList<CtElement> result = new ArrayList<CtElement>();
+        List<CtElement> assigns = getElementsOfType(e, CtAssignment.class);
+        for ( CtElement a : assigns ) {
+            if ( hasElementOfType(a, CtFieldAccess.class) ) {
+                result.add(a);
+            }
+        }
+        return result;
+    }
+
+    protected boolean hasElementOfType(CtElement e, Class<?> toQuery) {
+
+        return toQuery.isAssignableFrom(e.getClass()) || getElementsOfType(e, toQuery).size() > 0;
+    }
+
+    /**
+     * Returns the childs elements of a given type. More general than the get elements of CtElements
+     * @param e
+     * @return
+     */
+    protected List<CtElement> getElementsOfType(CtElement e, Class toQuery) {
+        TypeFilter assignFilter = new TypeFilter(toQuery);
+        QueryVisitor<CtElement> assignQuery = new QueryVisitor<CtElement>(assignFilter);
+        assignQuery.scan(e);
+        return assignQuery.getResult();
+    }
 }
