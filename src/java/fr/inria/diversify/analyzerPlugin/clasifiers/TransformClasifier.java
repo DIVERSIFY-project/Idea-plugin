@@ -1,11 +1,14 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
 import fr.inria.diversify.analyzerPlugin.model.Transplant;
-import spoon.reflect.code.CtAssignment;
-import spoon.reflect.code.CtFieldAccess;
+import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtElement;
+import spoon.reflect.declaration.CtExecutable;
+import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.reference.CtExecutableReference;
 import spoon.reflect.visitor.QueryVisitor;
 import spoon.reflect.visitor.filter.TypeFilter;
+import spoon.support.reflect.code.CtInvocationImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,56 @@ public abstract class TransformClasifier {
      * indicate if this class is just user interface commodity filter or if it s a real classification function
      */
     public abstract boolean isUserFilter();
+
+    /**
+     * Indicates if the element contains an innocuous invocation.
+     * <p/>
+     * An innocuous invocation is an invocation that complies to the following:
+     * 1. Block != null (the method inside code is known)
+     * 2. Has no other invocations
+     * 3. Has no Field assignments
+     *
+     * @param e Element to inspect
+     * @return True if the element contains innocuous invocations
+     */
+    protected boolean containsInnocuousInvocation(CtElement e) {
+        List<CtElement> invocations = getElementsOfType(e, CtInvocation.class);
+        if (invocations.size() == 0) return false;
+        return activeInvocationCount(invocations, 5, false) == 0;
+    }
+
+    private int activeInvocationCount(List<CtElement> invocations, int depth, boolean countAll) {
+        int result = 0;
+        if (depth > 0) {
+            if (invocations.size() == 0) {
+                return 0;
+            } //Contains no invocations at all, active or positive
+
+            //Search for active invocations
+            for (CtElement inv : invocations) {
+                if (!countAll && result > 0) return result;
+                CtExecutable executable = ((CtInvocationImpl) inv).getExecutable().getDeclaration();
+
+                if (executable != null ) {
+                    if ( executable.getType().toString().toLowerCase().equals("void") ) {
+                        CtBlock b = executable.getBody();
+                        if (b == null) { //The method code cannot be found (native, external lib., etc.)
+                            result++; //Since cannot be sure is not active, we count it as active
+                        } else if (hasElementOfType(b, CtThrow.class) || getFieldAssignments(b).size() > 0) {
+                            result++; //Definitively active
+                        } else if (hasElementOfType(b, CtInvocation.class)) {
+                            result += activeInvocationCount(getElementsOfType(b, CtInvocation.class), depth - 1, countAll);
+                        }
+                    } else {
+                        result++;
+                    }
+                } else {//The method code cannot be found (native, external lib., etc.)
+                    result++; //Since cannot be sure is not active, we count it as active
+                }
+            }
+        }
+        return result;
+    }
 
     /**
      * Indicates if the transformation can be classified or not
@@ -63,14 +116,15 @@ public abstract class TransformClasifier {
 
     /**
      * Returns all the field assignments in e
+     *
      * @param e
      * @return
      */
     protected List<CtElement> getFieldAssignments(CtElement e) {
         ArrayList<CtElement> result = new ArrayList<CtElement>();
         List<CtElement> assigns = getElementsOfType(e, CtAssignment.class);
-        for ( CtElement a : assigns ) {
-            if ( hasElementOfType(a, CtFieldAccess.class) ) {
+        for (CtElement a : assigns) {
+            if (hasElementOfType(a, CtFieldAccess.class)) {
                 result.add(a);
             }
         }
@@ -84,6 +138,7 @@ public abstract class TransformClasifier {
 
     /**
      * Returns the childs elements of a given type. More general than the get elements of CtElements
+     *
      * @param e
      * @return
      */

@@ -118,6 +118,9 @@ public class MainToolWin implements ToolWindowFactory {
     private JLabel lblTPCount;
     private JLabel lblTestCount;
     private JButton btnSave;
+    private JButton btnMedium;
+    private JButton btnStrong;
+    private JButton btnWeak;
     private Project project;
     private PluginDataLoader formatter;
 
@@ -360,7 +363,6 @@ public class MainToolWin implements ToolWindowFactory {
         }
     }
 
-
     /**
      * Returns all the classifiers we know. It's hard coded. No fancy auto-detection methods
      *
@@ -393,13 +395,18 @@ public class MainToolWin implements ToolWindowFactory {
                     transplant.setVisibility(Transplant.Visibility.unclassified);
                     for (TransformClasifier c : getClassifiers()) {
                         float v;
-                        if (transplant.isAlreadyClassified(c.getDescription())) {
+                        //the only way classification functions modify the score assigned
+                        //is by user input, therefore only user filters must be reclassified each time
+                        if (!c.isUserFilter() && transplant.isAlreadyClassified(c.getDescription())) {
+                            //retrieve classification already assignment to the transformation
                             v = transplant.getClassification(c.getDescription());
                         } else {
+                            // evaluates the transformation
                             v = c.value(transplant);
                             transplant.setClassification(c.getDescription(), v);
                         }
 
+                        //sets the visibility on/off depending on the show intersection option
                         if (v != 0) {
                             if (getFilterVisible().get(c.getDescription())) {
                                 transplant.setVisibility(Transplant.Visibility.show);
@@ -410,6 +417,9 @@ public class MainToolWin implements ToolWindowFactory {
                             }
                         }
                     }
+                    //If no classification functions and was able to classify the transplant
+                    //then the transplant become  unclassified and its visibility is assignment depending
+                    //on a special case of classification function
                     if (transplant.getVisibility() == Transplant.Visibility.unclassified) {
                         Transplant.Visibility vis = getFilterVisible().get(UNCLASSIFIED_TEXT) ?
                                 Transplant.Visibility.show : Transplant.Visibility.hide;
@@ -457,7 +467,7 @@ public class MainToolWin implements ToolWindowFactory {
      * Creates the tool window content
      *
      * @param project    Current Intellij IdeaProject
-     * @param toolWindow Tool window over wich the UI is represented
+     * @param toolWindow Tool window over which the UI is represented
      */
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
@@ -488,6 +498,26 @@ public class MainToolWin implements ToolWindowFactory {
         getTreeTransformations().setModel(null);
         getTreeTests().setRootVisible(false);
         getTreeTests().setModel(null);
+
+
+        btnStrong.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tagTransplant("strong");
+            }
+        });
+        btnMedium.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tagTransplant("medium");
+            }
+        });
+        btnWeak.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tagTransplant("weak");
+            }
+        });
 
         getBtnLoadTransf().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -618,6 +648,15 @@ public class MainToolWin implements ToolWindowFactory {
         });
     }
 
+    private void tagTransplant(String strong) {
+        CodePosition p = getDataOfSelectedTransformationItem(getTreeTransformations());
+        if (p instanceof Transplant) {
+            Transplant t = (Transplant) p;
+            t.setTags(strong);
+        }
+        showProperties(p);
+    }
+
     private void doBtnSave() {
         try {
             PluginDataExport exports = new PluginDataExport();
@@ -630,6 +669,7 @@ public class MainToolWin implements ToolWindowFactory {
         } catch (IOException e2) {
             complain("Cannot save", e2);
         }
+        //{}
     }
 
     /**

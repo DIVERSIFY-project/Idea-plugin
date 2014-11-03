@@ -1,7 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
 import fr.inria.diversify.analyzerPlugin.model.Transplant;
-import fr.inria.diversify.transformation.ast.ASTDelete;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtElement;
@@ -20,14 +19,10 @@ public class InnocuousMethodCallReplace extends TransformClasifier {
     @Override
     protected boolean canClassify(Transplant transform) {
         if ( transform.getTransformation() instanceof ASTReplace) {
-            CtElement e = ((ASTReplace)transform.getTransformation()).getTransplantationPoint().getCtCodeFragment();
-            List<CtElement> invocations = getElementsOfType(e, CtInvocation.class);
-            for ( CtElement inv : invocations ) {
-                if ( hasElementOfType(inv, CtInvocation.class) || getFieldAssignments(e).size() > 0 ) {
-                    return false;
-                }
-            }
-            return true;
+            //verify only invocations
+            CtElement e = ((ASTReplace) transform.getTransformation()).getTransplantationPoint().getCtCodeFragment();
+            CtElement r = ((ASTReplace) transform.getTransformation()).getTransplant().getCtCodeFragment();
+            return containsInnocuousInvocation(e) || containsInnocuousInvocation(r);
         }
         return false;
     }
@@ -44,7 +39,7 @@ public class InnocuousMethodCallReplace extends TransformClasifier {
 
     @Override
     public String getDescription() {
-        return "Method call added";
+        return "Innocuous method replaced";
     }
 
 }

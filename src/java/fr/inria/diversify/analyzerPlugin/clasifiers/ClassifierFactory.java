@@ -15,17 +15,16 @@ public class ClassifierFactory {
     public List<TransformClasifier> buildClassifiers() {
         ArrayList<TransformClasifier> clasifiers = new ArrayList<TransformClasifier>();
 
-
-
         //clasifiers.add(new AssignNotUsedLocally());
         //clasifiers.add(new StatementByLiteral());
-        //clasifiers.add(new BlockSubstitution());
         //clasifiers.add(new SingleStatementSubstitution());
         //clasifiers.add(new DeleteSubstitution());
 
         //Strong classifiers
         clasifiers.add(new TagedStrong());
-
+        clasifiers.add(new InnocuousMethodCallAdd());
+        clasifiers.add(new InnocuousMethodCallReplace());
+        clasifiers.add(new InnocuousMethodCallDelete());
 
         //Medium classifiers
         clasifiers.add(new TagedMedium());
@@ -49,6 +48,7 @@ public class ClassifierFactory {
         clasifiers.add(new TagedWeak());
         clasifiers.add(new LocalVarDeclaration());
         clasifiers.add(new ExceptionByException());
+        clasifiers.add(new Fake());
 
         return clasifiers;
     }

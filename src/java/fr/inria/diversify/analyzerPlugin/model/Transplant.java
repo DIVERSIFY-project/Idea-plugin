@@ -12,6 +12,8 @@ import java.util.HashMap;
 */
 public class Transplant extends CodePosition {
 
+    private Boolean containsInnocuousCalls = null;
+
     private HashMap<String, Float> classificationMap;
 
     public String getTags() {
@@ -20,6 +22,18 @@ public class Transplant extends CodePosition {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    /**
+     * Indicates if there are innocuous calls in the transplant. Finding them is extremely expensive so store the data
+     * @return
+     */
+    public Boolean getContainsInnocuousCalls() {
+        return containsInnocuousCalls;
+    }
+
+    public void setContainsInnocuousCalls(Boolean containsInnocuousCalls) {
+        this.containsInnocuousCalls = containsInnocuousCalls;
     }
 
     public enum Visibility {show, hide, unclassified}

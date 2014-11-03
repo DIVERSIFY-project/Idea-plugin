@@ -3,6 +3,7 @@ package fr.inria.diversify.analyzerPlugin.clasifiers;
 import fr.inria.diversify.analyzerPlugin.model.Transplant;
 import fr.inria.diversify.transformation.ast.ASTAdd;
 import fr.inria.diversify.transformation.ast.ASTDelete;
+import fr.inria.diversify.transformation.ast.ASTReplace;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtElement;
 
@@ -19,15 +20,14 @@ public class InnocuousMethodCallDelete extends TransformClasifier {
 
     @Override
     protected boolean canClassify(Transplant transform) {
-        if ( transform.getTransformation() instanceof ASTDelete) {
-            CtElement e = ((ASTDelete)transform.getTransformation()).getTransplantationPoint().getCtCodeFragment();
-            List<CtElement> invocations = getElementsOfType(e, CtInvocation.class);
-            for ( CtElement inv : invocations ) {
-                if ( hasElementOfType(inv, CtInvocation.class) || getFieldAssignments(e).size() > 0 ) {
-                    return false;
-                }
+        if (transform.getTransformation() instanceof ASTDelete) {
+            CtElement e = ((ASTDelete) transform.getTransformation()).getTransplantationPoint().getCtCodeFragment();
+            if (transform.getContainsInnocuousCalls() == null) {
+                boolean b = containsInnocuousInvocation(e);
+                transform.setContainsInnocuousCalls(b);
+            } else {
+                return transform.getContainsInnocuousCalls();
             }
-            return true;
         }
         return false;
     }
@@ -44,7 +44,7 @@ public class InnocuousMethodCallDelete extends TransformClasifier {
 
     @Override
     public String getDescription() {
-        return "Method call added";
+        return "Innocuous method call deleted";
     }
 
 }
