@@ -1,15 +1,21 @@
 package fr.inria.diversify.analyzerPlugin.model;
 
+import fr.inria.diversify.codeFragment.CodeFragment;
+import fr.inria.diversify.diversification.InputConfiguration;
+import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.transformation.Transformation;
+import fr.inria.diversify.transformation.ast.ASTAdd;
+import fr.inria.diversify.transformation.ast.ASTDelete;
+import fr.inria.diversify.transformation.ast.ASTReplace;
 
 import java.util.HashMap;
+import java.util.function.Function;
 
 /**
- *
  * Representation of the Transplant containing necessary data for the plugin to work
- *
-* Created by marodrig on 15/09/2014.
-*/
+ * <p/>
+ * Created by marodrig on 15/09/2014.
+ */
 public class Transplant extends CodePosition {
 
     private Boolean containsInnocuousCalls = null;
@@ -26,6 +32,7 @@ public class Transplant extends CodePosition {
 
     /**
      * Indicates if there are innocuous calls in the transplant. Finding them is extremely expensive so store the data
+     *
      * @return
      */
     public Boolean getContainsInnocuousCalls() {
@@ -83,19 +90,21 @@ public class Transplant extends CodePosition {
 
     /**
      * Stores the last classification weight assigned to this transplant by the last filter operation
+     *
      * @param functionName Name of the function assignment weight
-     * @param weight Weight assigned by the function
+     * @param weight       Weight assigned by the function
      */
     public void setClassification(String functionName, float weight) {
-        if ( classificationMap == null ) {
+        if (classificationMap == null) {
             classificationMap = new HashMap<String, Float>();
         }
         classificationMap.put(functionName, weight);
     }
 
     /**
-     *  indicates in the classification function passed as parameters has already classified this transplant
-     * @param functionName   function to classify the transplant
+     * indicates in the classification function passed as parameters has already classified this transplant
+     *
+     * @param functionName function to classify the transplant
      * @return true if the function has already classified the transplant
      */
     public boolean isAlreadyClassified(String functionName) {
@@ -104,10 +113,11 @@ public class Transplant extends CodePosition {
 
     /**
      * Obtains the classification value assigned to this transplant by the function passed as parameters
-     * @param functionName  classification function  name
+     *
+     * @param functionName classification function  name
      */
     public float getClassification(String functionName) {
-        if ( classificationMap == null ) {
+        if (classificationMap == null) {
             classificationMap = new HashMap<String, Float>();
         }
         return classificationMap.containsKey(functionName) ? classificationMap.get(functionName) : 0;
@@ -149,6 +159,70 @@ public class Transplant extends CodePosition {
         this.type = type;
     }
 
+    /**
+     * Initializes the transformation belonging to this transplant representation
+     */
+    public void initTransformation(InputConfiguration inputConfiguration) {
+
+        //Don't do this again if we already have a transformation
+        if ( getTransformation() != null ) return;
+
+        Function<CodeFragment, String> source = new Function<CodeFragment, String>() {
+            @Override
+            public String apply(CodeFragment codeFragment) {
+                return codeFragment.equalString();
+            }
+        };
+
+        Function<CodeFragment, String> spoonType = new Function<CodeFragment, String>() {
+            @Override
+            public String apply(CodeFragment codeFragment) {
+                return codeFragment.getCodeFragmentType().getSimpleName();
+            }
+        };
+
+        InputProgram inputProgram = inputConfiguration.getInputProgram();
+        TransformationRepresentation parentTP = getTransplantationPoint();
+        CodeFragment pot = inputProgram.findCodeFragment(parentTP.getPosition(),
+                parentTP.getSource(), source);
+        if ( pot == null ) {
+            pot = inputProgram.findCodeFragment(parentTP.getPosition(),
+                    parentTP.getSpoonType(), spoonType);
+        }
+        if (pot == null) throw new RuntimeException("Unable to find pot");
+
+        CodeFragment transplant = null;
+        if ( !getType().equals("delete") ) {
+            transplant = inputProgram.findCodeFragment(getPosition(), getSource(), source);
+            if (transplant == null) {
+                transplant = inputProgram.findCodeFragment(parentTP.getPosition(),
+                        getSpoonType(), spoonType);
+            }
+            if (transplant == null) throw new RuntimeException("Unable to find transplant");
+        }
+
+        if (getType().equals("delete")) {
+            ASTDelete trans = new ASTDelete();
+            trans.setTransplantationPoint(pot);
+            trans.setInputConfiguration(inputConfiguration);
+            setTransformation(trans);
+        } else if (getType().contains("replace")) {
+            if (transplant == null) return;
+            ASTReplace trans = new ASTReplace();
+            trans.setTransplantationPoint(pot);
+            trans.setTransplant(transplant);
+            trans.setInputConfiguration(inputConfiguration);
+            setTransformation(trans);
+        } else if (getType().contains("add")) {
+            if (transplant == null) return;
+            ASTAdd trans = new ASTAdd();
+            trans.setTransplantationPoint(pot);
+            trans.setCodeFragmentToAdd(transplant);
+            trans.setInputConfiguration(inputConfiguration);
+            setTransformation(trans);
+        }
+    }
+
     public Transformation getTransformation() {
         return transformation;
     }
@@ -184,6 +258,7 @@ public class Transplant extends CodePosition {
 
     /**
      * Indicates if the transplant is applied
+     *
      * @return true if applied
      */
     public boolean isApplied() {

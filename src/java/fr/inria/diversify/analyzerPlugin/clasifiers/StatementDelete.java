@@ -7,7 +7,7 @@ import fr.inria.diversify.analyzerPlugin.model.Transplant;
  * <p/>
  * Created by marodrig on 13/10/2014.
  */
-public class DeleteSubstitution extends TransformClasifier {
+public class StatementDelete extends TransformClasifier {
 
     @Override
     public boolean isUserFilter() {
@@ -16,7 +16,13 @@ public class DeleteSubstitution extends TransformClasifier {
 
     @Override
     protected boolean canClassify(Transplant transform) {
-        return transform.getType().equals("delete");
+        MethodCallDelete method = new MethodCallDelete();
+        FieldAssignmentDelete field = new FieldAssignmentDelete();
+        ReturnDelete ret = new ReturnDelete();
+        BlockDelete block = new BlockDelete();
+
+        return transform.getType().contains("delete") && ((block.value(transform) +
+                method.value(transform) + field.value(transform) + ret.value(transform)) == 0);
     }
 
     @Override
@@ -26,7 +32,7 @@ public class DeleteSubstitution extends TransformClasifier {
 
     @Override
     public String getDescription() {
-        return "Delete transformations";
+        return "Other statements deleted";
     }
 
     @Override

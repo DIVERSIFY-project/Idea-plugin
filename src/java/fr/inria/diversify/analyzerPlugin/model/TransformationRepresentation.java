@@ -62,7 +62,7 @@ public class TransformationRepresentation extends CodePosition {
 
     private String position;
 
-    private String spoonTransformationType;
+    private String spoonType;
 
     private String variableMapping;
 
@@ -101,7 +101,7 @@ public class TransformationRepresentation extends CodePosition {
         JSONObject tp = object.getJSONObject("transplantationPoint");
         setSource(tp.getString("sourceCode"));
         setPosition(tp.getString("position"));
-        setSpoonTransformationType(tp.getString("type"));
+        setSpoonType(tp.getString("type"));
         setType(object.getString("name"));
 
         appendTransplant(object, tags);
@@ -248,12 +248,12 @@ public class TransformationRepresentation extends CodePosition {
         return result;
     }
 
-    public String getSpoonTransformationType() {
-        return spoonTransformationType;
+    public String getSpoonType() {
+        return spoonType;
     }
 
-    public void setSpoonTransformationType(String spoonTransformationType) {
-        this.spoonTransformationType = spoonTransformationType;
+    public void setSpoonType(String spoonType) {
+        this.spoonType = spoonType;
     }
 
     public String getVariableMapping() {

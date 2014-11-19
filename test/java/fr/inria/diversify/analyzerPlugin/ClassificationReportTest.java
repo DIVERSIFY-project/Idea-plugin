@@ -16,7 +16,7 @@ public class ClassificationReportTest {
 
     @Test
     public void testDoReport() throws IOException, JSONException {
-        String s = "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\single-sosies-pools\\NonRep-Indexed";
+        String s = "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\single-sosies-pools\\ISSTA";
         ClassificationReport report = new ClassificationReport();
         report.createReport(s);
         assertEquals(true, new File(s + "\\report.html").exists());

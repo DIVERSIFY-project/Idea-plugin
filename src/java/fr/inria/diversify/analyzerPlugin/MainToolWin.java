@@ -2,7 +2,6 @@ package fr.inria.diversify.analyzerPlugin;
 
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -16,15 +15,17 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.awt.RelativePoint;
+import com.intellij.ui.components.MultiColumnList;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
+import fr.inria.diversify.analyzerPlugin.actions.Complain;
+import fr.inria.diversify.analyzerPlugin.actions.PerformCurrentTransformation;
 import fr.inria.diversify.analyzerPlugin.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.actions.SeekCodeTransformation;
+import fr.inria.diversify.analyzerPlugin.actions.ShowTransformationProperties;
 import fr.inria.diversify.analyzerPlugin.io.PluginDataExport;
 import fr.inria.diversify.analyzerPlugin.io.PluginDataLoader;
 import fr.inria.diversify.analyzerPlugin.model.*;
@@ -37,16 +38,10 @@ import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.transformation.ast.ASTAdd;
 import fr.inria.diversify.transformation.ast.ASTDelete;
 import fr.inria.diversify.transformation.ast.ASTReplace;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.kevoree.log.Log;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -60,8 +55,6 @@ import java.util.List;
  * Created by marodrig on 26/08/2014.
  */
 public class MainToolWin implements ToolWindowFactory {
-
-    private static String TEMP_MOD = "_mod";
 
     private static String UNCLASSIFIED_TEXT = "Unclassified";
 
@@ -130,6 +123,18 @@ public class MainToolWin implements ToolWindowFactory {
     private CodePosition currentCodePosition = null;
 
     PopUpTransformations popUpTransformations;
+
+    public JTable getPropertyTable() {
+        return tblTransf;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public Component getPanelContent() {
+        return pnlContent;
+    }
 
     class PopUpTransformations extends JPopupMenu {
 
@@ -290,8 +295,7 @@ public class MainToolWin implements ToolWindowFactory {
             anItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
-                    seekCodePosition(data, false);
+                    seekCodePosition(false);
                 }
             });
             add(anItem);
@@ -377,6 +381,8 @@ public class MainToolWin implements ToolWindowFactory {
      */
     private void filter() {
 
+        int i = 0;
+
         try {
             String pomPath = project.getBasePath() + File.separator + "pom.xml";
             String srcDir = getSrcCodePath();
@@ -385,9 +391,11 @@ public class MainToolWin implements ToolWindowFactory {
             for (TransformationRepresentation p : reps) {
                 for (Transplant transplant : p.getTransplants()) {
                     try {
+                        i++;
                         getTransplantTransformation(transplant, pomPath, srcDir);
                     } catch (RuntimeException rex) {
                         //Skip this transplant
+                        Log.warn(i + ". There was a problem with " + transplant.toString() + ". Because " + rex.getMessage());
                         softComplain(rex.getMessage());
                         p.getTransplants().remove(transplant);
                         break;
@@ -435,15 +443,11 @@ public class MainToolWin implements ToolWindowFactory {
 
     /**
      * Complain softly by creating a balloon text instead of a message box
+     *
      * @param message
      */
     private void softComplain(String message) {
-        JBPopupFactory.getInstance()
-                .createHtmlTextBalloonBuilder("Warning: " + message, MessageType.WARNING, null)
-                .setFadeoutTime(7500)
-                .createBalloon()
-                .show(RelativePoint.getCenterOf(treeTransformations),
-                        Balloon.Position.atRight);
+        new Complain(this, message, null, true).execute();
     }
 
     /**
@@ -494,6 +498,9 @@ public class MainToolWin implements ToolWindowFactory {
     }
 
     public MainToolWin() {
+
+        Log.info("Hey, I'm loggin");
+
         getTreeTransformations().setRootVisible(false);
         getTreeTransformations().setModel(null);
         getTreeTests().setRootVisible(false);
@@ -541,8 +548,8 @@ public class MainToolWin implements ToolWindowFactory {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    CodePosition data = getDataOfSelectedTransformationItem(getTreeTests());
-                    seekCodePosition(data, true);
+                    //CodePosition data = getDataOfSelectedTransformationItem(getTreeTests());
+                    seekCodePosition(true);
                 }
             }
 
@@ -580,8 +587,8 @@ public class MainToolWin implements ToolWindowFactory {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    CodePosition data = getDataOfSelectedTransformationItem(getTreeTests());
-                    seekCodePosition(data, true);
+                    //CodePosition data = getDataOfSelectedTransformationItem(getTreeTests());
+                    seekCodePosition(true);
                 }
             }
         });
@@ -602,8 +609,8 @@ public class MainToolWin implements ToolWindowFactory {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
-                    seekCodePosition(data, false);
+                    //CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
+                    seekCodePosition(false);
                 }
             }
         });
@@ -613,12 +620,12 @@ public class MainToolWin implements ToolWindowFactory {
                 CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
                 if (data == null) return; //No selected node
                 if (data != currentCodePosition) {
-                    showProperties(data);
+                    showProperties();
                     showTests(data);
                     currentCodePosition = data;
                 }
                 if (e.getClickCount() == 2) {
-                    seekCodePosition(data, false);
+                    seekCodePosition(false);
                 }
             }
 
@@ -654,7 +661,7 @@ public class MainToolWin implements ToolWindowFactory {
             Transplant t = (Transplant) p;
             t.setTags(strong);
         }
-        showProperties(p);
+        showProperties();
     }
 
     private void doBtnSave() {
@@ -685,10 +692,11 @@ public class MainToolWin implements ToolWindowFactory {
         inputConfiguration.getProperty("CodeFragmentClass", "fr.inria.diversify.codeFragment.Statement");
         inputProgram = new InputProgram();
         inputProgram.setSourceCodeDir(srcDir);
+        inputConfiguration.setInputProgram(inputProgram);
         try {
             MavenDependencyResolver dr = new MavenDependencyResolver();
             dr.DependencyResolver(pomPath);
-            inputProgram.setFactory(new SpoonMetaFactory().buildNewFactory(srcDir, 5));
+            inputProgram.setFactory(new SpoonMetaFactory().buildNewFactory(srcDir, 7));
         } catch (Exception e) {
             inputProgram = null;
             complain("Unexpected error when applying: " + e.getMessage(), e);
@@ -696,10 +704,11 @@ public class MainToolWin implements ToolWindowFactory {
 
         //TODO: Add a progress bar
         try {
-            inputProgram.processCodeFragments(formatter.getSourceJSONArray());
+            //inputProgram.processCodeFragments(formatter.getSourceJSONArray());
+            inputProgram.processCodeFragments();
             if (inputProgram.getCodeFragments() == null && inputProgram.getCodeFragments().size() == 0)
                 complain("Unable to apply transformations", null);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             complain("Cannot process the array", e);
         }
     }
@@ -711,14 +720,14 @@ public class MainToolWin implements ToolWindowFactory {
      * @param source   Source of the fragment
      * @return The code fragment found. Raises an exception or show a error message box if the fragment was not found
      */
+    /*
     private CodeFragment getCodeFragmentFromInputProgram(String position, String source) {
-
         CodeFragment cf = inputProgram.getCodeFragment(position, source);
         if (cf == null) {
             throw new RuntimeException("Unable to find code fragment with position '" + position + "' and source '" + source + "'");
         }
         return cf;
-    }
+    }*/
 
     /**
      * Obtains the Transformation object from the transformation representation.
@@ -729,39 +738,12 @@ public class MainToolWin implements ToolWindowFactory {
      * @return A transformation
      */
     private Transformation getTransformation(Transplant t) {
-        TransformationRepresentation parentTP = t.getTransplantationPoint();
-        //All transformations has a TP so get it!
-        CodeFragment pot = getCodeFragmentFromInputProgram(parentTP.getPosition(), parentTP.getSource());
-        if (pot == null) return null;
-
-        if (t.getType().equals("delete")) {
-            ASTDelete trans = new ASTDelete();
-            trans.setTransplantationPoint(pot);
-            t.setTransformation(trans);
-            trans.setInputConfiguration(inputConfiguration);
-            return trans;
-        } else if (t.getType().contains("replace")) {
-            CodeFragment transplantCF = getCodeFragmentFromInputProgram(t.getPosition(), t.getSource());
-            if (transplantCF == null) return null;
-
-            ASTReplace trans = new ASTReplace();
-            trans.setTransplantationPoint(pot);
-            trans.setTransplant(transplantCF);
-            trans.setInputConfiguration(inputConfiguration);
-            return trans;
-        } else if (t.getType().contains("add")) {
-            CodeFragment transplantCF = getCodeFragmentFromInputProgram(t.getPosition(), t.getSource());
-            if (transplantCF == null) return null;
-
-            ASTAdd trans = new ASTAdd();
-            trans.setTransplantationPoint(pot);
-            trans.setCodeFragmentToAdd(transplantCF);
-            trans.setInputConfiguration(inputConfiguration);
-            return trans;
+        t.initTransformation(inputConfiguration);
+        Transformation result = t.getTransformation();
+        if (result == null) {
+            complain("Unknown type of transformation", null);
         }
-
-        complain("Unknown type of transformation", null);
-        return null;
+        return result;
     }
 
     /**
@@ -770,8 +752,8 @@ public class MainToolWin implements ToolWindowFactory {
      * @param transplant Transplant for which we want to obtain the Transformation
      * @return The Transformation file of the given Transplant
      */
-    private Transformation getTransplantTransformation(Transplant transplant,
-                                                       String pomPath, String srcDir) throws IOException {
+    public Transformation getTransplantTransformation(Transplant transplant,
+                                                      String pomPath, String srcDir) throws IOException {
         Transformation transf = transplant.getTransformation();
         if (transf == null) { //don't search twice
             if (inputProgram == null) initInputProgram(pomPath, srcDir); //Init input program if still null
@@ -788,30 +770,8 @@ public class MainToolWin implements ToolWindowFactory {
      * Performs the transplant on the code in the selected transformations
      */
     public void performCurrentSelectedTransformation(String pomPath, String srcDir) throws IOException {
-
-        CodePosition data = getDataOfSelectedTransformationItem(getTreeTransformations());
-        if (data != null && data instanceof Transplant) {
-            //The intelligible code of the casting cast of the "castation".
-            //Anyway,  we get here the parent node...
-            DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) ((DefaultMutableTreeNode)
-                    getTreeTransformations().getLastSelectedPathComponent()).getParent();
-
-            //And here the transplantation point of the current transplant
-            TransformationRepresentation tp = (TransformationRepresentation) parentNode.getUserObject();
-
-            //obtain transplant we want to apply
-            Transplant transplant = (Transplant) data;
-
-            getTransplantTransformation(transplant, pomPath, srcDir);
-
-            try {
-                //Applies or restores the transformation
-                tp.switchTransformation(transplant, srcDir, srcDir + TEMP_MOD);
-                seekCodePosition(tp, false);
-            } catch (Exception e) {
-                complain("Cannot apply!! Something went wrong + " + e.getMessage(), e);
-            }
-        }
+        PerformCurrentTransformation perform = new PerformCurrentTransformation(this, pomPath, srcDir);
+        perform.execute();
     }
 
 
@@ -832,113 +792,47 @@ public class MainToolWin implements ToolWindowFactory {
      * @param tree Tree for which we want to extract the CodePosition of the selected node
      * @return A CodePosition object contained in the node
      */
-    private CodePosition getDataOfSelectedTransformationItem(Tree tree) {
+    public CodePosition getDataOfSelectedTransformationItem(Tree tree) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                 tree.getLastSelectedPathComponent();
         return node == null ? null : (CodePosition) node.getUserObject();
     }
 
+    /**
+     * Returns the selected code position in the interface
+     *
+     * @return
+     */
+    public CodePosition getSelectedCodePosition() {
+        if (treeTests.hasFocus()) {
+            return getDataOfSelectedTransformationItem(treeTests);
+        } else if (treeTransformations.hasFocus()) {
+            return getDataOfSelectedTransformationItem(treeTransformations);
+        }
+        return null;
+    }
 
     /**
      * Show properties of the transformation represented by the CodePosition passed as parameter
-     *
-     * @param data CodePosition for which we want to know the properties
      */
-    private void showProperties(CodePosition data) {
-        //Show the properties in the table
-        if (data == null) return;
+    private void showProperties() {
+        ShowTransformationProperties showProperty = new ShowTransformationProperties(this);
+        showProperty.execute();
+    }
 
-        Object[] s = new Object[]{"Property", "Value"};
-        DefaultTableModel dtm = new DefaultTableModel(s, 0);
-        if (data instanceof TransformationRepresentation) {
-            TransformationRepresentation rep = (TransformationRepresentation) data;
-            dtm.addRow(new Object[]{"Hits", rep.getHits()});
-            dtm.addRow(new Object[]{"Test count", rep.getTests().size()});
-            dtm.addRow(new Object[]{"Assert count", rep.getAsserts().size()});
-            dtm.addRow(new Object[]{"Assert Hit total", rep.getTotalAssertionHits()});
-            dtm.addRow(new Object[]{"Spoon type", rep.getSpoonTransformationType()});
-            dtm.addRow(new Object[]{"Type", rep.getType()});
-            dtm.addRow(new Object[]{"Total transplants", rep.getTransplants().size()});
-        }
-        dtm.addRow(new Object[]{"Source", data.getSource()});
-        if (data instanceof Transplant) {
-            Transplant t = (Transplant) data;
-            dtm.addRow(new Object[]{"Spoon type", t.getSpoonType()});
-            dtm.addRow(new Object[]{"Type", t.getType()});
-            dtm.addRow(new Object[]{"Variable Map", t.getVariableMap()});
-            dtm.addRow(new Object[]{"Tags", t.getTags()});
-        }
-
-
-        tblTransf.setModel(dtm);
-
-        tblTransf.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        for (int column = 0; column < tblTransf.getColumnCount(); column++) {
-            TableColumn tableColumn = tblTransf.getColumnModel().getColumn(column);
-            int preferredWidth = tableColumn.getMinWidth();
-            int maxWidth = tableColumn.getMaxWidth();
-            for (int row = 0; row < tblTransf.getRowCount(); row++) {
-                TableCellRenderer cellRenderer = tblTransf.getCellRenderer(row, column);
-                Component c = tblTransf.prepareRenderer(cellRenderer, row, column);
-                int width = c.getPreferredSize().width + tblTransf.getIntercellSpacing().width;
-                preferredWidth = Math.max(preferredWidth, width);
-                //  We've exceeded the maximum width, no need to check other rows
-                if (preferredWidth >= maxWidth) {
-                    preferredWidth = maxWidth;
-                    break;
-                }
-            }
-            tableColumn.setPreferredWidth(preferredWidth);
-        }
-
-        dtm.addTableModelListener(new TableModelListener() {
-            public void tableChanged(TableModelEvent e) {
-                CodePosition p = getDataOfSelectedTransformationItem(getTreeTransformations());
-                if (p instanceof Transplant) {
-                    Transplant t = (Transplant) p;
-                    t.setTags((String) tblTransf.getValueAt(4, 1));
-                }
-            }
-        });
+    private void seekCodePosition(Boolean includeMethodName) {
+        seekCodePosition(getSelectedCodePosition(), includeMethodName);
     }
 
     /**
      * Seek the code position
      *
-     * @param data:             Code position to seek
      * @param includeMethodName Tells if the methodName is included
+     * @param cp                code position to navigate to
      */
-    private void seekCodePosition(CodePosition data, Boolean includeMethodName) {
-
-        if (data == null) return;
-
-        String[] p = data.getPosition().split(":");
-        String className = p[0];
-        if (includeMethodName) {
-            className = className.substring(0, className.lastIndexOf('.'));
-        }
-
-        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(className, scope);
-
-        if (psiClass != null) {
-            //FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
-            //FileEditor[] fe = fileEditorManager.openFile(vf, true, true);
-
-            //Open the file containing the transformation
-            VirtualFile vf = psiClass.getContainingFile().getVirtualFile();
-            vf.refresh(false, false);
-            //Jump there
-            int line = Integer.parseInt(p[1]);
-            line = line > 1 ? line - 1 : line;
-            new OpenFileDescriptor(project, vf, line, 0).navigateInEditor(project, false);
-        } else {
-            JOptionPane.showMessageDialog(pnlContent,
-                    "I was unable to find the class corresponding to the transformation :( ...\n" +
-                            "Do the transformation file belongs to this project?",
-                    "Ups...",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+    private void seekCodePosition(CodePosition cp, Boolean includeMethodName) {
+        SeekCodeTransformation seek = new SeekCodeTransformation(this, cp, includeMethodName);
+        seek.execute();
     }
 
     /**
@@ -973,12 +867,7 @@ public class MainToolWin implements ToolWindowFactory {
     private void complain(String error, Exception e) {
         if (isThrowErrors()) {
             throw new RuntimeException(error, e);
-        } else {
-            JOptionPane.showMessageDialog(null,
-                    error,
-                    "Ups...",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        } else new Complain(this, error, e, false).execute();
     }
 
     /**
@@ -1078,7 +967,7 @@ public class MainToolWin implements ToolWindowFactory {
             formatter.fromLogDir(resourcePath);
             //Update the table with data from the representation
             CodePosition cp = getDataOfSelectedTransformationItem(getTreeTransformations());
-            showProperties(cp);
+            showProperties();
             showTests(cp);
 
             String template = "Test. Declared: %d - Executed: %d | Asserts. Declared: %d - Executed : %d";

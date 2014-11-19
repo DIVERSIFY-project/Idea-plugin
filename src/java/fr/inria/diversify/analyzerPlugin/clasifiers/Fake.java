@@ -13,8 +13,10 @@ public class Fake extends TransformClasifier {
 
     @Override
     protected boolean canClassify(Transplant transform) {
-        if ( transform.getType().equals("delete") ) return false;
-        return transform.getSource().equals(transform.getTransplantationPoint().getSource());
+        if (transform.getType().contains("replace")) {
+            return transform.getSource().equals(transform.getTransplantationPoint().getSource());
+        }
+        return false;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class Fake extends TransformClasifier {
 
     @Override
     public String getDescription() {
-        return "Fake sosies (TP == Transplant)";
+        return "Fake replace (TP == Transplant)";
     }
 
     @Override

@@ -44,6 +44,11 @@ public class ClassifierFactory {
         clasifiers.add(new FieldAssignmentReplace());
         clasifiers.add(new FieldAssignmentDelete());
 
+        clasifiers.add(new StatementAdd());
+        clasifiers.add(new StatementReplace());
+        clasifiers.add(new StatementDelete());
+
+
         //Weak classifiers
         clasifiers.add(new TagedWeak());
         clasifiers.add(new LocalVarDeclaration());

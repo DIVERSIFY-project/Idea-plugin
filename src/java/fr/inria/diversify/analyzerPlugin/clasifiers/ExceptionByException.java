@@ -33,7 +33,7 @@ public class ExceptionByException extends TransformClasifier {
         CtElement ctTP = replace.getTransplantationPoint().getCtCodeFragment();
         CtElement ctT = replace.getTransplant().getCtCodeFragment();
         String spoonTP = transplant.getSpoonType();
-        String spoonT = transplant.getTransplantationPoint().getSpoonTransformationType();
+        String spoonT = transplant.getTransplantationPoint().getSpoonType();
 
         if ((ctTP instanceof CtThrow && ctT instanceof CtThrow) ||
                 (spoonT.contains("CtThrow") && spoonTP.contains("CtThrow"))) {
