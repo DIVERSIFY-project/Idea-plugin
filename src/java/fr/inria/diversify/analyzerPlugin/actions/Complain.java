@@ -18,7 +18,7 @@ public class Complain extends WinAction {
     private final boolean soft;
 
     public Complain(MainToolWin mainToolWin, String error, Exception e, boolean soft) {
-        setMainToolWin(mainToolWin);
+        super(mainToolWin);
         this.error = error;
         this.exception = e;
         this.soft = soft;

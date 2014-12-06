@@ -21,7 +21,7 @@ public class PerformCurrentTransformation extends WinAction {
     String srcDir;
 
     public PerformCurrentTransformation(MainToolWin mainToolWin, String pomPath, String srcDir) {
-        setMainToolWin(mainToolWin);
+        super(mainToolWin);
         this.pomPath = pomPath;
         this.srcDir = srcDir;
     }

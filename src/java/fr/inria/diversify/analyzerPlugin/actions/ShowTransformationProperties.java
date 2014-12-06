@@ -19,7 +19,7 @@ import java.awt.*;
 public class ShowTransformationProperties extends WinAction {
 
     public ShowTransformationProperties(MainToolWin toolWin) {
-        setMainToolWin(toolWin);
+        super(toolWin);
     }
 
     @Override
@@ -41,6 +41,8 @@ public class ShowTransformationProperties extends WinAction {
             dtm.addRow(new Object[]{"Spoon type", rep.getSpoonType()});
             dtm.addRow(new Object[]{"Type", rep.getType()});
             dtm.addRow(new Object[]{"Total transplants", rep.getTransplants().size()});
+            dtm.addRow(new Object[]{"Nb of Var Diff", rep.getVarDiff()});
+            dtm.addRow(new Object[]{"Nb of Call Diff", rep.getCallDiff()});
         }
         dtm.addRow(new Object[]{"Source", data.getSource()});
         if (data instanceof Transplant) {

@@ -43,6 +43,10 @@ public class Transplant extends CodePosition {
         this.containsInnocuousCalls = containsInnocuousCalls;
     }
 
+    public boolean isVisible() {
+        return visibility.equals(Visibility.show);
+    }
+
     public enum Visibility {show, hide, unclassified}
 
     /**

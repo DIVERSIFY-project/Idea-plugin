@@ -9,35 +9,23 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.SourceFolder;
 import com.intellij.openapi.ui.JBCheckboxMenuItem;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.ui.awt.RelativePoint;
-import com.intellij.ui.components.MultiColumnList;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
-import fr.inria.diversify.analyzerPlugin.actions.Complain;
-import fr.inria.diversify.analyzerPlugin.actions.PerformCurrentTransformation;
+import fr.inria.diversify.analyzerPlugin.actions.*;
 import fr.inria.diversify.analyzerPlugin.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
-import fr.inria.diversify.analyzerPlugin.actions.SeekCodeTransformation;
-import fr.inria.diversify.analyzerPlugin.actions.ShowTransformationProperties;
 import fr.inria.diversify.analyzerPlugin.io.PluginDataExport;
 import fr.inria.diversify.analyzerPlugin.io.PluginDataLoader;
 import fr.inria.diversify.analyzerPlugin.model.*;
 import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
-import fr.inria.diversify.codeFragment.CodeFragment;
 import fr.inria.diversify.diversification.InputConfiguration;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.factories.SpoonMetaFactory;
 import fr.inria.diversify.transformation.Transformation;
-import fr.inria.diversify.transformation.ast.ASTAdd;
-import fr.inria.diversify.transformation.ast.ASTDelete;
-import fr.inria.diversify.transformation.ast.ASTReplace;
 import org.json.JSONException;
 import org.kevoree.log.Log;
 
@@ -82,6 +70,10 @@ public class MainToolWin implements ToolWindowFactory {
 
     private List<TransformClasifier> classifiers;
 
+    private Collection<TransformationRepresentation> visibleRepresentations;
+
+    Comparator<TransformationRepresentation> currentComparator;
+
     private String transfJSONPath;
 
     private boolean showClassifIntersection = false;
@@ -114,6 +106,8 @@ public class MainToolWin implements ToolWindowFactory {
     private JButton btnMedium;
     private JButton btnStrong;
     private JButton btnWeak;
+    private JButton btnReports;
+    private JTextPane txtDiff;
     private Project project;
     private PluginDataLoader formatter;
 
@@ -135,6 +129,20 @@ public class MainToolWin implements ToolWindowFactory {
     public Component getPanelContent() {
         return pnlContent;
     }
+
+    public Collection<TransformationRepresentation> getVisibleRepresentations() {
+        if ( visibleRepresentations == null ) visibleRepresentations = new ArrayList<TransformationRepresentation>();
+        return visibleRepresentations;
+    }
+
+    public void setVisibleRepresentations(Collection<TransformationRepresentation> visibleRepresentations) {
+        this.visibleRepresentations = visibleRepresentations;
+    }
+
+    public JTextPane getTxtDiff() {
+        return txtDiff;
+    }
+
 
     class PopUpTransformations extends JPopupMenu {
 
@@ -218,7 +226,7 @@ public class MainToolWin implements ToolWindowFactory {
                     sortAndShowTransformations(new Comparator<TransformationRepresentation>() {
                         @Override
                         public int compare(TransformationRepresentation o1, TransformationRepresentation o2) {
-                            return (o1.getHits() - o2.getHits()) * -1;
+                            return (int)Math.signum(o1.getHits() - o2.getHits()) * -1;
                         }
                     });
 
@@ -266,10 +274,9 @@ public class MainToolWin implements ToolWindowFactory {
                     sortAndShowTransformations(new Comparator<TransformationRepresentation>() {
                         @Override
                         public int compare(TransformationRepresentation o1, TransformationRepresentation o2) {
-                            return (o1.getTotalAssertionHits() - o2.getTotalAssertionHits()) * -1;
+                            return (int)Math.signum((double)(o1.getTotalAssertionHits() - o2.getTotalAssertionHits())) * -1;
                         }
                     });
-
                 }
             });
 
@@ -285,7 +292,37 @@ public class MainToolWin implements ToolWindowFactory {
                             return (o1.getTransplants().size() - o2.getTransplants().size()) * -1;
                         }
                     });
+                }
+            });
 
+            anItem = new JMenuItem("Sort by Var diff");
+            //sortItems.add(anItem);
+            add(anItem);
+            anItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    sortAndShowTransformations(new Comparator<TransformationRepresentation>() {
+                        @Override
+                        public int compare(TransformationRepresentation o1, TransformationRepresentation o2) {
+                            return (o2.getVarDiff() - o1.getVarDiff());
+                        }
+                    });
+                }
+            });
+
+
+            anItem = new JMenuItem("Sort by Call diff");
+            //sortItems.add(anItem);
+            add(anItem);
+            anItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    sortAndShowTransformations(new Comparator<TransformationRepresentation>() {
+                        @Override
+                        public int compare(TransformationRepresentation o1, TransformationRepresentation o2) {
+                            return (o2.getCallDiff() - o1.getCallDiff());
+                        }
+                    });
                 }
             });
 
@@ -377,6 +414,14 @@ public class MainToolWin implements ToolWindowFactory {
     }
 
     /**
+     * Returns the representations obtained so far
+     * @return A Collection of transformation representations
+     */
+    public Collection<TransformationRepresentation> getRepresentations() {
+        return formatter.getRepresentations();
+    }
+
+    /**
      * Filter the code positions by classifications
      */
     private void filter() {
@@ -386,6 +431,9 @@ public class MainToolWin implements ToolWindowFactory {
         try {
             String pomPath = project.getBasePath() + File.separator + "pom.xml";
             String srcDir = getSrcCodePath();
+
+            if ( getVisibleRepresentations() == null ) setVisibleRepresentations(new ArrayList<TransformationRepresentation>());
+            else getVisibleRepresentations().clear();
 
             Collection<TransformationRepresentation> reps = formatter.getRepresentations();
             for (TransformationRepresentation p : reps) {
@@ -526,6 +574,7 @@ public class MainToolWin implements ToolWindowFactory {
             }
         });
 
+
         getBtnLoadTransf().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 doBtnLoadTransfClick();
@@ -540,6 +589,16 @@ public class MainToolWin implements ToolWindowFactory {
             @Override
             public void actionPerformed(ActionEvent e) {
                 doBtnSave();
+            }
+        });
+        final MainToolWin me = this;
+        btnReports.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new DepthsReportsAction(me).execute();
+                new DepthsHistogramAction(me).execute();
+                new DepthsDistributionAction(me, 20).execute();
+                new HitsAndAssertsReportAction(me, 20).execute();
             }
         });
 
@@ -614,6 +673,7 @@ public class MainToolWin implements ToolWindowFactory {
                 }
             }
         });
+
         getTreeTransformations().addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -622,6 +682,7 @@ public class MainToolWin implements ToolWindowFactory {
                 if (data != currentCodePosition) {
                     showProperties();
                     showTests(data);
+                    new ShowDifferencesAction(me, data).execute();
                     currentCodePosition = data;
                 }
                 if (e.getClickCount() == 2) {
@@ -781,9 +842,14 @@ public class MainToolWin implements ToolWindowFactory {
      * @param comparator Comparator to sort
      */
     private void sortAndShowTransformations(Comparator<TransformationRepresentation> comparator) {
-        ArrayList<TransformationRepresentation> ta = new ArrayList<TransformationRepresentation>(formatter.getRepresentations());
+        currentComparator = comparator;
+        filter();
+    }
+
+    private Collection<TransformationRepresentation> sortTransformations(Comparator<TransformationRepresentation> comparator, Collection<TransformationRepresentation> representations) {
+        ArrayList<TransformationRepresentation> ta = new ArrayList<TransformationRepresentation>(representations);
         Collections.sort(ta, comparator);
-        showTransformations(ta);
+        return ta;
     }
 
     /**
@@ -881,10 +947,10 @@ public class MainToolWin implements ToolWindowFactory {
             DefaultMutableTreeNode root = new DefaultMutableTreeNode("Test");
             DefaultTreeModel model = new DefaultTreeModel(root);
             TransformationRepresentation tp = (TransformationRepresentation) cp;
-            for (TestRepresentation t : tp.getTests()) {
+            for (PertTestCoverageData t : tp.getTests().values()) {
                 DefaultMutableTreeNode rep = new DefaultMutableTreeNode(t);
                 model.insertNodeInto(rep, root, root.getChildCount());
-                for (AssertRepresentation a : t.getAsserts()) {
+                for (AssertRepresentation a : t.getTest().getAsserts()) {
                     model.insertNodeInto(new DefaultMutableTreeNode(a), rep, rep.getChildCount());
                 }
             }
@@ -901,9 +967,15 @@ public class MainToolWin implements ToolWindowFactory {
         int tpCount = 0;
         int tCount = 0;
 
+        if ( currentComparator != null ) {
+            setVisibleRepresentations(sortTransformations(currentComparator, representations));
+        } else {
+            getVisibleRepresentations().addAll(representations);
+        }
+
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Transformations");
         DefaultTreeModel model = new DefaultTreeModel(root);
-        for (TransformationRepresentation tp : representations) {
+        for (TransformationRepresentation tp : getVisibleRepresentations()) {
 
             DefaultMutableTreeNode rep = new DefaultMutableTreeNode(tp);
             for (Transplant t : tp.getTransplants()) {
@@ -921,6 +993,8 @@ public class MainToolWin implements ToolWindowFactory {
         lblTPCount.setText("Transformations: " + tCount + " | " + "Pots: " +
                 tpCount + " | Pot hits: " + formatter.getPotsTotalHitCount());
     }
+
+
 
     /**
      * Loads the transformatios from file and shows it in the Transformation Tree
@@ -1010,7 +1084,6 @@ public class MainToolWin implements ToolWindowFactory {
     private void doBtnLoadInstrumentationResultClick() {
         loadInstrumentationResultsToTree();
     }
-
 
     /**
      * Handler for the btnLoadTransf

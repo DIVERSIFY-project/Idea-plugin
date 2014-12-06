@@ -1,9 +1,11 @@
 package fr.inria.diversify.analyzerPlugin.model;
 
 import fr.inria.diversify.transformation.ast.ASTTransformation;
+import fr.inria.diversify.util.Log;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,21 +21,25 @@ public class TransformationRepresentation extends CodePosition {
     private int totalTestHits;
 
     private int appliedTransformIndex = -1;
+    private int varDiff;
+    private int callDiff;
 
-    public int getTotalAssertionHits() {
+    public long getTotalAssertionHits() {
         return totalAssertionHits;
     }
 
-    public void setTotalAssertionHits(int totalAssertionHits) {
+    public void setTotalAssertionHits(long totalAssertionHits) {
         this.totalAssertionHits = totalAssertionHits;
     }
 
     /**
      * Total hits of this TP
      */
-    private int hits = 0;
+    private long hits = 0;
 
-    private int totalAssertionHits = 0;
+    private long totalAssertionHits = 0;
+
+    private String diffReport;
 
     /**
      * Increments the hits of the TP
@@ -44,19 +50,19 @@ public class TransformationRepresentation extends CodePosition {
         hits = hits + i;
     }
 
-    public Set<TestRepresentation> getTests() {
+    public HashMap<TestRepresentation, PertTestCoverageData> getTests() {
         return tests;
     }
 
-    public void setTest(Set<TestRepresentation> test) {
+    public void setTest(HashMap<TestRepresentation, PertTestCoverageData> test) {
         this.tests = test;
     }
 
-    public int getHits() {
+    public long getHits() {
         return hits;
     }
 
-    public void setHits(int hits) {
+    public void setHits(long hits) {
         this.hits = hits;
     }
 
@@ -68,7 +74,9 @@ public class TransformationRepresentation extends CodePosition {
 
     private List<Transplant> transplants;
 
-    private Set<TestRepresentation> tests;
+    //Data associated to the test
+    private HashMap<TestRepresentation, PertTestCoverageData> tests;
+
 
     private String type;
 
@@ -89,7 +97,7 @@ public class TransformationRepresentation extends CodePosition {
      */
     public TransformationRepresentation() {
         transplants = new ArrayList<Transplant>();
-        tests = new HashSet<TestRepresentation>();
+        tests = new HashMap<TestRepresentation, PertTestCoverageData>();
         assertCount = new HashMap<AssertRepresentation, Integer>();
         testCount = new HashMap<TestRepresentation, Integer>();
     }
@@ -103,6 +111,7 @@ public class TransformationRepresentation extends CodePosition {
         setPosition(tp.getString("position"));
         setSpoonType(tp.getString("type"));
         setType(object.getString("name"));
+
 
         appendTransplant(object, tags);
 
@@ -139,6 +148,41 @@ public class TransformationRepresentation extends CodePosition {
         setTotalAssertionHits(getTotalAssertionHits() + hits);
     }
 
+    /**
+     * Sets the first depth found for this transformation
+     */
+    public void setDepth(TestRepresentation test, int depth, int stackDepth) {
+        PertTestCoverageData perTest;
+        if (!this.tests.containsKey(test)) {
+            perTest = new PertTestCoverageData(test);
+            tests.put(test, perTest);
+        } else {
+            perTest = this.tests.get(test);
+        }
+        perTest.setDepth(depth);
+        perTest.setStackDepth(stackDepth);
+    }
+
+    /**
+     * Sets all the depth values found for this transformation
+     */
+    public void updateDepth(TestRepresentation test, int minDepth, int meanDepth, int maxDepth,
+                            int stackMin, int stackMean, int stackMax) {
+        PertTestCoverageData perTest;
+        if (!this.tests.containsKey(test)) {
+            perTest = new PertTestCoverageData(test);
+            tests.put(test, perTest);
+        } else {
+            perTest = this.tests.get(test);
+        }
+        perTest.setMinDepth(minDepth);
+        perTest.setMeanDepth(meanDepth);
+        perTest.setMaxDepth(maxDepth);
+        perTest.setStackMinDepth(stackMin);
+        perTest.setStackMeanDepth(stackMean);
+        perTest.setStackMaxDepth(stackMax);
+    }
+
 
     /**
      * Add an test hits to the TP
@@ -147,9 +191,18 @@ public class TransformationRepresentation extends CodePosition {
      * @param hits number of hits
      */
     public void addTestHit(TestRepresentation test, int hits) {
-        if (!this.tests.contains(test)) {
-            tests.add(test);
+        PertTestCoverageData perTest;
+        if (!this.tests.containsKey(test)) {
+            perTest = new PertTestCoverageData(test);
+            tests.put(test, perTest);
+        } else {
+            perTest = this.tests.get(test);
         }
+
+        //Register the hits in this test
+        perTest.addHits(hits);
+
+        //Register the total hit count
         addHits(testCount, test, hits);
         setTotalTestHits(getTotalTestHits() + hits);
     }
@@ -401,4 +454,38 @@ public class TransformationRepresentation extends CodePosition {
         return transplants.get(appliedTransformIndex);
     }
 
+    public boolean hasVisibleTransplants() {
+        for (Transplant t : transplants) {
+            if (t.isVisible()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getDiffReport() {
+        return diffReport;
+    }
+
+    public void setDiffReport(String diffReport) {
+        StringBuilder sb = new StringBuilder(diffReport);
+        this.diffReport = sb.toString();
+        Log.info("Diff at " + this.getPosition() +  " set to " + diffReport);
+    }
+
+    public int getVarDiff() {
+        return varDiff;
+    }
+
+    public int getCallDiff() {
+        return callDiff;
+    }
+
+    public void setVarDiff(int varDiff) {
+        this.varDiff = varDiff;
+    }
+
+    public void setCallDiff(int callDiff) {
+        this.callDiff = callDiff;
+    }
 }

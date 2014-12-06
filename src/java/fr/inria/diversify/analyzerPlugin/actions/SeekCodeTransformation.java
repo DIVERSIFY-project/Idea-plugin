@@ -20,7 +20,7 @@ public class SeekCodeTransformation extends WinAction {
     private CodePosition codePosition;
 
     public SeekCodeTransformation(MainToolWin toolWin, CodePosition cp, boolean includeMethodName) {
-        setMainToolWin(toolWin);
+        super(toolWin);
         this.includeMethodName = includeMethodName;
         this.codePosition = cp;
     }

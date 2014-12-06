@@ -4,6 +4,7 @@ import fr.inria.diversify.analyzerPlugin.model.AssertRepresentation;
 import fr.inria.diversify.analyzerPlugin.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
 import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,16 +23,74 @@ import java.util.*;
 public class PluginDataLoader {
 
     private class EntryLog implements Comparable {
-        long millis;
 
+        public String fileName;
+
+        public long millis;
+
+        //Position or position id
         public String position;
 
+        //executions of the loggin element
         int executions = 1;
+
+        //Type of the logging element
         public String type;
+
+        public int line = 0;
+
+        //Min depth of the entry (Transplant points only)
+        public int minDepth;
+
+        public int maxDepth;
+
+        public int meanDepth;
+
+        public int stackMinDepth = -1;
+
+        public int stackMaxDepth = -1;
+
+        public int stackMeanDepth = -1;
+
+        public EntryLog(String file, int line) {
+            this.line = line;
+            fileName = file;
+        }
+
 
         @Override
         public int compareTo(Object o) {
             return (int) ((((EntryLog) o).millis - millis) * -1);
+        }
+
+        public void fromLineData(String[] lineData) {
+            type = lineData[0];
+            position = lineData[1];
+            if (lineData[0].equals(NEW_TEST) || lineData[0].equals("SA")) {
+                millis = Long.parseLong(lineData[2]);
+
+            } else if (lineData[0].equals("TPC") || lineData[0].equals("ASC")) {
+                executions = Integer.parseInt(lineData[2]);
+                millis = Long.parseLong(lineData[3]);
+                if ( lineData[0].equals("TPC") ) {
+                    minDepth = Integer.parseInt(lineData[4]);
+                    meanDepth = Integer.parseInt(lineData[5]);
+                    maxDepth = Integer.parseInt(lineData[6]);
+                    if ( lineData.length > 6 ) {
+                        stackMinDepth = Integer.parseInt(lineData[7]);
+                        stackMeanDepth = Integer.parseInt(lineData[8]);
+                        stackMaxDepth = Integer.parseInt(lineData[9]);
+                    }
+                }
+            } else if (lineData[0].equals("TE")) {
+                millis = Long.parseLong(lineData[1]);
+            } else if ( lineData[0].equals(TP) ) {
+                millis = Long.parseLong(lineData[2]);
+                maxDepth = Integer.parseInt(lineData[3]);
+                if ( lineData.length > 4 ) {
+                    stackMaxDepth = Integer.parseInt(lineData[4]);
+                }
+            }            
         }
     }
 
@@ -144,13 +203,18 @@ public class PluginDataLoader {
 
         JSONObject jsonObject = readJSONFromFile(new BufferedReader(new FileReader(path)));
         JSONArray transformations = jsonObject.getJSONArray("transformations");
+
+        JSONObject differences = null;
+        if ( jsonObject.has("differences") ) {
+            differences = jsonObject.getJSONObject("differences");
+        }
+
         JSONObject tags;
         if ( jsonObject.has("tags") ) {
             tags = jsonObject.getJSONObject("tags");
         } else {
             tags = new JSONObject();
         }
-
 
         errors.clear();
 
@@ -176,7 +240,17 @@ public class PluginDataLoader {
                 } else {
                     TransformationRepresentation tr = new TransformationRepresentation();
                     tr.fromJSONObject(jt, tags);
+                    if (jt.has("nbVar")) tr.setVarDiff(jt.getInt("nbVar"));
+                    if (jt.has("nbCall")) tr.setCallDiff(jt.getInt("nbCall"));
                     representations.put(pos, tr);
+                    if ( differences != null ) {
+                        if (differences.has(pos)) {
+                            String s = differences.getString(pos);
+                            tr.setDiffReport(s);
+                        } else if (jt.has("diffString")) {
+                            tr.setDiffReport(differences.getString(jt.getString("diffString")));
+                        }
+                    }
                     indexedRepresentations.put(index, tr);
 
                     //Count transformations and pots
@@ -237,8 +311,10 @@ public class PluginDataLoader {
                 iteration++;
                 String[] ln = line.split(" ");
                 idMap.put(Integer.parseInt(ln[0]), ln[1]);
-                if (ln[2].equals(TESTS)) testDeclaredCount++;
-                if (ln[2].equals(ASSERTS)) assertionsDeclared++;
+                if ( ln.length > 2 ) {
+                    if (ln[2].equals(TESTS)) testDeclaredCount++;
+                    if (ln[2].equals(ASSERTS)) assertionsDeclared++;
+                }
                 //if ( ln[2].equals(POT) ) totalPotsIdFound++;
             }
         } catch (Exception e) {
@@ -274,25 +350,14 @@ public class PluginDataLoader {
                             lineData = l.split(";");
                         }
 
-                        EntryLog e = new EntryLog();
-                        e.type = lineData[0];
-                        e.position = lineData[1];
-                        if (lineData[0].equals(NEW_TEST) || lineData[0].equals(TP) || lineData[0].equals("SA")) {
-                            e.millis = Long.parseLong(lineData[2]);
-                        } else if (lineData[0].equals("TPC") || lineData[0].equals("ASC")) {
-                            e.executions = Integer.parseInt(lineData[2]);
-                            e.millis = Long.parseLong(lineData[3]);
-                        } else if (lineData[0].equals("TE")) {
-                            e.millis = Long.parseLong(lineData[1]);
-                        } else {
-                            //Ignore ill formed strings
-                            continue;
-                        }
+                        EntryLog e = new EntryLog(f.getName(), iteration);
+                        e.fromLineData(lineData);
                         entries.add(e);
                     }
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
-                    //errors.add(new LoadingException(iteration, fileName, e));
+                    //throw new RuntimeException(e);
+                    errors.add(new LoadingException(iteration, fileName, e));
+
                 }
             }
         }
@@ -343,6 +408,7 @@ public class PluginDataLoader {
                         if (test != null) {
                             //Counts the test hit
                             r.addTestHit(test, 1);
+                            r.setDepth(test, el.maxDepth, el.stackMaxDepth);
                         }
                     } else if (el.type.equals("SA")) {
                         assertionsExecutedCount++;
@@ -368,11 +434,13 @@ public class PluginDataLoader {
                         int k = el.executions;
                         totalPotsHitsCount += k;
                         r.incHits(k);
+                        r.updateDepth(currentTest,
+                                el.minDepth, el.meanDepth, el.maxDepth,
+                                el.stackMinDepth, el.stackMeanDepth, el.stackMaxDepth);
                     } else if (el.type.equals("ASC")) {
                         String pos = idMap.get(Integer.parseInt(el.position));
                         AssertRepresentation ar = assertsThisTest.get(pos);
                         int hits = el.executions;
-
                         assertionsExecutedCount += hits;
 
                         //Count asserts covering at least one TP
@@ -382,17 +450,17 @@ public class PluginDataLoader {
 
                         for (TransformationRepresentation t : tcpThisTest) {
                             //Don't add asserts hits to TP that don't have them
-                            if (t.getAssertHits(ar) > 0) {
-                                t.addAssertHit(ar, hits - 1);
-                            }
+                            if (t.getAssertHits(ar) > 0) { t.addAssertHit(ar, hits - 1); }
                         }
-                    } else if (el.type.equals("TE")) {
-                        currentTest.setEndTime(el.millis);
-                    }
+                    } else if (el.type.equals("TE")) { currentTest.setEndTime(el.millis); }
                 }
             } catch (Exception e) {
                 errors.add(e);
             }
+        }
+
+        for (Exception e : errors) {
+            Log.warn(e.getMessage());
         }
 
         //testDeclaredCount

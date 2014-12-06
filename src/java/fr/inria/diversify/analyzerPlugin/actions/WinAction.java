@@ -10,6 +10,11 @@ public abstract class WinAction {
 
     private MainToolWin mainToolWin;
 
+
+    public WinAction(MainToolWin mainToolWin) {
+        this.mainToolWin = mainToolWin;
+    }
+
     /**
      * Window to control.
      *
@@ -22,6 +27,7 @@ public abstract class WinAction {
     protected void setMainToolWin(MainToolWin mainToolWin) {
         this.mainToolWin = mainToolWin;
     }
+
 
     /**
      *
