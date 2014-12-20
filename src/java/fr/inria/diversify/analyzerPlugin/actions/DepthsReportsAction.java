@@ -24,9 +24,10 @@ public class DepthsReportsAction extends WinAction {
         Collection<TransformationRepresentation> reps = getMainToolWin().getVisibleRepresentations();
         for ( TransformationRepresentation r : reps ) {
             if ( r.hasVisibleTransplants() ) {
-                b.append(r.getPosition()).append(System.lineSeparator());//Write position
+                //b.append(r.getPosition()).append(System.lineSeparator());//Write position
                 for (PertTestCoverageData p : r.getTests().values()) {
                     //write values per test
+                    b.append(r.getPosition()).append(",");
                     b.append(p.getTest().toString()).append(",");
                     b.append(p.getMinDepth()).append(",").
                             append(p.getMeanDepth()).append(",").
@@ -38,7 +39,7 @@ public class DepthsReportsAction extends WinAction {
 
                     b.append(System.lineSeparator());
                 }
-                b.append(System.lineSeparator());
+                //b.append(System.lineSeparator());
             }
         }
         Writer writer = null;

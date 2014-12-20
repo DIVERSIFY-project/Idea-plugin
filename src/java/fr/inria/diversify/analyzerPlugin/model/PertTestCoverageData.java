@@ -90,4 +90,23 @@ public class PertTestCoverageData {
     public int getHits() {
         return hits;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(test.toString());
+        if ( minDepth == meanDepth &&  maxDepth == minDepth) {
+            sb.append("D: ").append(meanDepth);
+        } else {
+            sb.append("D: [").append(minDepth).append(", ").append(meanDepth).append(", ").append(maxDepth).append("]");
+        }
+        if ( stackMeanDepth != null ) {
+            if ( stackMinDepth == stackMeanDepth &&  stackMaxDepth == stackMinDepth) {
+                sb.append(" - SD: ").append(stackMeanDepth);
+            } else {
+                sb.append(" SD: [").append(stackMinDepth).append(", ").
+                        append(stackMeanDepth).append(", ").append(stackMaxDepth).append("]");
+            }
+        }
+        return sb.toString();
+    }
 }

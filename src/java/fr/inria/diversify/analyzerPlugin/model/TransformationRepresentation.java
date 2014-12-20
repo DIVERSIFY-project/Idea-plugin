@@ -107,7 +107,8 @@ public class TransformationRepresentation extends CodePosition {
      */
     public void fromJSONObject(JSONObject object, JSONObject tags) throws JSONException {
         JSONObject tp = object.getJSONObject("transplantationPoint");
-        setSource(tp.getString("sourceCode"));
+        if ( tp.has("sourceCode") ) setSource(tp.getString("sourceCode"));
+        else setSource(tp.getString("sourcecode"));
         setPosition(tp.getString("position"));
         setSpoonType(tp.getString("type"));
         setType(object.getString("name"));
@@ -259,7 +260,8 @@ public class TransformationRepresentation extends CodePosition {
             JSONObject tp = jt.getJSONObject("transplant");
             Transplant t = new Transplant();
             t.setPosition(tp.getString("position"));
-            t.setSource(tp.getString("sourceCode"));
+            if ( tp.has("sourceCode") )  t.setSource(tp.getString("sourceCode"));
+            else t.setSource(tp.getString("sourcecode"));
             t.setSpoonType(tp.getString("type"));
             t.setIndex(jt.getInt("tindex"));
             t.setType(jt.getString("name"));
