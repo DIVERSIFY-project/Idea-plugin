@@ -4,6 +4,9 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModuleRootManager;
@@ -15,6 +18,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.xdebugger.XDebuggerManager;
 import fr.inria.diversify.analyzerPlugin.actions.*;
 import fr.inria.diversify.analyzerPlugin.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
@@ -26,6 +30,9 @@ import fr.inria.diversify.diversification.InputConfiguration;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.factories.SpoonMetaFactory;
 import fr.inria.diversify.transformation.Transformation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.debugger.Breakpoint;
+import org.jetbrains.debugger.BreakpointManager;
 import org.json.JSONException;
 import org.kevoree.log.Log;
 
@@ -99,7 +106,6 @@ public class MainToolWin implements ToolWindowFactory {
     private JButton btnLoadInstu;
     private Tree treeTransformations;
     private Tree treeTests;
-    //private JButton btnSave;
     private JLabel lblTPCount;
     private JLabel lblTestCount;
     private JButton btnSave;
@@ -108,15 +114,21 @@ public class MainToolWin implements ToolWindowFactory {
     private JButton btnWeak;
     private JButton btnReports;
     private JTextPane txtDiff;
+    private JButton btnSearchNext;
+    private JButton btnSearchPrev;
+    private JTextField txtSearchPosition;
     private Project project;
     private PluginDataLoader formatter;
-
     private InputProgram inputProgram;
 
     //Current code position shown in the Test tree
     private CodePosition currentCodePosition = null;
 
     PopUpTransformations popUpTransformations;
+
+    public JTextField getTextSearch() {
+        return txtSearchPosition;
+    }
 
     public JTable getPropertyTable() {
         return tblTransf;
@@ -131,7 +143,7 @@ public class MainToolWin implements ToolWindowFactory {
     }
 
     public Collection<TransformationRepresentation> getVisibleRepresentations() {
-        if ( visibleRepresentations == null ) visibleRepresentations = new ArrayList<TransformationRepresentation>();
+        if (visibleRepresentations == null) visibleRepresentations = new ArrayList<TransformationRepresentation>();
         return visibleRepresentations;
     }
 
@@ -226,7 +238,7 @@ public class MainToolWin implements ToolWindowFactory {
                     sortAndShowTransformations(new Comparator<TransformationRepresentation>() {
                         @Override
                         public int compare(TransformationRepresentation o1, TransformationRepresentation o2) {
-                            return (int)Math.signum(o1.getHits() - o2.getHits()) * -1;
+                            return (int) Math.signum(o1.getHits() - o2.getHits()) * -1;
                         }
                     });
 
@@ -274,7 +286,7 @@ public class MainToolWin implements ToolWindowFactory {
                     sortAndShowTransformations(new Comparator<TransformationRepresentation>() {
                         @Override
                         public int compare(TransformationRepresentation o1, TransformationRepresentation o2) {
-                            return (int)Math.signum((double)(o1.getTotalAssertionHits() - o2.getTotalAssertionHits())) * -1;
+                            return (int) Math.signum((double) (o1.getTotalAssertionHits() - o2.getTotalAssertionHits())) * -1;
                         }
                     });
                 }
@@ -415,6 +427,7 @@ public class MainToolWin implements ToolWindowFactory {
 
     /**
      * Returns the representations obtained so far
+     *
      * @return A Collection of transformation representations
      */
     public Collection<TransformationRepresentation> getRepresentations() {
@@ -426,67 +439,87 @@ public class MainToolWin implements ToolWindowFactory {
      */
     private void filter() {
 
-        int i = 0;
+        final Collection<TransformationRepresentation> reps = formatter.getRepresentations();
 
-        try {
-            String pomPath = project.getBasePath() + File.separator + "pom.xml";
-            String srcDir = getSrcCodePath();
+        ProgressManager.getInstance().run(new Task.Backgroundable(project,
+                "Sorting and filtering (This will be done only once)...") {
 
-            if ( getVisibleRepresentations() == null ) setVisibleRepresentations(new ArrayList<TransformationRepresentation>());
-            else getVisibleRepresentations().clear();
+            public void onSuccess() {
+                super.onSuccess();
+                showTransformations(reps);
+            }
 
-            Collection<TransformationRepresentation> reps = formatter.getRepresentations();
-            for (TransformationRepresentation p : reps) {
-                for (Transplant transplant : p.getTransplants()) {
-                    try {
-                        i++;
-                        getTransplantTransformation(transplant, pomPath, srcDir);
-                    } catch (RuntimeException rex) {
-                        //Skip this transplant
-                        Log.warn(i + ". There was a problem with " + transplant.toString() + ". Because " + rex.getMessage());
-                        softComplain(rex.getMessage());
-                        p.getTransplants().remove(transplant);
-                        break;
-                    }
-                    transplant.setVisibility(Transplant.Visibility.unclassified);
-                    for (TransformClasifier c : getClassifiers()) {
-                        float v;
-                        //the only way classification functions modify the score assigned
-                        //is by user input, therefore only user filters must be reclassified each time
-                        if (!c.isUserFilter() && transplant.isAlreadyClassified(c.getDescription())) {
-                            //retrieve classification already assignment to the transformation
-                            v = transplant.getClassification(c.getDescription());
-                        } else {
-                            // evaluates the transformation
-                            v = c.value(transplant);
-                            transplant.setClassification(c.getDescription(), v);
-                        }
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                int i = 0;
 
-                        //sets the visibility on/off depending on the show intersection option
-                        if (v != 0) {
-                            if (getFilterVisible().get(c.getDescription())) {
-                                transplant.setVisibility(Transplant.Visibility.show);
-                                if (showClassifIntersection) break;
-                            } else {
-                                transplant.setVisibility(Transplant.Visibility.hide);
-                                if (!showClassifIntersection) break;
+                try {
+                    String pomPath = project.getBasePath() + File.separator + "pom.xml";
+                    String srcDir = getSrcCodePath();
+
+                    if (getVisibleRepresentations() == null)
+                        setVisibleRepresentations(new ArrayList<TransformationRepresentation>());
+                    else getVisibleRepresentations().clear();
+
+                    int progress = 1;
+                    for (TransformationRepresentation p : reps) {
+
+                        if ( progressIndicator.isCanceled() ) return;
+                        progressIndicator.setFraction((double) progress / (double) reps.size());
+                        progress++;
+
+                        for (Transplant transplant : p.getTransplants()) {
+                            try {
+                                i++;
+                                getTransplantTransformation(transplant, pomPath, srcDir);
+                            } catch (RuntimeException rex) {
+                                //Skip this transplant
+                                Log.warn(i + ". There was a problem with " + transplant.toString() + ". Because " + rex.getMessage());
+                                softComplain(rex.getMessage());
+                                p.getTransplants().remove(transplant);
+                                break;
+                            }
+                            transplant.setVisibility(Transplant.Visibility.unclassified);
+                            for (TransformClasifier c : getClassifiers()) {
+                                float v;
+                                //the only way classification functions modify the score assigned
+                                //is by user input, therefore only user filters must be reclassified each time
+                                if (!c.isUserFilter() && transplant.isAlreadyClassified(c.getDescription())) {
+                                    //retrieve classification already assignment to the transformation
+                                    v = transplant.getClassification(c.getDescription());
+                                } else {
+                                    // evaluates the transformation
+                                    v = c.value(transplant);
+                                    transplant.setClassification(c.getDescription(), v);
+                                }
+
+                                //sets the visibility on/off depending on the show intersection option
+                                if (v != 0) {
+                                    if (getFilterVisible().get(c.getDescription())) {
+                                        transplant.setVisibility(Transplant.Visibility.show);
+                                        if (showClassifIntersection) break;
+                                    } else {
+                                        transplant.setVisibility(Transplant.Visibility.hide);
+                                        if (!showClassifIntersection) break;
+                                    }
+                                }
+                            }
+                            //If no classification functions and was able to classify the transplant
+                            //then the transplant become  unclassified and its visibility is assignment depending
+                            //on a special case of classification function
+                            if (transplant.getVisibility() == Transplant.Visibility.unclassified) {
+                                Transplant.Visibility vis = getFilterVisible().get(UNCLASSIFIED_TEXT) ?
+                                        Transplant.Visibility.show : Transplant.Visibility.hide;
+                                transplant.setVisibility(vis);
                             }
                         }
                     }
-                    //If no classification functions and was able to classify the transplant
-                    //then the transplant become  unclassified and its visibility is assignment depending
-                    //on a special case of classification function
-                    if (transplant.getVisibility() == Transplant.Visibility.unclassified) {
-                        Transplant.Visibility vis = getFilterVisible().get(UNCLASSIFIED_TEXT) ?
-                                Transplant.Visibility.show : Transplant.Visibility.hide;
-                        transplant.setVisibility(vis);
-                    }
+
+                } catch (IOException e) {
+                    complain("Cannot perform weighting", e);
                 }
             }
-            showTransformations(reps);
-        } catch (IOException e) {
-            complain("Cannot perform weighting", e);
-        }
+        });
+
     }
 
     /**
@@ -599,6 +632,19 @@ public class MainToolWin implements ToolWindowFactory {
                 new DepthsHistogramAction(me).execute();
                 new DepthsDistributionAction(me, 20).execute();
                 new HitsAndAssertsReportAction(me, 20).execute();
+            }
+        });
+
+        btnSearchNext.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SearchPosition(me, 1).execute();
+            }
+        });
+        btnSearchPrev.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SearchPosition(me, -1).execute();
             }
         });
 
@@ -967,7 +1013,7 @@ public class MainToolWin implements ToolWindowFactory {
         int tpCount = 0;
         int tCount = 0;
 
-        if ( currentComparator != null ) {
+        if (currentComparator != null) {
             setVisibleRepresentations(sortTransformations(currentComparator, representations));
         } else {
             getVisibleRepresentations().addAll(representations);
@@ -995,29 +1041,39 @@ public class MainToolWin implements ToolWindowFactory {
     }
 
 
-
     /**
      * Loads the transformatios from file and shows it in the Transformation Tree
      *
      * @param resourcePath Path where the transformation file lies
      */
-    public void loadTransformations(String resourcePath) {
-        transfJSONPath = resourcePath;
-        formatter = new PluginDataLoader();
-        try {
-            //Disable load instru button
-            btnLoadInstu.setEnabled(false);
-            showTransformations(formatter.fromJSON(resourcePath));
-            initInputProgram(project.getBasePath() + File.separator + "pom.xml", getSrcCodePath());
-            //Disable load instru button
-            btnLoadInstu.setEnabled(true);
-        } catch (IOException e) {
-            complain("I was unable to open or read from the file. Perhaps is opened already by another application?", e);
-        } catch (JSONException e) {
-            complain("I was unable to load any transplantation points :(... A wrong JSON file format perhaps?", e);
-        }
+    public void loadTransformations(final String resourcePath) {
+        Task.Modal m = new Task.Modal(project, "Loading Transformations, patience...", false) {
+            public void onSuccess() {
+                super.onSuccess();
+                try {
+                    showTransformations(formatter.fromJSON(resourcePath));
+                } catch (IOException e) {
+                    complain("I was unable to open or read from the file. Perhaps is opened already by another application?", e);
+                } catch (JSONException e) {
+                    complain("I was unable to load any transplantation points :(... A wrong JSON file format perhaps?", e);
+                }
+            }
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                transfJSONPath = resourcePath;
+                formatter = new PluginDataLoader();
+                try {
+                    //Disable load instru button
+                    btnLoadInstu.setEnabled(false);
+                    initInputProgram(project.getBasePath() + File.separator + "pom.xml", getSrcCodePath());
+                    //Disable load instru button
+                    btnLoadInstu.setEnabled(true);
+                } catch (IOException e) {
+                    complain("I was unable to open or read from the file. Perhaps is opened already by another application?", e);
+                }
+            }
+        };
 
-
+        ProgressManager.getInstance().run(m);
     }
 
     /**
@@ -1035,27 +1091,31 @@ public class MainToolWin implements ToolWindowFactory {
      *
      * @param resourcePath Source where the instrumentation lies
      */
-    public void loadInstrumentation(String resourcePath) {
+    public void loadInstrumentation(final String resourcePath) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(project,
+                "Loading Instrumentation") {
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                int i = 0;
+                try {
+                    formatter.fromLogDir(resourcePath);
+                    //Update the table with data from the representation
+                    CodePosition cp = getDataOfSelectedTransformationItem(getTreeTransformations());
+                    showProperties();
+                    showTests(cp);
 
-        try {
-            formatter.fromLogDir(resourcePath);
-            //Update the table with data from the representation
-            CodePosition cp = getDataOfSelectedTransformationItem(getTreeTransformations());
-            showProperties();
-            showTests(cp);
+                    String template = "Test. Declared: %d - Executed: %d | Asserts. Declared: %d - Executed : %d";
+                    lblTestCount.setText(String.format(template,
+                            formatter.getTestDeclaredCount(), formatter.getTestExecutedCount(),
+                            formatter.getAssertionsDeclared(), formatter.getAssertsDeclaredCoveringATP()));
 
-            String template = "Test. Declared: %d - Executed: %d | Asserts. Declared: %d - Executed : %d";
-            lblTestCount.setText(String.format(template,
-                    formatter.getTestDeclaredCount(), formatter.getTestExecutedCount(),
-                    formatter.getAssertionsDeclared(), formatter.getAssertsDeclaredCoveringATP()));
+                    lblTPCount.setText("Transformations: " + formatter.getTotalTransformations() + " | " + "Pots: " +
+                            formatter.getTotalPots() + " | Pot hits: " + formatter.getPotsTotalHitCount());
 
-            lblTPCount.setText("Transformations: " + formatter.getTotalTransformations() + " | " + "Pots: " +
-                    formatter.getTotalPots() + " | Pot hits: " + formatter.getPotsTotalHitCount());
-
-        } catch (LoadingException e) {
-            complain("I was unable to open or read from the file. Perhaps is opened already by another application?", e);
-        }
-
+                } catch (LoadingException e) {
+                    complain("I was unable to open or read from the file. Perhaps is opened already by another application?", e);
+                }
+            }
+        });
     }
 
 

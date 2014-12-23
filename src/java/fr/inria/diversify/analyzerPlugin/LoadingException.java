@@ -32,7 +32,7 @@ public class LoadingException extends Exception {
     }
 
     public String getMessage() {
-        return "In file:" + fileName + ", At line:" + lineNumber + ", got" + super.getMessage();
+        return "In file:" + fileName + ", At iteration:" + lineNumber + ", got" + super.getMessage();
     }
 }
 

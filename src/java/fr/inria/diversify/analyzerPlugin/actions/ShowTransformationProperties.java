@@ -51,6 +51,7 @@ public class ShowTransformationProperties extends WinAction {
             dtm.addRow(new Object[]{"Type", t.getType()});
             dtm.addRow(new Object[]{"Variable Map", t.getVariableMap()});
             dtm.addRow(new Object[]{"Tags", t.getTags()});
+            dtm.addRow(new Object[]{"Index", t.getIndex()});
         }
 
         tblTransf.setModel(dtm);

@@ -22,7 +22,16 @@ import java.util.*;
  */
 public class PluginDataLoader {
 
+    static private String TP = "S";
+    static private String NEW_TEST = "TB";
+    static private String END_TEST = "TE";
+    static private String ASSERT = "SA";
+    static private String ASSERT_COUNT = "ASC";
+    static private String TP_COUNT = "TPC";
+
     private class EntryLog implements Comparable {
+
+        HashMap<Integer, String> idMap;
 
         public String fileName;
 
@@ -37,7 +46,8 @@ public class PluginDataLoader {
         //Type of the logging element
         public String type;
 
-        public int line = 0;
+        //Number of the line in the text file where this entry was located
+        public int iteration = 0;
 
         //Min depth of the entry (Transplant points only)
         public int minDepth;
@@ -46,57 +56,51 @@ public class PluginDataLoader {
 
         public int meanDepth;
 
-        public int stackMinDepth = -1;
-
-        public int stackMaxDepth = -1;
-
-        public int stackMeanDepth = -1;
-
-        public EntryLog(String file, int line) {
-            this.line = line;
+        public EntryLog(String file, int line, HashMap<Integer, String> idMap) {
+            this.iteration = line;
             fileName = file;
+            this.idMap = idMap;
         }
 
 
         @Override
         public int compareTo(Object o) {
-            return (int) ((((EntryLog) o).millis - millis) * -1);
+            EntryLog e = (EntryLog) o;
+            int result = (int) (millis - e.millis);
+            return result == 0 ? iteration - e.iteration : result;
+        }
+
+        @Override
+        public String toString() {
+            return type + "," + position + "," + millis;
         }
 
         public void fromLineData(String[] lineData) {
             type = lineData[0];
-            position = lineData[1];
-            if (lineData[0].equals(NEW_TEST) || lineData[0].equals("SA")) {
+            if (type.equals(END_TEST)) {
+                millis = Long.parseLong(lineData[1]);
+                return;
+            }
+            String p = idMap.get(Integer.parseInt(lineData[1]));
+            position = p.substring(p.indexOf(">") + 1);
+            if (type.equals(NEW_TEST) || type.equals(ASSERT)) {
                 millis = Long.parseLong(lineData[2]);
 
-            } else if (lineData[0].equals("TPC") || lineData[0].equals("ASC")) {
-                executions = Integer.parseInt(lineData[2]);
-                millis = Long.parseLong(lineData[3]);
-                if ( lineData[0].equals("TPC") ) {
+            } else if (type.equals(TP_COUNT) || type.equals(ASSERT_COUNT)) {
+                millis = Long.parseLong(lineData[2]);
+                executions = Integer.parseInt(lineData[3]);
+                if (type.equals(TP_COUNT)) {
                     minDepth = Integer.parseInt(lineData[4]);
                     meanDepth = Integer.parseInt(lineData[5]);
                     maxDepth = Integer.parseInt(lineData[6]);
-                    if ( lineData.length > 6 ) {
-                        stackMinDepth = Integer.parseInt(lineData[7]);
-                        stackMeanDepth = Integer.parseInt(lineData[8]);
-                        stackMaxDepth = Integer.parseInt(lineData[9]);
-                    }
                 }
-            } else if (lineData[0].equals("TE")) {
-                millis = Long.parseLong(lineData[1]);
-            } else if ( lineData[0].equals(TP) ) {
+            } else if (type.equals(TP)) {
                 millis = Long.parseLong(lineData[2]);
-                maxDepth = Integer.parseInt(lineData[3]);
-                if ( lineData.length > 4 ) {
-                    stackMaxDepth = Integer.parseInt(lineData[4]);
-                }
-            }            
+                maxDepth = meanDepth = minDepth = Integer.parseInt(lineData[3]);
+            }
         }
     }
 
-    static private String TP = "S";
-
-    static private String NEW_TEST = "NewTest";
 
     private ArrayList<Exception> errors;
 
@@ -104,10 +108,6 @@ public class PluginDataLoader {
 
     HashMap<String, TransformationRepresentation> representations;
 
-    //The index belongs to the Transformation, we order the transformations by TP so there must be a place to index
-    //wich TP belongs to an indexed transformation. Ugly, but I don't think of a better solution without a full
-    //refactoring of the code
-    HashMap<Integer, TransformationRepresentation> indexedRepresentations;
 
     private JSONArray sourceJSONArray;
 
@@ -205,12 +205,12 @@ public class PluginDataLoader {
         JSONArray transformations = jsonObject.getJSONArray("transformations");
 
         JSONObject differences = null;
-        if ( jsonObject.has("differences") ) {
+        if (jsonObject.has("differences")) {
             differences = jsonObject.getJSONObject("differences");
         }
 
         JSONObject tags;
-        if ( jsonObject.has("tags") ) {
+        if (jsonObject.has("tags")) {
             tags = jsonObject.getJSONObject("tags");
         } else {
             tags = new JSONObject();
@@ -220,9 +220,6 @@ public class PluginDataLoader {
 
         //Transformations points indexed by position
         representations = new HashMap<String, TransformationRepresentation>();
-
-        //Transformation points indexed by Transformation index
-        indexedRepresentations = new HashMap<Integer, TransformationRepresentation>();
 
         totalTransformations = 0;
         totalPots = 0;
@@ -235,7 +232,6 @@ public class PluginDataLoader {
 
                 if (representations.containsKey(pos)) {
                     representations.get(pos).appendTransplant(jt, tags);
-                    indexedRepresentations.put(index, representations.get(pos));
                     totalTransformations++;
                 } else {
                     TransformationRepresentation tr = new TransformationRepresentation();
@@ -243,7 +239,7 @@ public class PluginDataLoader {
                     if (jt.has("nbVar")) tr.setVarDiff(jt.getInt("nbVar"));
                     if (jt.has("nbCall")) tr.setCallDiff(jt.getInt("nbCall"));
                     representations.put(pos, tr);
-                    if ( differences != null ) {
+                    if (differences != null) {
                         if (differences.has(pos)) {
                             String s = differences.getString(pos);
                             tr.setDiffReport(s);
@@ -251,8 +247,6 @@ public class PluginDataLoader {
                             tr.setDiffReport(differences.getString(jt.getString("diffString")));
                         }
                     }
-                    indexedRepresentations.put(index, tr);
-
                     //Count transformations and pots
                     totalPots++;
                     totalTransformations++;
@@ -273,9 +267,11 @@ public class PluginDataLoader {
      */
     public Collection<TransformationRepresentation> fromLogDir(String logDir) throws LoadingException {
 
+        /*
         final String TESTS = "TEST";
         final String ASSERTS = "ASSERT";
         final String POT = "POT";
+        */
 
         testDeclaredCount = 0;
         testDeclaredCoveringATPCount = 0;
@@ -298,24 +294,27 @@ public class PluginDataLoader {
 
         //To collect information regarding the errors
         int iteration = 0;
-        String fileName = "";
+
 
         HashMap<Integer, String> idMap = new HashMap<Integer, String>();
 
         //Read the id file
+        String fileName = "augmentedMetrics.id";
         try {
-            fileName = "id";
-            BufferedReader reader = new BufferedReader(new FileReader(logDir + File.separator + "id"));
+            BufferedReader reader = new BufferedReader(new FileReader(logDir + File.separator + fileName));
             String line;
             while ((line = reader.readLine()) != null) {
                 iteration++;
                 String[] ln = line.split(" ");
                 idMap.put(Integer.parseInt(ln[0]), ln[1]);
+                //TODO: obtain this in static analysis store in properties file
+                //TODO: now they go:
+                /*
                 if ( ln.length > 2 ) {
                     if (ln[2].equals(TESTS)) testDeclaredCount++;
                     if (ln[2].equals(ASSERTS)) assertionsDeclared++;
                 }
-                //if ( ln[2].equals(POT) ) totalPotsIdFound++;
+                if ( ln[2].equals(POT) ) totalPotsIdFound++;*/
             }
         } catch (Exception e) {
             throw new LoadingException(iteration, fileName, e);
@@ -337,22 +336,14 @@ public class PluginDataLoader {
                     BufferedReader logReader = new BufferedReader(new FileReader(f));
                     String l;
                     while ((l = logReader.readLine()) != null) {
-
-                        //We try to modify the current log as little as possible...
-                        //Jump over all known non important lines
-                        if (l.equals("$$$")) continue;
-
                         iteration++;
                         String[] lineData;
-                        if (l.endsWith("$$$")) {
-                            lineData = l.substring(0, l.length() - 3).split(";");
-                        } else {
-                            lineData = l.split(";");
+                        lineData = l.split(";");
+                        if (lineData.length > 0) {
+                            EntryLog e = new EntryLog(f.getName(), iteration, idMap);
+                            e.fromLineData(lineData);
+                            entries.add(e);
                         }
-
-                        EntryLog e = new EntryLog(f.getName(), iteration);
-                        e.fromLineData(lineData);
-                        entries.add(e);
                     }
                 } catch (Exception e) {
                     //throw new RuntimeException(e);
@@ -365,58 +356,51 @@ public class PluginDataLoader {
         //Sort them by registration moment
         Collections.sort(entries);
         TestRepresentation currentTest = null;
+        iteration = 0;
+
+        //Move entries to elements
         for (EntryLog el : entries) {
+            iteration++;
             try {
                 if (el.type.equals(NEW_TEST)) {
                     currentTest = new TestRepresentation();
                     currentTest.setPosition(el.position);
                     currentTest.setRegisterTime(el.millis);
-
                     testExecutedCount++; //Count total test executions
                     if (tcpThisTest.size() > 0) {
                         testExecutedCoveringATPCount++;
-                        if (!coveringTests.contains(currentTest.toString())) {
-                            //Count declared test covering at least a TP
-                            coveringTests.add(currentTest.toString());
-                        }
+                        //Count declared test covering at least a TP
+                        if (!coveringTests.contains(currentTest.toString())) coveringTests.add(currentTest.toString());
+                        //Count total assertions declared covering a test
                         for (String ar : assertsThisTest.keySet()) {
-                            //Count total assertions declared covering a test
-                            if (!coveringAsserts.contains(ar.toString())) {
-                                coveringAsserts.add(ar.toString());
-                            }
+                            if (!coveringAsserts.contains(ar.toString())) coveringAsserts.add(ar.toString());
                         }
                     }
 
-                    if (!declaredTest.contains(currentTest)) {
-                        declaredTest.add(currentTest);
-                    }
-
+                    if (!declaredTest.contains(currentTest)) declaredTest.add(currentTest);
                     tcpThisTest.clear();
                     assertsThisTest.clear();
                 } else {
+                    if (currentTest == null) continue; //Ignore elements outside a test
                     if (el.type.equals(TP)) {
                         TestRepresentation test = currentTest;
                         //Obtain the TP by its position
-                        Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
-                        TransformationRepresentation r = indexedRepresentations.get(index);
+                        //Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
+                        TransformationRepresentation r = representations.get(el.position);
                         r.incHits(1);
                         totalPotsHitsCount++;
-                        if (!tcpThisTest.contains(r)) {
-                            tcpThisTest.add(r);
-                        }
+                        if (!tcpThisTest.contains(r)) tcpThisTest.add(r);
 
                         if (test != null) {
                             //Counts the test hit
                             r.addTestHit(test, 1);
-                            r.setDepth(test, el.maxDepth, el.stackMaxDepth);
+                            //r.setDepth(test, el.maxDepth, el.stackMaxDepth);
+                            r.setDepth(test, el.maxDepth, -1);
                         }
-                    } else if (el.type.equals("SA")) {
+                    } else if (el.type.equals(ASSERT)) {
                         assertionsExecutedCount++;
-
-                        String pos = idMap.get(Integer.parseInt(el.position));
-
-                        AssertRepresentation ar = new AssertRepresentation(pos);
-                        assertsThisTest.put(pos, ar);
+                        AssertRepresentation ar = new AssertRepresentation(el.position);
+                        assertsThisTest.put(el.position, ar);
                         currentTest.getAsserts().add(ar);
                         //Include this assert in the asserts of all TP in the log
                         for (TransformationRepresentation t : tcpThisTest) {
@@ -428,18 +412,15 @@ public class PluginDataLoader {
                             assertionsExecutedCoveringCount++;
                         }
 
-                    } else if (el.type.equals("TPC")) {
-                        Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
-                        TransformationRepresentation r = indexedRepresentations.get(index);
+                    } else if (el.type.equals(TP_COUNT)) {
+                        //Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
+                        TransformationRepresentation r = representations.get(el.position);
                         int k = el.executions;
                         totalPotsHitsCount += k;
                         r.incHits(k);
-                        r.updateDepth(currentTest,
-                                el.minDepth, el.meanDepth, el.maxDepth,
-                                el.stackMinDepth, el.stackMeanDepth, el.stackMaxDepth);
-                    } else if (el.type.equals("ASC")) {
-                        String pos = idMap.get(Integer.parseInt(el.position));
-                        AssertRepresentation ar = assertsThisTest.get(pos);
+                        r.updateDepth(currentTest, el.minDepth, el.meanDepth, el.maxDepth, -1, -1, -1);
+                    } else if (el.type.equals(ASSERT_COUNT)) {
+                        AssertRepresentation ar = assertsThisTest.get(el.position);
                         int hits = el.executions;
                         assertionsExecutedCount += hits;
 
@@ -450,9 +431,13 @@ public class PluginDataLoader {
 
                         for (TransformationRepresentation t : tcpThisTest) {
                             //Don't add asserts hits to TP that don't have them
-                            if (t.getAssertHits(ar) > 0) { t.addAssertHit(ar, hits - 1); }
+                            if (t.getAssertHits(ar) > 0) {
+                                t.addAssertHit(ar, hits - 1);
+                            }
                         }
-                    } else if (el.type.equals("TE")) { currentTest.setEndTime(el.millis); }
+                    } else if (el.type.equals(END_TEST)) {
+                        currentTest.setEndTime(el.millis);
+                    }
                 }
             } catch (Exception e) {
                 errors.add(e);
@@ -475,14 +460,6 @@ public class PluginDataLoader {
         //assertionsExecutedCoveringCount
 
         return representations.values();
-    }
-
-    private TestRepresentation findTest(String[] lineData) {
-        return null;
-    }
-
-    private void registerSimpleAssertion() {
-
     }
 
     /**
