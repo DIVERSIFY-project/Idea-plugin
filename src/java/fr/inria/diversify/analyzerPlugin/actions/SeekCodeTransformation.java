@@ -1,5 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.actions;
 
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -52,6 +53,7 @@ public class SeekCodeTransformation extends WinAction {
             int line = Integer.parseInt(p[1]);
             line = line > 1 ? line - 1 : line;
             new OpenFileDescriptor(project, vf, line, 0).navigateInEditor(project, false);
+
         } else {
             JOptionPane.showMessageDialog(getMainToolWin().getPanelContent(),
                     "I was unable to find the class corresponding to the transformation :( ...\n" +

@@ -350,6 +350,7 @@ public class MainToolWin implements ToolWindowFactory {
             add(anItem);
             gotoThisPosition = anItem;
 
+            //Apply transplant
             anItem = new JMenuItem();
             anItem.addActionListener(new ActionListener() {
                 @Override
@@ -365,6 +366,14 @@ public class MainToolWin implements ToolWindowFactory {
             applyItem = anItem;
             add(anItem);
 
+            anItem = new JMenuItem("Toggle breakpoints in 0 hits");
+            anItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    setBreakpoints();
+                }
+            });
+            add(anItem);
 
             addSeparator();
             JMenu subMenu = new JMenu("Show");
@@ -414,6 +423,13 @@ public class MainToolWin implements ToolWindowFactory {
             item.addActionListener(new ChangeAllVisibilityListener(subMenu, false));
             subMenu.add(item);
         }
+    }
+
+    /**
+     * Sets breakpoints in all zero hits TP
+     */
+    private void setBreakpoints() {
+        new SetBreakPointsActions(this).execute();
     }
 
     /**

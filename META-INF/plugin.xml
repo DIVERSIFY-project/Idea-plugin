@@ -1,20 +1,16 @@
 <idea-plugin version="2">
-  <id>com.yourcompany.unique.plugin.id</id>
-  <name>Plugin display name here</name>
+  <id>fr.inria.diversify.testEye</id>
+  <name>TestEye transformation analysis</name>
   <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+  <vendor email="marcelino.rodriguez-cancio@irisa.fr" url="http://diverse.irisa.fr/">Diverse Team IRISA</vendor>
 
   <description><![CDATA[
-
-      The sosie analyzer is a productivity tool to easily navigate
-      through all transformations created by the sosie generator.<br>
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+      TestEye is a productivity tool to easily navigate
+      through all transformations in specific places in the code.<br>
     ]]></description>
 
   <change-notes><![CDATA[
       26/08/2014. Creation of the plugin
-      <em>most HTML tags may be used</em>
     ]]>
   </change-notes>
 
@@ -29,7 +25,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-      <toolWindow id="Sosie analyzer panel" anchor="right" factoryClass="fr.inria.diversify.analyzerPlugin.MainToolWin">
+      <toolWindow id="TestEye" anchor="right" factoryClass="fr.inria.diversify.analyzerPlugin.MainToolWin">
       </toolWindow>
   </extensions>
 
