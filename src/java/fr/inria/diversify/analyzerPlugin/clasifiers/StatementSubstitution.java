@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.visitor.filter.TypeFilter;
@@ -15,7 +15,7 @@ public abstract class StatementSubstitution extends TransformClasifier {
     protected static TypeFilter blockFilter = new TypeFilter(CtMethod.class);
 
     @Override
-    protected boolean canClassify(Transplant transplant) {
+    protected boolean canClassify(TransplantInfo transplant) {
         //The sosie transformation is inside the Transplant UI representation
         return (transplant.getTransformation() instanceof ASTReplace);
     }

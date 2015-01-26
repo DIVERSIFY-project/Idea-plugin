@@ -10,7 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Sosies-generator-1.0-SNAPSHOT-jar-with-dependencies" level="project" />
+    <orderEntry type="library" name="core-1.0-SNAPSHOT-jar-with-dependencies" level="project" />
+    <orderEntry type="library" name="core-1.0-SNAPSHOT-tests" level="project" />
   </component>
 </module>
-

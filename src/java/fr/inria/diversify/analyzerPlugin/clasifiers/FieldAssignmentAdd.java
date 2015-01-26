@@ -1,13 +1,8 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.transformation.ast.ASTAdd;
-import spoon.reflect.code.CtAssignment;
-import spoon.reflect.code.CtFieldAccess;
-import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtElement;
-
-import java.util.List;
 
 /**
  * Created by marodrig on 24/10/2014.
@@ -19,7 +14,7 @@ public class FieldAssignmentAdd extends TransformClasifier {
     }
 
     @Override
-    protected boolean canClassify(Transplant transform) {
+    protected boolean canClassify(TransplantInfo transform) {
         if ( transform.getTransformation() instanceof ASTAdd ) {
             CtElement e = ((ASTAdd)transform.getTransformation()).getTransplant().getCtCodeFragment();
             return getFieldAssignments(e).size() > 0;
@@ -28,7 +23,7 @@ public class FieldAssignmentAdd extends TransformClasifier {
     }
 
     @Override
-    protected int calculateValue(Transplant transform) {
+    protected int calculateValue(TransplantInfo transform) {
         return getWeight();
     }
 

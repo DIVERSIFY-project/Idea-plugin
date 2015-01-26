@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import spoon.reflect.code.CtLocalVariable;
 import spoon.reflect.code.CtNewClass;
@@ -19,7 +19,7 @@ public class SingleStatementSubstitution extends StatementSubstitution {
     }
 
     @Override
-    protected int calculateValue(Transplant transplant) {
+    protected int calculateValue(TransplantInfo transplant) {
         ASTReplace replace = (ASTReplace) transplant.getTransformation();
 
         CtElement cf = replace.getTransplant().getCtCodeFragment();

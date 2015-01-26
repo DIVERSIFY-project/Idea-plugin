@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 
 /**
  * Gives a little high weight to all delete transformations
@@ -15,7 +15,7 @@ public class StatementAdd extends TransformClasifier {
     }
 
     @Override
-    protected boolean canClassify(Transplant transform) {
+    protected boolean canClassify(TransplantInfo transform) {
         MethodCallAdd method = new MethodCallAdd();
         FieldAssignmentAdd field = new FieldAssignmentAdd();
         ReturnAdd ret = new ReturnAdd();
@@ -26,7 +26,7 @@ public class StatementAdd extends TransformClasifier {
     }
 
     @Override
-    protected int calculateValue(Transplant transform) {
+    protected int calculateValue(TransplantInfo transform) {
         return getWeight();
     }
 

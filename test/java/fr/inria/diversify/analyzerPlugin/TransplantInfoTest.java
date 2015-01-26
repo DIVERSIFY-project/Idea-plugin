@@ -5,7 +5,7 @@ import org.junit.Test;
 /**
  * Created by marodrig on 08/10/2014.
  */
-public class TransplantTest {
+public class TransplantInfoTest {
 
     @Test
     public void testToJson() {

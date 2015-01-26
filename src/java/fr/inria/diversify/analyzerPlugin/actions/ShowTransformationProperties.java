@@ -2,8 +2,8 @@ package fr.inria.diversify.analyzerPlugin.actions;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -32,8 +32,8 @@ public class ShowTransformationProperties extends WinAction {
 
         Object[] s = new Object[]{"Property", "Value"};
         DefaultTableModel dtm = new DefaultTableModel(s, 0);
-        if (data instanceof TransformationRepresentation) {
-            TransformationRepresentation rep = (TransformationRepresentation) data;
+        if (data instanceof TransformationInfo) {
+            TransformationInfo rep = (TransformationInfo) data;
             dtm.addRow(new Object[]{"Hits", rep.getHits()});
             dtm.addRow(new Object[]{"Test count", rep.getTests().size()});
             dtm.addRow(new Object[]{"Assert count", rep.getAsserts().size()});
@@ -45,8 +45,8 @@ public class ShowTransformationProperties extends WinAction {
             dtm.addRow(new Object[]{"Nb of Call Diff", rep.getCallDiff()});
         }
         dtm.addRow(new Object[]{"Source", data.getSource()});
-        if (data instanceof Transplant) {
-            Transplant t = (Transplant) data;
+        if (data instanceof TransplantInfo) {
+            TransplantInfo t = (TransplantInfo) data;
             dtm.addRow(new Object[]{"Spoon type", t.getSpoonType()});
             dtm.addRow(new Object[]{"Type", t.getType()});
             dtm.addRow(new Object[]{"Variable Map", t.getVariableMap()});
@@ -77,8 +77,8 @@ public class ShowTransformationProperties extends WinAction {
         dtm.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 CodePosition p = getDataOfTransformationTree();
-                if (p instanceof Transplant) {
-                    Transplant t = (Transplant) p;
+                if (p instanceof TransplantInfo) {
+                    TransplantInfo t = (TransplantInfo) p;
                     JTable table = (JTable)e.getSource();
                     t.setTags((String) table.getValueAt(4, 1));
                 }

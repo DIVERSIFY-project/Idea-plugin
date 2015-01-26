@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.transformation.ast.ASTTransformation;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtElement;
@@ -77,7 +77,7 @@ public class AssignNotUsedLocally extends TransformClasifier {
     }
 
     @Override
-    protected boolean canClassify(Transplant transform) {
+    protected boolean canClassify(TransplantInfo transform) {
         if (transform.getTransformation() instanceof ASTTransformation) {
             ASTTransformation t = (ASTTransformation) transform.getTransformation();
             CtElement e = t.getTransplantationPoint().getCtCodeFragment();
@@ -90,7 +90,7 @@ public class AssignNotUsedLocally extends TransformClasifier {
 
 
     @Override
-    protected int calculateValue(Transplant transform) {
+    protected int calculateValue(TransplantInfo transform) {
         ASTTransformation t = (ASTTransformation) transform.getTransformation();
         CtElement e = t.getTransplantationPoint().getCtCodeFragment();
         CtElement m = getParentMethod(e);

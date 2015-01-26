@@ -1,7 +1,7 @@
 package fr.inria.diversify.analyzerPlugin;
 
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -44,8 +44,8 @@ public class TransplantNodeRenderer extends DefaultTreeCellRenderer {
         setFont(getFont().deriveFont(Font.PLAIN));
 
         if ( value instanceof DefaultMutableTreeNode) {
-            if ( ((DefaultMutableTreeNode)value).getUserObject() instanceof Transplant) {
-                Transplant t = (Transplant) ((DefaultMutableTreeNode)value).getUserObject();
+            if ( ((DefaultMutableTreeNode)value).getUserObject() instanceof TransplantInfo) {
+                TransplantInfo t = (TransplantInfo) ((DefaultMutableTreeNode)value).getUserObject();
                 if (t.getType().contains("replace")) {
                     setIcon(replace);
                 } else if (t.getType().contains("add")) {
@@ -57,8 +57,8 @@ public class TransplantNodeRenderer extends DefaultTreeCellRenderer {
                 if (t.isApplied()) {
                     setFont(getFont().deriveFont(Font.BOLD));
                 }
-            } else if  ( ((DefaultMutableTreeNode)value).getUserObject() instanceof TransformationRepresentation) {
-                TransformationRepresentation t = (TransformationRepresentation) ((DefaultMutableTreeNode)value).getUserObject();
+            } else if  ( ((DefaultMutableTreeNode)value).getUserObject() instanceof TransformationInfo) {
+                TransformationInfo t = (TransformationInfo) ((DefaultMutableTreeNode)value).getUserObject();
                 if ( t.getAppliedTransplant() != null ) {
                     setFont(getFont().deriveFont(Font.BOLD));
                 }

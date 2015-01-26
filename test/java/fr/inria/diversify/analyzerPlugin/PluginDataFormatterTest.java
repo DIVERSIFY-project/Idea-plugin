@@ -2,7 +2,7 @@ package fr.inria.diversify.analyzerPlugin;
 
 import fr.inria.diversify.analyzerPlugin.io.PluginDataLoader;
 import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import org.junit.Test;
 
 import java.util.*;
@@ -22,14 +22,14 @@ public class PluginDataFormatterTest {
 
     private void assertProperLoadingOfTransformations(PluginDataLoader formatter) {
         //Test all where loaded
-        ArrayList<TransformationRepresentation> ar = new ArrayList<TransformationRepresentation>(formatter.getRepresentations());
+        ArrayList<TransformationInfo> ar = new ArrayList<TransformationInfo>(formatter.getRepresentations());
         assertEquals(2, ar.size());
         assertEquals(2, formatter.getTotalPots());
 
         //Test some properties where loaded properly
         ArrayList<String> strings = new ArrayList<String>(Arrays.asList(new String[]{
                 "org.easymock.internal.RecordState:318", "org.easymock.internal.MethodSerializationWrapper:40"}));
-        for (TransformationRepresentation t : ar) {
+        for (TransformationInfo t : ar) {
             assertTrue(strings.contains(t.getPosition()));
             strings.remove(t.getPosition());
         }
@@ -37,7 +37,7 @@ public class PluginDataFormatterTest {
 
     private void assertProperLoadingOfLog(PluginDataLoader formatter) {
         //Assert the proper loading of log (Data obtained from the logMain_123456 file)
-        ArrayList<TransformationRepresentation> ar = new ArrayList<TransformationRepresentation>(formatter.getRepresentations());
+        ArrayList<TransformationInfo> ar = new ArrayList<TransformationInfo>(formatter.getRepresentations());
 
         //Tests
         assertEquals(2, ar.get(0).getTests().size());
@@ -70,7 +70,7 @@ public class PluginDataFormatterTest {
 
     private void testConvertFromTransformationsJSON(String path) throws Exception {
         PluginDataLoader formatter = new PluginDataLoader();
-        Collection<TransformationRepresentation> representations =
+        Collection<TransformationInfo> representations =
                 formatter.fromJSON(getResourcePath(path));
 
         assertProperLoadingOfTransformations(formatter);
@@ -99,7 +99,7 @@ public class PluginDataFormatterTest {
     public void testScattered() throws Exception {
         //Load from scattered resources
         PluginDataLoader formatter = new PluginDataLoader();
-        Collection<TransformationRepresentation> representations =
+        Collection<TransformationInfo> representations =
                 formatter.fromScattered(getResourcePath("sosiepool_size2.json"), getResourcePath("."));
 
         assertEquals(0, formatter.getErrors().size());
@@ -118,7 +118,7 @@ public class PluginDataFormatterTest {
         //Load from scattered resources
         PluginDataLoader formatter = new PluginDataLoader();
         formatter.fromJSON(getResourcePath("sosiepool_size2.json"));
-        Collection<TransformationRepresentation> representations = formatter.fromLogDir(getResourcePath("."));
+        Collection<TransformationInfo> representations = formatter.fromLogDir(getResourcePath("."));
 
         assertEquals(0, formatter.getErrors().size());
         //Test the proper loading of transformations
@@ -174,7 +174,7 @@ public class PluginDataFormatterTest {
      * @param name
      */
     private void reportAll(String[] name, PluginDataLoader[] formatter) {
-        Iterator<TransformationRepresentation>[] r = new Iterator[formatter.length];
+        Iterator<TransformationInfo>[] r = new Iterator[formatter.length];
         Iterator<TestRepresentation>[] t = new Iterator[formatter.length];
         for (int i = 0; i < formatter.length; i++) {
             r[i] = formatter[i].getRepresentations().iterator();
@@ -193,7 +193,7 @@ public class PluginDataFormatterTest {
         }
         System.out.println();
 
-        TransformationRepresentation[] trans = new TransformationRepresentation[formatter.length];
+        TransformationInfo[] trans = new TransformationInfo[formatter.length];
         TestRepresentation[] test = new TestRepresentation[formatter.length];
 
         boolean allEmpty = false;

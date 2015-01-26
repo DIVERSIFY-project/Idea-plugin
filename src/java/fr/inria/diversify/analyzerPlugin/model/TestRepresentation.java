@@ -8,12 +8,12 @@ import java.util.Set;
  */
 public class TestRepresentation extends CodePosition {
 
-    private HashSet<AssertRepresentation> asserts;
+    private HashSet<AssertInfo> asserts;
 
     private long endTime;
 
     public TestRepresentation() {
-        asserts = new HashSet<AssertRepresentation>();
+        asserts = new HashSet<AssertInfo>();
     }
 
     public void fromLogString(String line) {
@@ -21,7 +21,7 @@ public class TestRepresentation extends CodePosition {
         setPosition(line.substring(pos, line.length() - 3));
     }
 
-    public Set<AssertRepresentation> getAsserts() {
+    public Set<AssertInfo> getAsserts() {
         return asserts;
     }
 

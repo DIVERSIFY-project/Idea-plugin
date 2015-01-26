@@ -1,9 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
-import fr.inria.diversify.transformation.ast.ASTAdd;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.transformation.ast.ASTReplace;
-import spoon.reflect.code.CtBlock;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtElement;
 
@@ -17,7 +15,7 @@ public class MethodCallReplace extends TransformClasifier {
     }
 
     @Override
-    protected boolean canClassify(Transplant transform) {
+    protected boolean canClassify(TransplantInfo transform) {
         if ( transform.getTransformation() instanceof ASTReplace) {
             CtElement e = ((ASTReplace)transform.getTransformation()).getTransplantationPoint().getCtCodeFragment();
             CtElement r = ((ASTReplace)transform.getTransformation()).getTransplant().getCtCodeFragment();
@@ -27,7 +25,7 @@ public class MethodCallReplace extends TransformClasifier {
     }
 
     @Override
-    protected int calculateValue(Transplant transform) {
+    protected int calculateValue(TransplantInfo transform) {
         return MEDIUM;
     }
 

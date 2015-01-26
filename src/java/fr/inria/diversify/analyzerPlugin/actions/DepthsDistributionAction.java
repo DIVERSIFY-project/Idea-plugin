@@ -2,14 +2,12 @@ package fr.inria.diversify.analyzerPlugin.actions;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
 import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
-import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
 import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Creates a report with global depth data
@@ -34,10 +32,10 @@ public class DepthsDistributionAction extends WinAction {
     @Override
     public void execute() {
         histogram = new HashMap<Integer, Integer>();
-        Collection<TransformationRepresentation> reps = getMainToolWin().getVisibleRepresentations();
+        Collection<TransformationInfo> reps = getMainToolWin().getVisibleRepresentations();
         //Collect all top transformations iterators for the test representation
         Iterator<PertTestCoverageData>[] t = new Iterator[top];
-        Iterator<TransformationRepresentation> repsIt = reps.iterator();
+        Iterator<TransformationInfo> repsIt = reps.iterator();
         for (int i = 0; i < top; i++) {
             t[i] = repsIt.next().getTests().values().iterator();
         }

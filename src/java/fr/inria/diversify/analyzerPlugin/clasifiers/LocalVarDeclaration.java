@@ -1,7 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import spoon.reflect.code.CtLocalVariable;
 import spoon.reflect.code.CtNewClass;
@@ -22,13 +21,13 @@ public class LocalVarDeclaration extends TransformClasifier {
     }
 
     @Override
-    protected boolean canClassify(Transplant transplant) {
+    protected boolean canClassify(TransplantInfo transplant) {
         //The sosie transformation is inside the Transplant UI representation
         return (transplant.getTransformation() instanceof ASTReplace);
     }
 
     @Override
-    protected int calculateValue(Transplant transplant) {
+    protected int calculateValue(TransplantInfo transplant) {
         ASTReplace replace = (ASTReplace) transplant.getTransformation();
 
         CtElement cf = replace.getTransplant().getCtCodeFragment();

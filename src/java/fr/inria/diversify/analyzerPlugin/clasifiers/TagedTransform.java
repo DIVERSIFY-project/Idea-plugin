@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 
 /**
  * Created by marodrig on 10/10/2014.
@@ -16,12 +16,12 @@ public abstract class TagedTransform extends TransformClasifier {
     protected String tagClassification;
 
     @Override
-    protected boolean canClassify(Transplant transform) {
+    protected boolean canClassify(TransplantInfo transform) {
         return true;
     }
 
     @Override
-    protected int calculateValue(Transplant transform) {
+    protected int calculateValue(TransplantInfo transform) {
         if ( transform.getTags() == null ) return 0;
         String[] tags = transform.getTags().split(",");
         for (String tag : tags ) {

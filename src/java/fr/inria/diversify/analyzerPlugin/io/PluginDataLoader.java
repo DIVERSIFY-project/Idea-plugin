@@ -1,9 +1,9 @@
 package fr.inria.diversify.analyzerPlugin.io;
 
-import fr.inria.diversify.analyzerPlugin.model.AssertRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
 import fr.inria.diversify.analyzerPlugin.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,7 +106,7 @@ public class PluginDataLoader {
 
     private HashSet<TestRepresentation> declaredTest;
 
-    HashMap<String, TransformationRepresentation> representations;
+    HashMap<String, TransformationInfo> representations;
 
 
     private JSONArray sourceJSONArray;
@@ -171,7 +171,7 @@ public class PluginDataLoader {
      *
      * @return
      */
-    public Collection<TransformationRepresentation> getRepresentations() {
+    public Collection<TransformationInfo> getRepresentations() {
         return representations.values();
     }
 
@@ -199,7 +199,7 @@ public class PluginDataLoader {
      *
      * @param path
      */
-    public Collection<TransformationRepresentation> fromJSON(String path) throws IOException, JSONException {
+    public Collection<TransformationInfo> fromJSON(String path) throws IOException, JSONException {
 
         JSONObject jsonObject = readJSONFromFile(new BufferedReader(new FileReader(path)));
         JSONArray transformations = jsonObject.getJSONArray("transformations");
@@ -219,7 +219,7 @@ public class PluginDataLoader {
         errors.clear();
 
         //Transformations points indexed by position
-        representations = new HashMap<String, TransformationRepresentation>();
+        representations = new HashMap<String, TransformationInfo>();
 
         totalTransformations = 0;
         totalPots = 0;
@@ -234,7 +234,7 @@ public class PluginDataLoader {
                     representations.get(pos).appendTransplant(jt, tags);
                     totalTransformations++;
                 } else {
-                    TransformationRepresentation tr = new TransformationRepresentation();
+                    TransformationInfo tr = new TransformationInfo();
                     tr.fromJSONObject(jt, tags);
                     if (jt.has("nbVar")) tr.setVarDiff(jt.getInt("nbVar"));
                     if (jt.has("nbCall")) tr.setCallDiff(jt.getInt("nbCall"));
@@ -265,7 +265,7 @@ public class PluginDataLoader {
      * @param logDir Dir of the log
      * @return The collection of TransformationRepresentation with the log information added
      */
-    public Collection<TransformationRepresentation> fromLogDir(String logDir) throws LoadingException {
+    public Collection<TransformationInfo> fromLogDir(String logDir) throws LoadingException {
 
         /*
         final String TESTS = "TEST";
@@ -320,8 +320,8 @@ public class PluginDataLoader {
             throw new LoadingException(iteration, fileName, e);
         }
 
-        HashSet<TransformationRepresentation> tcpThisTest = new HashSet<TransformationRepresentation>(); //Transplant point reached in this test
-        HashMap<String, AssertRepresentation> assertsThisTest = new HashMap<String, AssertRepresentation>();
+        HashSet<TransformationInfo> tcpThisTest = new HashSet<TransformationInfo>(); //Transplant point reached in this test
+        HashMap<String, AssertInfo> assertsThisTest = new HashMap<String, AssertInfo>();
 
         //Code positions not having a parent Test.
         ArrayList<EntryLog> entries = new ArrayList<EntryLog>();
@@ -386,7 +386,7 @@ public class PluginDataLoader {
                         TestRepresentation test = currentTest;
                         //Obtain the TP by its position
                         //Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
-                        TransformationRepresentation r = representations.get(el.position);
+                        TransformationInfo r = representations.get(el.position);
                         r.incHits(1);
                         totalPotsHitsCount++;
                         if (!tcpThisTest.contains(r)) tcpThisTest.add(r);
@@ -399,11 +399,11 @@ public class PluginDataLoader {
                         }
                     } else if (el.type.equals(ASSERT)) {
                         assertionsExecutedCount++;
-                        AssertRepresentation ar = new AssertRepresentation(el.position);
+                        AssertInfo ar = new AssertInfo(el.position);
                         assertsThisTest.put(el.position, ar);
                         currentTest.getAsserts().add(ar);
                         //Include this assert in the asserts of all TP in the log
-                        for (TransformationRepresentation t : tcpThisTest) {
+                        for (TransformationInfo t : tcpThisTest) {
                             t.addAssertHit(ar, 1);
                         }
 
@@ -414,13 +414,13 @@ public class PluginDataLoader {
 
                     } else if (el.type.equals(TP_COUNT)) {
                         //Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
-                        TransformationRepresentation r = representations.get(el.position);
+                        TransformationInfo r = representations.get(el.position);
                         int k = el.executions;
                         totalPotsHitsCount += k;
                         r.incHits(k);
                         r.updateDepth(currentTest, el.minDepth, el.meanDepth, el.maxDepth, -1, -1, -1);
                     } else if (el.type.equals(ASSERT_COUNT)) {
-                        AssertRepresentation ar = assertsThisTest.get(el.position);
+                        AssertInfo ar = assertsThisTest.get(el.position);
                         int hits = el.executions;
                         assertionsExecutedCount += hits;
 
@@ -429,7 +429,7 @@ public class PluginDataLoader {
                             assertionsExecutedCoveringCount += hits;
                         }
 
-                        for (TransformationRepresentation t : tcpThisTest) {
+                        for (TransformationInfo t : tcpThisTest) {
                             //Don't add asserts hits to TP that don't have them
                             if (t.getAssertHits(ar) > 0) {
                                 t.addAssertHit(ar, hits - 1);
@@ -468,7 +468,7 @@ public class PluginDataLoader {
      * @param jsonPath Multisosie or sosie pool json file containing the transformations
      * @param logDir   Directory containing the
      */
-    public Collection<TransformationRepresentation> fromScattered(
+    public Collection<TransformationInfo> fromScattered(
             String jsonPath, String logDir) throws LoadingException {
 
         errors.clear();

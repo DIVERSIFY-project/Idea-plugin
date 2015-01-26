@@ -1,8 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.actions;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
-import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
 import java.io.*;
 import java.util.Collection;
@@ -32,8 +31,8 @@ public class HitsAndAssertsReportAction extends WinAction {
     @Override
     public void execute() {
         histogram = new HashMap<Integer, Integer>();
-        Collection<TransformationRepresentation> reps = getMainToolWin().getVisibleRepresentations();
-        Iterator<TransformationRepresentation> t = reps.iterator();
+        Collection<TransformationInfo> reps = getMainToolWin().getVisibleRepresentations();
+        Iterator<TransformationInfo> t = reps.iterator();
 
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < top; i++) {

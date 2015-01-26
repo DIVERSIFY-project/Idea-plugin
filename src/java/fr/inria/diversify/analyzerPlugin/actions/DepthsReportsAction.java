@@ -2,7 +2,7 @@ package fr.inria.diversify.analyzerPlugin.actions;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
 import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
 import java.io.*;
 import java.util.Collection;
@@ -21,8 +21,8 @@ public class DepthsReportsAction extends WinAction {
     @Override
     public void execute() {
         StringBuilder b = new StringBuilder();
-        Collection<TransformationRepresentation> reps = getMainToolWin().getVisibleRepresentations();
-        for ( TransformationRepresentation r : reps ) {
+        Collection<TransformationInfo> reps = getMainToolWin().getVisibleRepresentations();
+        for ( TransformationInfo r : reps ) {
             if ( r.hasVisibleTransplants() ) {
                 //b.append(r.getPosition()).append(System.lineSeparator());//Write position
                 for (PertTestCoverageData p : r.getTests().values()) {

@@ -1,7 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.io;
 
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.analyzerPlugin.clasifiers.TransformClasifier;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +20,7 @@ public class PluginDataExport {
     /**
      * Current representations obtained from the JSON  file
      */
-    private Collection<TransformationRepresentation> representations;
+    private Collection<TransformationInfo> representations;
 
 
     private Collection<TransformClasifier> clasifiers;
@@ -28,11 +28,11 @@ public class PluginDataExport {
     /**
      * Current representations obtained from the JSON  file
      */
-    public Collection<TransformationRepresentation> getRepresentations() {
+    public Collection<TransformationInfo> getRepresentations() {
         return representations;
     }
 
-    public void setRepresentations(Collection<TransformationRepresentation> representations) {
+    public void setRepresentations(Collection<TransformationInfo> representations) {
         this.representations = representations;
     }
 
@@ -80,8 +80,8 @@ public class PluginDataExport {
         //Collect tag for all representations
         JSONObject tags = new JSONObject();
         //Put tags
-        for (TransformationRepresentation rep : representations) {
-            for (Transplant t : rep.getTransplants()) {
+        for (TransformationInfo rep : representations) {
+            for (TransplantInfo t : rep.getTransplants()) {
                 if (!(t.getTags() == null || t.getTags().isEmpty())) {
                     tags.put(String.valueOf(t.getIndex()), t.getTags());
                 }
@@ -105,8 +105,8 @@ public class PluginDataExport {
 
         //save them to file
         JSONArray repArray = new JSONArray();
-        for (TransformationRepresentation rep : representations) {
-            for (Transplant t : rep.getTransplants()) {
+        for (TransformationInfo rep : representations) {
+            for (TransplantInfo t : rep.getTransplants()) {
                 for (TransformClasifier c : clasifiers) {
                     float v = t.isAlreadyClassified(c.getDescription()) ? t.getClassification(c.getDescription()) : 0;
                     if ( v != 0 && !c.isUserFilter() ) {

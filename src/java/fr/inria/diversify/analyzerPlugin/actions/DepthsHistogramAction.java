@@ -2,7 +2,7 @@ package fr.inria.diversify.analyzerPlugin.actions;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
 import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
 import java.io.*;
 import java.util.Collection;
@@ -39,8 +39,8 @@ public class DepthsHistogramAction extends WinAction {
     public void execute() {
         histogram = new HashMap<Integer, Integer>();
 
-        Collection<TransformationRepresentation> reps = getMainToolWin().getVisibleRepresentations();
-        for (TransformationRepresentation r : reps) {
+        Collection<TransformationInfo> reps = getMainToolWin().getVisibleRepresentations();
+        for (TransformationInfo r : reps) {
             if ( r.hasVisibleTransplants() ) {
                 HashMap<Integer, Integer> localHistogram = new HashMap<Integer, Integer>();
                 for (PertTestCoverageData p : r.getTests().values()) {

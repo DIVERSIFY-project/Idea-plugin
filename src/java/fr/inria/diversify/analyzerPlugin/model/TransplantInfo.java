@@ -3,20 +3,21 @@ package fr.inria.diversify.analyzerPlugin.model;
 import fr.inria.diversify.codeFragment.CodeFragment;
 import fr.inria.diversify.diversification.InputConfiguration;
 import fr.inria.diversify.diversification.InputProgram;
+import fr.inria.diversify.diversification.accessors.SourceAccesor;
+import fr.inria.diversify.diversification.accessors.TypeAccesor;
 import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.transformation.ast.ASTAdd;
 import fr.inria.diversify.transformation.ast.ASTDelete;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 
 import java.util.HashMap;
-import java.util.function.Function;
 
 /**
  * Representation of the Transplant containing necessary data for the plugin to work
  * <p/>
  * Created by marodrig on 15/09/2014.
  */
-public class Transplant extends CodePosition {
+public class TransplantInfo extends CodePosition {
 
     private Boolean containsInnocuousCalls = null;
 
@@ -90,7 +91,7 @@ public class Transplant extends CodePosition {
     /**
      *
      */
-    private TransformationRepresentation transplantationPoint;
+    private TransformationInfo transplantationPoint;
 
     /**
      * Stores the last classification weight assigned to this transplant by the last filter operation
@@ -171,36 +172,26 @@ public class Transplant extends CodePosition {
         //Don't do this again if we already have a transformation
         if ( getTransformation() != null ) return;
 
-        Function<CodeFragment, String> source = new Function<CodeFragment, String>() {
-            @Override
-            public String apply(CodeFragment codeFragment) {
-                return codeFragment.equalString();
-            }
-        };
+        SourceAccesor srcAccessor = new SourceAccesor();
+        TypeAccesor typeAccesor = new TypeAccesor();
 
-        Function<CodeFragment, String> spoonType = new Function<CodeFragment, String>() {
-            @Override
-            public String apply(CodeFragment codeFragment) {
-                return codeFragment.getCodeFragmentType().getSimpleName();
-            }
-        };
 
         InputProgram inputProgram = inputConfiguration.getInputProgram();
-        TransformationRepresentation parentTP = getTransplantationPoint();
+        TransformationInfo parentTP = getTransplantationPoint();
         CodeFragment pot = inputProgram.findCodeFragment(parentTP.getPosition(),
-                parentTP.getSource(), source);
+                parentTP.getSource(), srcAccessor);
         if ( pot == null ) {
             pot = inputProgram.findCodeFragment(parentTP.getPosition(),
-                    parentTP.getSpoonType(), spoonType);
+                    parentTP.getSpoonType(), typeAccesor);
         }
         if (pot == null) throw new RuntimeException("Unable to find pot");
 
         CodeFragment transplant = null;
         if ( !getType().equals("delete") ) {
-            transplant = inputProgram.findCodeFragment(getPosition(), getSource(), source);
+            transplant = inputProgram.findCodeFragment(getPosition(), getSource(), srcAccessor);
             if (transplant == null) {
                 transplant = inputProgram.findCodeFragment(parentTP.getPosition(),
-                        getSpoonType(), spoonType);
+                        getSpoonType(), typeAccesor);
             }
             if (transplant == null) throw new RuntimeException("Unable to find transplant");
         }
@@ -208,21 +199,18 @@ public class Transplant extends CodePosition {
         if (getType().equals("delete")) {
             ASTDelete trans = new ASTDelete();
             trans.setTransplantationPoint(pot);
-            trans.setInputConfiguration(inputConfiguration);
             setTransformation(trans);
         } else if (getType().contains("replace")) {
             if (transplant == null) return;
             ASTReplace trans = new ASTReplace();
             trans.setTransplantationPoint(pot);
             trans.setTransplant(transplant);
-            trans.setInputConfiguration(inputConfiguration);
             setTransformation(trans);
         } else if (getType().contains("add")) {
             if (transplant == null) return;
             ASTAdd trans = new ASTAdd();
             trans.setTransplantationPoint(pot);
-            trans.setCodeFragmentToAdd(transplant);
-            trans.setInputConfiguration(inputConfiguration);
+            trans.setTransplant(transplant);
             setTransformation(trans);
         }
     }
@@ -252,11 +240,11 @@ public class Transplant extends CodePosition {
     }
 
 
-    public TransformationRepresentation getTransplantationPoint() {
+    public TransformationInfo getTransplantationPoint() {
         return transplantationPoint;
     }
 
-    public void setTransplantationPoint(TransformationRepresentation transplantationPoint) {
+    public void setTransplantationPoint(TransformationInfo transplantationPoint) {
         this.transplantationPoint = transplantationPoint;
     }
 

@@ -3,9 +3,9 @@ package fr.inria.diversify.analyzerPlugin.model;
 /**
  * Created by marodrig on 04/09/2014.
  */
-public class AssertRepresentation extends CodePosition {
+public class AssertInfo extends CodePosition {
 
-    public AssertRepresentation(String pos) {
+    public AssertInfo(String pos) {
         setPosition(pos);
     }
 
@@ -21,6 +21,6 @@ public class AssertRepresentation extends CodePosition {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof AssertRepresentation && toString().equals(o.toString());
+        return o instanceof AssertInfo && toString().equals(o.toString());
     }
 }

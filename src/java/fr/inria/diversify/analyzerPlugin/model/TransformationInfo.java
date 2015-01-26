@@ -1,11 +1,11 @@
 package fr.inria.diversify.analyzerPlugin.model;
 
+import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.transformation.ast.ASTTransformation;
 import fr.inria.diversify.util.Log;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.*;
  * <p/>
  * Created by marodrig on 04/09/2014.
  */
-public class TransformationRepresentation extends CodePosition {
+public class TransformationInfo extends CodePosition {
 
     private int totalTestHits;
 
@@ -72,7 +72,7 @@ public class TransformationRepresentation extends CodePosition {
 
     private String variableMapping;
 
-    private List<Transplant> transplants;
+    private List<TransplantInfo> transplants;
 
     //Data associated to the test
     private HashMap<TestRepresentation, PertTestCoverageData> tests;
@@ -82,7 +82,7 @@ public class TransformationRepresentation extends CodePosition {
 
     private String source;
 
-    private HashMap<AssertRepresentation, Integer> assertCount;
+    private HashMap<AssertInfo, Integer> assertCount;
 
     private HashMap<TestRepresentation, Integer> testCount;
 
@@ -95,10 +95,10 @@ public class TransformationRepresentation extends CodePosition {
     /**
      * Extract a series of data out of the json object
      */
-    public TransformationRepresentation() {
-        transplants = new ArrayList<Transplant>();
+    public TransformationInfo() {
+        transplants = new ArrayList<TransplantInfo>();
         tests = new HashMap<TestRepresentation, PertTestCoverageData>();
-        assertCount = new HashMap<AssertRepresentation, Integer>();
+        assertCount = new HashMap<AssertInfo, Integer>();
         testCount = new HashMap<TestRepresentation, Integer>();
     }
 
@@ -134,7 +134,7 @@ public class TransformationRepresentation extends CodePosition {
      * @param rep Assert that we want to query for
      * @return
      */
-    public int getAssertHits(AssertRepresentation rep) {
+    public int getAssertHits(AssertInfo rep) {
         return assertCount.containsKey(rep) ? assertCount.get(rep) : 0;
     }
 
@@ -144,7 +144,7 @@ public class TransformationRepresentation extends CodePosition {
      * @param ar   assertion hit after the TP
      * @param hits number of hits
      */
-    public void addAssertHit(AssertRepresentation ar, int hits) {
+    public void addAssertHit(AssertInfo ar, int hits) {
         addHits(assertCount, ar, hits);
         setTotalAssertionHits(getTotalAssertionHits() + hits);
     }
@@ -222,7 +222,7 @@ public class TransformationRepresentation extends CodePosition {
      *
      * @return
      */
-    public Collection<AssertRepresentation> getAsserts() {
+    public Collection<AssertInfo> getAsserts() {
         return assertCount.keySet();
     }
 
@@ -258,7 +258,7 @@ public class TransformationRepresentation extends CodePosition {
     public void appendTransplant(JSONObject jt, JSONObject tags) throws JSONException {
         if (jt.has("transplant")) {
             JSONObject tp = jt.getJSONObject("transplant");
-            Transplant t = new Transplant();
+            TransplantInfo t = new TransplantInfo();
             t.setPosition(tp.getString("position"));
             if ( tp.has("sourceCode") )  t.setSource(tp.getString("sourceCode"));
             else t.setSource(tp.getString("sourcecode"));
@@ -275,7 +275,7 @@ public class TransformationRepresentation extends CodePosition {
             t.setTransplantationPoint(this);
             transplants.add(t);
         } else {
-            Transplant delete = new Transplant();
+            TransplantInfo delete = new TransplantInfo();
             delete.setType("delete");
             delete.setIndex(jt.getInt("tindex"));
             delete.setTransplantationPoint(this);
@@ -290,11 +290,11 @@ public class TransformationRepresentation extends CodePosition {
      * @param representations
      * @return a JSONObject ArrayList with the Transformations serialized
      */
-    public static JSONObject tagsToJSON(Collection<TransformationRepresentation> representations) throws JSONException {
+    public static JSONObject tagsToJSON(Collection<TransformationInfo> representations) throws JSONException {
 
         JSONObject result = new JSONObject();
-        for (TransformationRepresentation r : representations) {
-            for (Transplant t : r.getTransplants()) {
+        for (TransformationInfo r : representations) {
+            for (TransplantInfo t : r.getTransplants()) {
                 if (!(t.getTags() == null || t.getTags().isEmpty())) {
                     result.put(String.valueOf(t.getIndex()), t.getTags());
                 }
@@ -319,13 +319,13 @@ public class TransformationRepresentation extends CodePosition {
         this.variableMapping = variableMapping;
     }
 
-    public List<Transplant> getTransplants() {
+    public List<TransplantInfo> getTransplants() {
         return transplants;
     }
 
-    public void setTransplants(List<Transplant> transplantPositions) {
+    public void setTransplants(List<TransplantInfo> transplantPositions) {
         this.transplants = transplantPositions;
-        for (Transplant t : transplantPositions) {
+        for (TransplantInfo t : transplantPositions) {
             t.setTransplantationPoint(this);
         }
     }
@@ -404,7 +404,7 @@ public class TransformationRepresentation extends CodePosition {
         FileUtils.copyFile(new File(filePath), new File(sourcePath));
     }
 
-    public boolean isTransplantApplied(Transplant transplant) {
+    public boolean isTransplantApplied(TransplantInfo transplant) {
         return appliedTransformIndex == transplants.indexOf(transplant);
     }
 
@@ -415,7 +415,7 @@ public class TransformationRepresentation extends CodePosition {
      * @param destDir Destination dir where the transformation code is going to be stored
      * @throws Exception
      */
-    public void switchTransformation(Transplant transplant, String srcDir, String destDir) throws Exception {
+    public void switchTransformation(TransplantInfo transplant, String srcDir, String destDir) throws Exception {
 
         int index = transplants.indexOf(transplant);
 
@@ -451,13 +451,13 @@ public class TransformationRepresentation extends CodePosition {
      *
      * @return A Transplant or null of none applied
      */
-    public Transplant getAppliedTransplant() {
+    public TransplantInfo getAppliedTransplant() {
         if (appliedTransformIndex == -1) return null;
         return transplants.get(appliedTransformIndex);
     }
 
     public boolean hasVisibleTransplants() {
-        for (Transplant t : transplants) {
+        for (TransplantInfo t : transplants) {
             if (t.isVisible()) {
                 return true;
             }
@@ -489,5 +489,14 @@ public class TransformationRepresentation extends CodePosition {
 
     public void setCallDiff(int callDiff) {
         this.callDiff = callDiff;
+    }
+
+    /**
+     * Returns a collection of TransformationInfo out a collection of Transformations
+     * @param t A collection of transformations
+     * @return A list of transformations
+     */
+    public static List<TransformationInfo> fromTransformations(Collection<Transformation> t) {
+        return null;
     }
 }

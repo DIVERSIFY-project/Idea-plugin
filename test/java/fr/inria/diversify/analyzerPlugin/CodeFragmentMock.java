@@ -7,6 +7,7 @@ import fr.inria.diversify.codeFragment.CodeFragment;
  */
 public class CodeFragmentMock extends CodeFragment {
 
+
     private String _codeFragmentString;
 
     @Override
@@ -15,8 +16,13 @@ public class CodeFragmentMock extends CodeFragment {
     }
 
     @Override
-    public boolean isReplace(CodeFragment other, boolean varNameMatch) {
+    public boolean isReplaceableBy(CodeFragment codeFragment, boolean b, boolean b2) {
         return false;
+    }
+
+    @Override
+    public CodeFragment clone() {
+        return null;
     }
 
     public void set_codeFragmentString(String _codeFragmentString) {

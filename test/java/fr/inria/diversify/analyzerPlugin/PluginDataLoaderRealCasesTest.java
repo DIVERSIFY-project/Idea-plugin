@@ -1,7 +1,7 @@
 package fr.inria.diversify.analyzerPlugin;
 
 import fr.inria.diversify.analyzerPlugin.io.PluginDataLoader;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -21,7 +21,7 @@ public class PluginDataLoaderRealCasesTest {
     @Test
     public void easyMockAugmentedMetrics() throws Exception {
         PluginDataLoader formatter = new PluginDataLoader();
-        Collection<TransformationRepresentation> representations =
+        Collection<TransformationInfo> representations =
                 formatter.fromScattered(getResourcePath("easymock3.2-non-rep-index.json"),
                         getResourcePath("easymock-AugmentedMetricsLOG"));
 
@@ -33,7 +33,7 @@ public class PluginDataLoaderRealCasesTest {
     @Test
     public void commonCollAugmentedMetrics() throws Exception {
         PluginDataLoader formatter = new PluginDataLoader();
-        Collection<TransformationRepresentation> representations =
+        Collection<TransformationInfo> representations =
                 formatter.fromScattered(getResourcePath("commons-collections_corrected.json"),
                         getResourcePath("collections-AugmentedMetricsLOG"));
         System.out.print(formatter.getErrors().size());

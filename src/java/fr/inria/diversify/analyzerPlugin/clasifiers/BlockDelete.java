@@ -1,9 +1,8 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.transformation.ast.ASTDelete;
 import spoon.reflect.code.CtBlock;
-import spoon.reflect.code.CtInvocation;
 import spoon.reflect.declaration.CtElement;
 
 /**
@@ -16,7 +15,7 @@ public class BlockDelete extends TransformClasifier {
     }
 
     @Override
-    protected boolean canClassify(Transplant transform) {
+    protected boolean canClassify(TransplantInfo transform) {
         if ( transform.getTransformation() instanceof ASTDelete) {
             CtElement e = ((ASTDelete)transform.getTransformation()).getTransplantationPoint().getCtCodeFragment();
             return hasElementOfType(e, CtBlock.class);
@@ -25,7 +24,7 @@ public class BlockDelete extends TransformClasifier {
     }
 
     @Override
-    protected int calculateValue(Transplant transform) {
+    protected int calculateValue(TransplantInfo transform) {
         return MEDIUM;
     }
 

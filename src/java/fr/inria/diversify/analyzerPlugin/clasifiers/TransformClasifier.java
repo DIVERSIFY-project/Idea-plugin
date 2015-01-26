@@ -1,11 +1,9 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtExecutable;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.reference.CtExecutableReference;
 import spoon.reflect.visitor.QueryVisitor;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.reflect.code.CtInvocationImpl;
@@ -87,7 +85,7 @@ public abstract class TransformClasifier {
      * @param transform Transform to be classified
      * @return True if can, false if not
      */
-    protected abstract boolean canClassify(Transplant transform);
+    protected abstract boolean canClassify(TransplantInfo transform);
 
     /**
      * Actually calculate the classification value of the transform
@@ -95,7 +93,7 @@ public abstract class TransformClasifier {
      * @param transform transform to be classified
      * @return An integer value weighting the compliance to an given trait
      */
-    protected abstract int calculateValue(Transplant transform);
+    protected abstract int calculateValue(TransplantInfo transform);
 
     /**
      * Calculate the classification value of the transform
@@ -103,7 +101,7 @@ public abstract class TransformClasifier {
      * @param transform transform to be classified
      * @return An integer value weighting the compliance to an given trait
      */
-    public int value(Transplant transform) {
+    public int value(TransplantInfo transform) {
         if (canClassify(transform)) {
             return calculateValue(transform);
         }

@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.clasifiers;
 
-import fr.inria.diversify.analyzerPlugin.model.Transplant;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 
 /**
  * Created by marodrig on 27/10/2014.
@@ -12,7 +12,7 @@ public class Fake extends TransformClasifier {
     }
 
     @Override
-    protected boolean canClassify(Transplant transform) {
+    protected boolean canClassify(TransplantInfo transform) {
         if (transform.getType().contains("replace")) {
             return transform.getSource().equals(transform.getTransplantationPoint().getSource());
         }
@@ -20,7 +20,7 @@ public class Fake extends TransformClasifier {
     }
 
     @Override
-    protected int calculateValue(Transplant transform) {
+    protected int calculateValue(TransplantInfo transform) {
         return getWeight();
     }
 

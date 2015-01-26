@@ -2,7 +2,7 @@ package fr.inria.diversify.analyzerPlugin.actions;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
-import fr.inria.diversify.analyzerPlugin.model.TransformationRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
 /**
  * Created by marodrig on 29/11/2014.
@@ -17,8 +17,8 @@ public class ShowDifferencesAction extends WinAction {
 
     @Override
     public void execute() {
-        if ( data instanceof TransformationRepresentation) {
-            TransformationRepresentation tr = (TransformationRepresentation)data;
+        if ( data instanceof TransformationInfo) {
+            TransformationInfo tr = (TransformationInfo)data;
             getMainToolWin().getTxtDiff().setText(tr.getDiffReport());
         }
     }
