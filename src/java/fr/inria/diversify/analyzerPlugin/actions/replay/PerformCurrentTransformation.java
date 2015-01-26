@@ -1,6 +1,8 @@
-package fr.inria.diversify.analyzerPlugin.actions;
+package fr.inria.diversify.analyzerPlugin.actions.replay;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.actions.WinAction;
+import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;

@@ -1,6 +1,8 @@
-package fr.inria.diversify.analyzerPlugin.actions;
+package fr.inria.diversify.analyzerPlugin.actions.reporting;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.actions.Complain;
+import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 

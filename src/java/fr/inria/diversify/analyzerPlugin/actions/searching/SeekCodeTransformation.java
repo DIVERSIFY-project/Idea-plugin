@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin.actions;
+package fr.inria.diversify.analyzerPlugin.actions.searching;
 
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -8,11 +8,14 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 
 import javax.swing.*;
 
 /**
+ * Given a node of JTree containing a Code position, this action will navigate to that position
+ *
  * Created by marodrig on 03/11/2014.
  */
 public class SeekCodeTransformation extends WinAction {

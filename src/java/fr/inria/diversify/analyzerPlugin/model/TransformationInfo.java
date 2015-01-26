@@ -1,18 +1,27 @@
 package fr.inria.diversify.analyzerPlugin.model;
 
+import fr.inria.diversify.codeFragment.CodeFragment;
+import fr.inria.diversify.diversification.InputProgram;
+import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
 import fr.inria.diversify.transformation.Transformation;
+import fr.inria.diversify.transformation.ast.ASTAdd;
+import fr.inria.diversify.transformation.ast.ASTReplace;
 import fr.inria.diversify.transformation.ast.ASTTransformation;
 import fr.inria.diversify.util.Log;
 import org.apache.commons.io.FileUtils;
+import org.apache.xmlbeans.impl.xb.ltgfmt.Code;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * Represents Transplantation point. Contains the data of the transformation needed for the plugin
+ * Represents Transplantation point. Contains the data of the transformation needed for the plugin in a more
+ * plugin friendly way
  * <p/>
  * Created by marodrig on 04/09/2014.
  */
@@ -102,21 +111,7 @@ public class TransformationInfo extends CodePosition {
         testCount = new HashMap<TestRepresentation, Integer>();
     }
 
-    /**
-     * Initializes the representation from the JSON object
-     */
-    public void fromJSONObject(JSONObject object, JSONObject tags) throws JSONException {
-        JSONObject tp = object.getJSONObject("transplantationPoint");
-        if ( tp.has("sourceCode") ) setSource(tp.getString("sourceCode"));
-        else setSource(tp.getString("sourcecode"));
-        setPosition(tp.getString("position"));
-        setSpoonType(tp.getString("type"));
-        setType(object.getString("name"));
 
-
-        appendTransplant(object, tags);
-
-    }
 
     /**
      * Returns the number of times an instrumented test method executed and hit this TP
@@ -249,39 +244,7 @@ public class TransformationInfo extends CodePosition {
         position = value;
     }
 
-    /**
-     * Extract the transplant out of the JSON object and appends it to the list of TP over this point
-     *
-     * @param jt   JSON with the transformation
-     * @param tags Array with the tags to every transformation
-     */
-    public void appendTransplant(JSONObject jt, JSONObject tags) throws JSONException {
-        if (jt.has("transplant")) {
-            JSONObject tp = jt.getJSONObject("transplant");
-            TransplantInfo t = new TransplantInfo();
-            t.setPosition(tp.getString("position"));
-            if ( tp.has("sourceCode") )  t.setSource(tp.getString("sourceCode"));
-            else t.setSource(tp.getString("sourcecode"));
-            t.setSpoonType(tp.getString("type"));
-            t.setIndex(jt.getInt("tindex"));
-            t.setType(jt.getString("name"));
-            String sIndex = String.valueOf(t.getIndex());
-            if (tags.has(sIndex)) {
-                t.setTags(tags.getString(sIndex));
-            }
-            if (jt.has("variableMapping")) {
-                t.setVariableMap(jt.getJSONObject("variableMapping").toString());
-            }
-            t.setTransplantationPoint(this);
-            transplants.add(t);
-        } else {
-            TransplantInfo delete = new TransplantInfo();
-            delete.setType("delete");
-            delete.setIndex(jt.getInt("tindex"));
-            delete.setTransplantationPoint(this);
-            transplants.add(delete);
-        }
-    }
+
 
     /**
      * Convert the tags of all transplant into a JSON ArrayList.
@@ -492,11 +455,150 @@ public class TransformationInfo extends CodePosition {
     }
 
     /**
-     * Returns a collection of TransformationInfo out a collection of Transformations
-     * @param t A collection of transformations
+     * Initializes the representation from the JSON object
+     */
+    @Deprecated
+    public void fromJSONObject(JSONObject object, JSONObject tags) throws JSONException {
+        JSONObject tp = object.getJSONObject("transplantationPoint");
+        if ( tp.has("sourceCode") ) setSource(tp.getString("sourceCode"));
+        else setSource(tp.getString("sourcecode"));
+        setPosition(tp.getString("position"));
+        setSpoonType(tp.getString("type"));
+        setType(object.getString("name"));
+        appendTransplant(object, tags);
+    }
+
+    /**
+     * Initializes the info from the Transformation object
+     *
+     * @param t Transformation object
+     */
+    public void fromTransformation(ASTTransformation t) {
+        setSource(t.getTransplantationPoint().codeFragmentString());
+        setPosition(t.getTransplantationPoint().positionString());
+        setSpoonType(t.getTransplantationPoint().getCodeFragmentTypeSimpleName());
+        setType(t.getName());
+        appendTransplant(t);
+    }
+
+    /**
+     * Extract the transplant out of the JSON object and appends it to the list of TP over this point
+     *
+     * @param jt   JSON with the transformation
+     * @param tags Array with the tags to every transformation
+     */
+    @Deprecated
+    public void appendTransplant(JSONObject jt, JSONObject tags) throws JSONException {
+        if (jt.has("transplant")) {
+            JSONObject tp = jt.getJSONObject("transplant");
+            TransplantInfo t = new TransplantInfo();
+            t.setPosition(tp.getString("position"));
+            if ( tp.has("sourceCode") )  t.setSource(tp.getString("sourceCode"));
+            else t.setSource(tp.getString("sourcecode"));
+            t.setSpoonType(tp.getString("type"));
+            t.setIndex(jt.getInt("tindex"));
+            t.setType(jt.getString("name"));
+            String sIndex = String.valueOf(t.getIndex());
+            if (tags.has(sIndex)) {
+                t.setTags(tags.getString(sIndex));
+            }
+            if (jt.has("variableMapping")) {
+                t.setVariableMap(jt.getJSONObject("variableMapping").toString());
+            }
+            t.setTransplantationPoint(this);
+            transplants.add(t);
+        } else {
+            TransplantInfo delete = new TransplantInfo();
+            delete.setType("delete");
+            delete.setIndex(jt.getInt("tindex"));
+            delete.setTransplantationPoint(this);
+            transplants.add(delete);
+        }
+    }
+
+    /**
+     * Appends transplant from a code fragment
+     * @param t Transformation containing the transplant
+    */
+    public void appendTransplant(ASTTransformation t) {
+        CodeFragment cf = null;
+        Map<String, String> v = null;
+        if ( t instanceof ASTAdd) {
+            cf = ((ASTAdd)t).getTransplant();
+            v = ((ASTAdd)t).getVarMapping();
+        }
+        if ( t instanceof ASTReplace ) {
+            cf = ((ASTReplace)t).getTransplant();
+            v = ((ASTReplace)t).getVarMapping();
+        }
+
+        if (cf != null) {
+            StringBuilder sb = new StringBuilder("[");
+            if ( v != null ) for (Map.Entry<String, String> k : v.entrySet()) sb.append("; " + k + "->" + v);
+            sb.append("]");
+            TransplantInfo ti = new TransplantInfo();
+            ti.setPosition(cf.positionString());
+            ti.setIndex(t.getIndex());
+            ti.setSource(cf.codeFragmentString());
+            ti.setSpoonType(cf.getCodeFragmentTypeSimpleName());
+            ti.setType(t instanceof ASTReplace ? "replace" : "add");
+            ti.setVariableMap(sb.toString());
+            ti.setTransplantationPoint(this);
+            transplants.add(ti);
+        } else {
+            TransplantInfo delete = new TransplantInfo();
+            delete.setType("delete");
+            delete.setIndex(t.getIndex());
+            delete.setTransplantationPoint(this);
+            transplants.add(delete);
+        }
+    }
+
+    /**
+     * Reads a set of transformations from a JSON file in
+     * @param program Program where the transformations where performed
+     * @param jsonPath JSON file path
      * @return A list of transformations
      */
-    public static List<TransformationInfo> fromTransformations(Collection<Transformation> t) {
-        return null;
+    public static Collection<TransformationInfo> fromJSON(String jsonPath, InputProgram program) {
+        JsonSosiesInput input = new JsonSosiesInput(jsonPath, program);
+        return fromTransformations(input.read());
+    }
+
+    /**
+     * Reads a set of transformations from a stream with a JSON file in it
+     * @param program Program where the transformations where performed
+     * @param stream Stream with the JSON file in it
+     * @return A list of transformations
+     */
+    public static Collection<TransformationInfo> fromJSON(InputStreamReader stream, InputProgram program) {
+        JsonSosiesInput input = new JsonSosiesInput(stream, program);
+        return fromTransformations(input.read());
+    }
+
+    /**
+     * Returns a collection of TransformationInfo out a collection of Transformations
+     * @param transformations A collection of transformations
+     * @return A list of transformations
+     */
+    public static Collection<TransformationInfo> fromTransformations(Collection<Transformation> transformations) {
+        HashMap<String, TransformationInfo> r = new HashMap<>();
+
+        for ( Transformation t : transformations ) {
+            if ( t instanceof ASTTransformation ) {
+                ASTTransformation astt = (ASTTransformation)t;
+                String pos = astt.getTransplantationPoint().positionString();
+                TransformationInfo ti = null;
+                if ( !r.containsKey(pos) ) {
+                    ti = new TransformationInfo();
+                    ti.fromTransformation(astt);
+                    r.put(pos, ti);
+                } else {
+                    r.get(pos).appendTransplant(astt);
+                }
+            }
+        }
+
+        return r.values();
     }
 }

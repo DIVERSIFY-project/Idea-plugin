@@ -9,6 +9,10 @@ import fr.inria.diversify.analyzerPlugin.MainToolWin;
 import javax.swing.*;
 
 /**
+ * An action to complain... about everything... the weather, the politics...U know, the usual
+ *
+ * Seriously now: Code to show warning and errors messages
+ *
  * Created by marodrig on 03/11/2014.
  */
 public class Complain extends WinAction {

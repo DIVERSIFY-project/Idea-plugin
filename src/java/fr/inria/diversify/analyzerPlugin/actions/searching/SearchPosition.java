@@ -1,7 +1,8 @@
-package fr.inria.diversify.analyzerPlugin.actions;
+package fr.inria.diversify.analyzerPlugin.actions.searching;
 
 import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 
 import javax.swing.*;
@@ -12,6 +13,9 @@ import javax.swing.tree.TreePath;
 import java.util.Enumeration;
 
 /**
+ * Given a position string and a list of TransformationInfo in a JTree, this action will search nodes in the
+ * tree containing that position
+ *
  * Created by marodrig on 21/12/2014.
  */
 public class SearchPosition extends WinAction {

@@ -48,6 +48,7 @@ public class TransplantInfo extends CodePosition {
         return visibility.equals(Visibility.show);
     }
 
+
     public enum Visibility {show, hide, unclassified}
 
     /**

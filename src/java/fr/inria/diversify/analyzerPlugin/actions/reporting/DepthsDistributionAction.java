@@ -1,6 +1,8 @@
-package fr.inria.diversify.analyzerPlugin.actions;
+package fr.inria.diversify.analyzerPlugin.actions.reporting;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.actions.Complain;
+import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
@@ -11,6 +13,7 @@ import java.util.Iterator;
 
 /**
  * Creates a report with global depth data
+ *
  * <p/>
  * Created by marodrig on 20/11/2014.
  */
