@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.actions.replay;
 
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
@@ -21,7 +21,7 @@ public class PerformCurrentTransformation extends WinAction {
 
     String srcDir;
 
-    public PerformCurrentTransformation(MainToolWin mainToolWin, String pomPath, String srcDir) {
+    public PerformCurrentTransformation(MainToolWinv0 mainToolWin, String pomPath, String srcDir) {
         super(mainToolWin);
         this.pomPath = pomPath;
         this.srcDir = srcDir;

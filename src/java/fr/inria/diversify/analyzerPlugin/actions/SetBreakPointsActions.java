@@ -9,7 +9,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.intellij.xdebugger.breakpoints.*;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public class SetBreakPointsActions extends WinAction {
         }
     }
 
-    public SetBreakPointsActions(MainToolWin mainToolWin) {
+    public SetBreakPointsActions(MainToolWinv0 mainToolWin) {
         super(mainToolWin);
         codePosition = getMainToolWin().getDataOfSelectedTransformationItem(getMainToolWin().getTreeTransformations());
     }

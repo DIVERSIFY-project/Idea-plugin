@@ -25,7 +25,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-      <toolWindow id="TestEye" anchor="right" factoryClass="fr.inria.diversify.analyzerPlugin.MainToolWin">
+      <toolWindow id="TestEye" anchor="right" factoryClass="fr.inria.diversify.analyzerPlugin.TestEyeToolWindowFactory">
       </toolWindow>
   </extensions>
 
@@ -34,7 +34,9 @@
   </application-components>
 
   <project-components>
-    <!-- Add your project components here -->
+    <component>
+      <implementation-class>fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent</implementation-class>
+    </component>
   </project-components>
 
   <actions>
@@ -43,6 +45,11 @@
               description="The sosie analyzer is a productivity tool to easily navigate through all transformations created by the sosie generator">
           <add-to-group group-id="ToolsMenu" anchor="first"/>
       </action>
+    <!--
+      <action class="fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction" id="TestEye.LoadTransformationsAction">
+        <add-to-group group-id="TestEye.LoadingTransformations"></add-to-group>
+      </action>
+      -->
   </actions>
 
 </idea-plugin>

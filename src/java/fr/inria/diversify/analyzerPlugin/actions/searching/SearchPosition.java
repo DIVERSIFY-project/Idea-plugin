@@ -1,7 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.actions.searching;
 
-import com.intellij.ui.treeStructure.Tree;
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 
@@ -22,11 +21,11 @@ public class SearchPosition extends WinAction {
 
     private int direction = 1;
 
-    public SearchPosition(MainToolWin mainToolWin) {
+    public SearchPosition(MainToolWinv0 mainToolWin) {
         super(mainToolWin);
     }
 
-    public SearchPosition(MainToolWin me, int i) {
+    public SearchPosition(MainToolWinv0 me, int i) {
         super(me);
         direction = i;
     }

@@ -1,7 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.actions.reporting;
 
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
-import fr.inria.diversify.analyzerPlugin.actions.Complain;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
+import fr.inria.diversify.analyzerPlugin.actions.ComplainAction;
 import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
@@ -22,7 +22,7 @@ public class DepthsHistogramAction extends WinAction {
 
     private HashMap<Integer, Integer> distribution;
 
-    public DepthsHistogramAction(MainToolWin mainToolWin) {
+    public DepthsHistogramAction(MainToolWinv0 mainToolWin) {
         super(mainToolWin);
         histogram = new HashMap<Integer, Integer>();
         distribution = new HashMap<Integer, Integer>();
@@ -89,7 +89,7 @@ public class DepthsHistogramAction extends WinAction {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("c:/reportHistogram.txt"), "utf-8"));
             writer.append(b);
         } catch (IOException ex) {
-            new Complain(getMainToolWin(), "Cannot write to file", ex, false).execute();
+            //new ComplainAction(getMainToolWin(), "Cannot write to file", ex, false).execute();
         } finally {
             try {
                 writer.close();

@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.actions.display;
 
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
@@ -19,7 +19,7 @@ import java.awt.*;
  */
 public class ShowTransformationProperties extends WinAction {
 
-    public ShowTransformationProperties(MainToolWin toolWin) {
+    public ShowTransformationProperties(MainToolWinv0 toolWin) {
         super(toolWin);
     }
 

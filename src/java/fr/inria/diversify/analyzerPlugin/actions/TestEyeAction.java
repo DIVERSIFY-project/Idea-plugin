@@ -1,0 +1,86 @@
+package fr.inria.diversify.analyzerPlugin.actions;
+
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.ui.awt.RelativePoint;
+import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
+import fr.inria.diversify.analyzerPlugin.gui.TestEyeExplorer;
+
+import javax.swing.*;
+
+/**
+ * Base action for all TestEye actions
+ * <p/>
+ * Created by marodrig on 27/01/2015.
+ */
+public abstract class TestEyeAction extends AnAction {
+
+    private static final String TEST_EYE_NOT_SET = "Test eye component not set";
+
+    private static final String CANT_FIND_ACTION = "Can't find action ";
+
+    public TestEyeAction() {
+        super();
+    }
+
+    public TestEyeAction(String caption, String description, Icon icon) {
+        super(caption, description, icon);
+    }
+
+    /**
+     * Get the project component from the event
+     *
+     * @param event Event containing the component
+     * @return
+     */
+    public TestEyeProjectComponent getComponent(AnActionEvent event) {
+        if (!event.getProject().hasComponent(TestEyeProjectComponent.class))
+            throw new IllegalStateException(TEST_EYE_NOT_SET);
+        return event.getProject().getComponent(TestEyeProjectComponent.class);
+    }
+
+    /**
+     * Returns an action from the action manager given its class
+     *
+     * @param event Event containing the action manager
+     * @param c     Class of the action
+     * @return
+     */
+    public AnAction getAction(AnActionEvent event, Class<?> c) {
+        String actionName = "TestEye." + c.getSimpleName();
+
+        if (event.getActionManager().getAction(actionName) == null)
+            throw new IllegalStateException(CANT_FIND_ACTION + actionName);
+
+        return event.getActionManager().getAction(actionName);
+    }
+
+    /**
+     * A method that shows a complain text
+     *
+     * @param message      Message to show in the complain
+     * @param component    Center component
+     * @param e            Exception that caused the complain
+     */
+    protected void softComplain(JComponent component, String message, Exception e) {
+        JBPopupFactory.getInstance()
+                .createHtmlTextBalloonBuilder("Warning: " + message, MessageType.WARNING, null)
+                .setFadeoutTime(7500)
+                .createBalloon()
+                .show(RelativePoint.getCenterOf(component), Balloon.Position.atRight);
+    }
+
+    /**
+     * A method that shows a complain text
+     *
+     * @param message      Message to show in the complain
+     * @param e            Exception that caused the complain
+     */
+    protected void hardComplain(String message, Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Unable to load transformations",  JOptionPane.ERROR_MESSAGE);
+    }
+
+}

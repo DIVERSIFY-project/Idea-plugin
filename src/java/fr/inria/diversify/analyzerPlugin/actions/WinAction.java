@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.actions;
 
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 
 /**
@@ -8,10 +8,10 @@ import fr.inria.diversify.analyzerPlugin.model.CodePosition;
  */
 public abstract class WinAction {
 
-    private MainToolWin mainToolWin;
+    private MainToolWinv0 mainToolWin;
 
 
-    public WinAction(MainToolWin mainToolWin) {
+    public WinAction(MainToolWinv0 mainToolWin) {
         this.mainToolWin = mainToolWin;
     }
 
@@ -20,11 +20,11 @@ public abstract class WinAction {
      *
      * @return
      */
-    protected MainToolWin getMainToolWin() {
+    protected MainToolWinv0 getMainToolWin() {
         return mainToolWin;
     }
 
-    protected void setMainToolWin(MainToolWin mainToolWin) {
+    protected void setMainToolWin(MainToolWinv0 mainToolWin) {
         this.mainToolWin = mainToolWin;
     }
 
@@ -38,9 +38,17 @@ public abstract class WinAction {
     }
 
     protected void complain(String s, Exception e) {
-        Complain c = new Complain(getMainToolWin(), "Cannot apply!! Something went wrong + " + e.getMessage(), e, false);
-        c.execute();
+        //ComplainAction c = new ComplainAction(getMainToolWin(), "Cannot apply!! Something went wrong + " + e.getMessage(), e, false);
+        //c.execute();
     }
 
     public abstract void execute();
+
+    /**
+     * Diminutive for a very used property getWinMain()
+     * @return The MainToolWin
+     */
+    protected MainToolWinv0 win() {
+        return mainToolWin;
+    }
 }

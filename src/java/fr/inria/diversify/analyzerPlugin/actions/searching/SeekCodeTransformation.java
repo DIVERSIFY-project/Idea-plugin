@@ -1,13 +1,12 @@
 package fr.inria.diversify.analyzerPlugin.actions.searching;
 
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 
@@ -23,7 +22,7 @@ public class SeekCodeTransformation extends WinAction {
     private boolean includeMethodName;
     private CodePosition codePosition;
 
-    public SeekCodeTransformation(MainToolWin toolWin, CodePosition cp, boolean includeMethodName) {
+    public SeekCodeTransformation(MainToolWinv0 toolWin, CodePosition cp, boolean includeMethodName) {
         super(toolWin);
         this.includeMethodName = includeMethodName;
         this.codePosition = cp;

@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.actions;
 
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
 import java.io.*;
@@ -21,7 +21,7 @@ public class HitsAndAssertsReportAction extends WinAction {
 
     int top;
 
-    public HitsAndAssertsReportAction(MainToolWin mainToolWin, int top) {
+    public HitsAndAssertsReportAction(MainToolWinv0 mainToolWin, int top) {
         super(mainToolWin);
         histogram = new HashMap<Integer, Integer>();
         distribution = new HashMap<Integer, Integer>();
@@ -44,7 +44,7 @@ public class HitsAndAssertsReportAction extends WinAction {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("c:/topHitsAndAsserts.txt"), "utf-8"));
             writer.append(b);
         } catch (IOException ex) {
-            new Complain(getMainToolWin(), "Cannot write to file", ex, false).execute();
+            new ComplainAction(getMainToolWin(), "Cannot write to file", ex, false).execute();
         } finally {
             try {
                 writer.close();

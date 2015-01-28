@@ -1,7 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.actions.reporting;
 
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
-import fr.inria.diversify.analyzerPlugin.actions.Complain;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
+import fr.inria.diversify.analyzerPlugin.actions.ComplainAction;
 import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
@@ -16,7 +16,7 @@ import java.util.Collection;
  */
 public class DepthsReportsAction extends WinAction {
 
-    public DepthsReportsAction(MainToolWin mainToolWin) {
+    public DepthsReportsAction(MainToolWinv0 mainToolWin) {
         super(mainToolWin);
     }
 
@@ -50,7 +50,7 @@ public class DepthsReportsAction extends WinAction {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("c:/report.txt"), "utf-8"));
             writer.append(b);
         } catch (IOException ex) {
-            new Complain(getMainToolWin(), "Cannot write to file", ex, false).execute();
+            new ComplainAction(getMainToolWin(), "Cannot write to file", ex, false).execute();
         } finally {
             try {writer.close();} catch (Exception ex) {}
         }

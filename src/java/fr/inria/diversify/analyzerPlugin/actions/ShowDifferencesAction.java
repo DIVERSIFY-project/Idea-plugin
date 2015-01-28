@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.actions;
 
-import fr.inria.diversify.analyzerPlugin.MainToolWin;
+import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
@@ -10,7 +10,7 @@ import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 public class ShowDifferencesAction extends WinAction {
 
     CodePosition data;
-    public ShowDifferencesAction(MainToolWin mainToolWin, CodePosition data) {
+    public ShowDifferencesAction(MainToolWinv0 mainToolWin, CodePosition data) {
         super(mainToolWin);
         this.data = data;
     }

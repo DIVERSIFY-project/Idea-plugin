@@ -8,9 +8,9 @@
       <sourceFolder url="file://$MODULE_DIR$/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test/resources" type="java-test-resource" />
     </content>
-    <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="org.jmockit:jmockit:1.14" level="project" />
+    <orderEntry type="jdk" jdkName="IDEA IC-135.909" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="TEST" name="org.jmockit:jmockit:1.14" level="project" />
     <orderEntry type="library" name="core-1.0-SNAPSHOT-jar-with-dependencies" level="project" />
     <orderEntry type="library" name="core-1.0-SNAPSHOT-tests" level="project" />
   </component>
