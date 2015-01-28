@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin.it;
+package fr.inria.diversify.analyzerPlugin.deprecated;
 
 import fr.inria.diversify.analyzerPlugin.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataLoader;

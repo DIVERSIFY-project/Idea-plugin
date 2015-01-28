@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin.ut;
+package fr.inria.diversify.analyzerPlugin.deprecated;
 
 import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
@@ -21,6 +21,7 @@ public class MainToolWinTest {
 
 
     @Test
+    @Ignore
     public void testCreation() throws Exception {
         //Test that no weird things occur during creation
         MainToolWinv0 m = new MainToolWinv0();

@@ -14,10 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.PicoContainer;
 
+import java.io.File;
+
 /**
  * Created by marodrig on 27/01/2015.
  */
 public class FakeProject implements Project {
+
+    private static final String BASE_PATH = "test\\data\\test-project";
 
     private TestEyeProjectComponent testEyeComponent = null;
 
@@ -34,7 +38,7 @@ public class FakeProject implements Project {
 
     @Override
     public String getBasePath() {
-        return null;
+        return new File(BASE_PATH).getAbsolutePath();
     }
 
     @Nullable
