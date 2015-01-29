@@ -3,6 +3,7 @@ package fr.inria.diversify.analyzerPlugin.gui;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.treeStructure.Tree;
+import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 import org.jetbrains.annotations.Nullable;
@@ -25,22 +26,27 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
 
     public static final DataKey<TreeTransformations>
             TEST_EYE_TREE_TRANSFORMATIONS = DataKey.create("test.eye.tree.transformations");
-    private CodePosition selectedCodePosition;
+
 
     public TreeTransformations() {
         super((TreeModel) getDefaultTreeModel());
-        installPopup();
-        installDoubleClick();
+        init();
     }
 
     public TreeTransformations(TreeNode root) {
         super((TreeModel) (new DefaultTreeModel(root, false)));
-        installPopup();
-        installDoubleClick();
+        init();
     }
 
     public TreeTransformations(TreeModel treemodel) {
         super(treemodel);
+        init();
+    }
+
+    private void init() {
+        setModel(null);
+        setToggleClickCount(0);
+        setRootVisible(false);
         installPopup();
         installDoubleClick();
     }
@@ -61,6 +67,8 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
 
             @Override
             public void mousePressed(MouseEvent e) {
+                ActionManager m = ActionManager.getInstance();
+                m.tryToExecute(m.getAction(ShowTransformationProperties.ID), e, me, null, true);
             }
 
             @Override

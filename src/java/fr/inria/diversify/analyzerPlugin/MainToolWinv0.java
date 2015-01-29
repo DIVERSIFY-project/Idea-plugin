@@ -938,8 +938,8 @@ public class MainToolWinv0 implements ToolWindowFactory {
      * Show properties of the transformation represented by the CodePosition passed as parameter
      */
     private void showProperties() {
-        ShowTransformationProperties showProperty = new ShowTransformationProperties(this);
-        showProperty.execute();
+        //ShowTransformationProperties showProperty = new ShowTransformationProperties(this);
+        //showProperty.execute();
     }
 
     private void seekCodePosition(Boolean includeMethodName) {

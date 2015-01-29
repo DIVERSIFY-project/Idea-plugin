@@ -34,6 +34,22 @@
               </component>
             </children>
           </scrollpane>
+          <scrollpane id="73158">
+            <constraints>
+              <splitpane position="right"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="6c4a1" class="fr.inria.diversify.analyzerPlugin.gui.TransformationsProperties" binding="tblProperties">
+                <constraints/>
+                <properties>
+                  <autoResizeMode value="4"/>
+                  <gridColor color="-7566196"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </splitpane>
       <component id="79a8f" class="javax.swing.JLabel" binding="lblTotals">
