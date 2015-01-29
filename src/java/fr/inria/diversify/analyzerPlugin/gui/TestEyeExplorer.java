@@ -36,7 +36,7 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
     /**
      * Tree with the visible transformations
      */
-    private Tree treeTransformations;
+    private TreeTransformations treeTransformations;
 
     /**
      * Label to show totals
@@ -57,6 +57,10 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
         setIDEObjects(new IDEObjects());
         setContent(pnlContent);
         setToolbar(createToolbarPanel());
+
+        treeTransformations.setToggleClickCount(0);
+        treeTransformations.setRootVisible(false);
+
         registerActions();
     }
 

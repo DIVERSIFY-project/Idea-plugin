@@ -36,7 +36,6 @@ public class ShowTransformationsInTree extends TestEyeAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-
         TestEyeProjectComponent p = getComponent(e);
 
         int tpCount = 0;

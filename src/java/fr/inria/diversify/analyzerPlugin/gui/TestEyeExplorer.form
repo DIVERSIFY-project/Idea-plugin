@@ -15,18 +15,25 @@
           </grid>
         </constraints>
         <properties>
-          <dividerLocation value="247"/>
+          <dividerLocation value="200"/>
           <dividerSize value="5"/>
           <orientation value="0"/>
         </properties>
         <border type="none"/>
         <children>
-          <component id="971df" class="com.intellij.ui.treeStructure.Tree" binding="treeTransformations">
+          <scrollpane id="3d475">
             <constraints>
               <splitpane position="left"/>
             </constraints>
             <properties/>
-          </component>
+            <border type="none"/>
+            <children>
+              <component id="7a7fc" class="fr.inria.diversify.analyzerPlugin.gui.TreeTransformations" binding="treeTransformations">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </splitpane>
       <component id="79a8f" class="javax.swing.JLabel" binding="lblTotals">
