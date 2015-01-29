@@ -1,14 +1,18 @@
 package fr.inria.diversify.analyzerPlugin.gui;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
+import com.intellij.ui.PopupHandler;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.IconUtil;
 import fr.inria.diversify.analyzerPlugin.actions.ComplainAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
+import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,6 +68,12 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
         registerActions();
     }
 
+
+
+    /**
+     * Creates the tool bar panel in the top
+     * @return
+     */
     private JPanel createToolbarPanel() {
 
         final DefaultActionGroup group = new DefaultActionGroup();
@@ -96,5 +106,6 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
 
     public void setIDEObjects(IDEObjects objects) {
         ideObjects = objects;
+        treeTransformations.setIDEObjects(ideObjects);
     }
 }

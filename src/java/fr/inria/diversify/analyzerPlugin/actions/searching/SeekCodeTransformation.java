@@ -1,13 +1,18 @@
 package fr.inria.diversify.analyzerPlugin.actions.searching;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.IconUtil;
 import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
+import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.WinAction;
+import fr.inria.diversify.analyzerPlugin.gui.TreeTransformations;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 
 import javax.swing.*;
@@ -17,21 +22,31 @@ import javax.swing.*;
  *
  * Created by marodrig on 03/11/2014.
  */
-public class SeekCodeTransformation extends WinAction {
+public class SeekCodeTransformation extends TestEyeAction {
+
 
     private boolean includeMethodName;
+
+    /**
+     * Position to travel to
+     */
     private CodePosition codePosition;
 
-    public SeekCodeTransformation(MainToolWinv0 toolWin, CodePosition cp, boolean includeMethodName) {
-        super(toolWin);
-        this.includeMethodName = includeMethodName;
-        this.codePosition = cp;
+    public SeekCodeTransformation() {
+        super("Load transformations", "Load transformations", IconUtil.getAddFolderIcon());
     }
 
+
+
     @Override
-    public void execute() {
-        CodePosition data = codePosition;
-        Project project = getMainToolWin().getProject();
+    public void actionPerformed(AnActionEvent event) {
+
+        //Get the Tranformation's tree thanks tho the data context magic in IntelliJ IDEA framework
+        TreeTransformations tree = event.getData(TreeTransformations.TEST_EYE_TREE_TRANSFORMATIONS);
+
+        CodePosition data = tree.getSelectedCodePosition();
+
+        Project project = event.getProject();
 
         if (data == null) return;
 
@@ -57,11 +72,8 @@ public class SeekCodeTransformation extends WinAction {
             new OpenFileDescriptor(project, vf, line, 0).navigateInEditor(project, false);
 
         } else {
-            JOptionPane.showMessageDialog(getMainToolWin().getPanelContent(),
-                    "I was unable to find the class corresponding to the transformation :( ...\n" +
-                            "Do the transformation file belongs to this project?",
-                    "Ups...",
-                    JOptionPane.ERROR_MESSAGE);
+            softComplain(tree, "I was unable to find the class corresponding to the transformation :( ...\n" +
+                    "Do the transformation file belongs to this project?", null);
         }
     }
 }

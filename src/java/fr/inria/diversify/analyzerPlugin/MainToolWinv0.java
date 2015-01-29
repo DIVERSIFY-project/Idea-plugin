@@ -953,8 +953,10 @@ public class MainToolWinv0 implements ToolWindowFactory {
      * @param cp                code position to navigate to
      */
     private void seekCodePosition(CodePosition cp, Boolean includeMethodName) {
+        /*
         SeekCodeTransformation seek = new SeekCodeTransformation(this, cp, includeMethodName);
         seek.execute();
+        */
     }
 
     /**

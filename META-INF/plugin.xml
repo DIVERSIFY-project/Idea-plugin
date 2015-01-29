@@ -1,55 +1,68 @@
 <idea-plugin version="2">
-  <id>fr.inria.diversify.testEye</id>
-  <name>TestEye transformation analysis</name>
-  <version>1.0</version>
-  <vendor email="marcelino.rodriguez-cancio@irisa.fr" url="http://diverse.irisa.fr/">Diverse Team IRISA</vendor>
+    <id>fr.inria.diversify.testEye</id>
+    <name>TestEye transformation analysis</name>
+    <version>1.0</version>
+    <vendor email="marcelino.rodriguez-cancio@irisa.fr" url="http://diverse.irisa.fr/">Diverse Team IRISA</vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
       TestEye is a productivity tool to easily navigate
       through all transformations in specific places in the code.<br>
     ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
       26/08/2014. Creation of the plugin
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="131"/>
+    <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="131"/>
 
-  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+    <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-      <toolWindow id="TestEye" anchor="right" factoryClass="fr.inria.diversify.analyzerPlugin.TestEyeToolWindowFactory">
-      </toolWindow>
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <toolWindow id="TestEye" anchor="right"
+                    factoryClass="fr.inria.diversify.analyzerPlugin.TestEyeToolWindowFactory">
+        </toolWindow>
+    </extensions>
 
-  <application-components>
-    <!-- Add your application components here -->
-  </application-components>
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
 
-  <project-components>
-    <component>
-      <implementation-class>fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent</implementation-class>
-    </component>
-  </project-components>
+    <project-components>
+        <component>
+            <implementation-class>fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent
+            </implementation-class>
+        </component>
+    </project-components>
 
-  <actions>
-    <!-- Add your actions here -->
-      <action id="SosieAnalyzer 0.1" class="fr.inria.diversify.analyzerPlugin.SosieAnalyzerAction" text="Sosie Analyzer"
-              description="The sosie analyzer is a productivity tool to easily navigate through all transformations created by the sosie generator">
-          <add-to-group group-id="ToolsMenu" anchor="first"/>
-      </action>
-    <!--
-      <action class="fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction" id="TestEye.LoadTransformationsAction">
-        <add-to-group group-id="TestEye.LoadingTransformations"></add-to-group>
-      </action>
-      -->
-  </actions>
+    <actions>
+        <group id="TreeTransformations.Context">
+            <reference id="TestEye.SeekCodePosition"/>
+        </group>
+
+        <!-- Add your actions here
+        <action id="SosieAnalyzer 0.1" class="fr.inria.diversify.analyzerPlugin.SosieAnalyzerAction"
+                text="Sosie Analyzer"
+                description="The sosie analyzer is a productivity tool to easily navigate through all transformations created by the sosie generator">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+
+        <action id="TestEye.SeekCodePosition"
+                class="fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation"
+                >
+            <add-to-group group-id="TreeTransformations.Context" anchor="first"/>
+        </action>
+
+          <action class="fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction" id="TestEye.LoadTransformationsAction">
+            <add-to-group group-id="TestEye.LoadingTransformations"></add-to-group>
+          </action>
+          -->
+    </actions>
 
 </idea-plugin>

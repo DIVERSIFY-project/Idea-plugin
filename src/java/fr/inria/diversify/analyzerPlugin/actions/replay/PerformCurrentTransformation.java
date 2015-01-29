@@ -46,7 +46,8 @@ public class PerformCurrentTransformation extends WinAction {
                 getMainToolWin().getTransplantTransformation(transplant, pomPath, srcDir);
                 //Applies or restores the transformation
                 tp.switchTransformation(transplant, srcDir, srcDir + TEMP_MOD);
-                new SeekCodeTransformation(getMainToolWin(), tp, false).execute();
+                //new SeekCodeTransformation(getMainToolWin(), tp, false).execute();
+                //new SeekCodeTransformation(getMainToolWin(), tp, false).execute();
             } catch (Exception e) {
                 complain("Cannot apply!! Something went wrong + " + e.getMessage(), e);
             }

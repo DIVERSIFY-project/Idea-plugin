@@ -66,6 +66,7 @@ public abstract class TestEyeAction extends AnAction {
      * @param e            Exception that caused the complain
      */
     protected void softComplain(JComponent component, String message, Exception e) {
+        if ( e != null ) message += e.getMessage();
         JBPopupFactory.getInstance()
                 .createHtmlTextBalloonBuilder("Warning: " + message, MessageType.WARNING, null)
                 .setFadeoutTime(7500)

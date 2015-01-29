@@ -25,6 +25,8 @@ public class FakeProject implements Project {
 
     private TestEyeProjectComponent testEyeComponent = null;
 
+    private String basePath;
+
     @NotNull
     @Override
     public String getName() {
@@ -38,7 +40,7 @@ public class FakeProject implements Project {
 
     @Override
     public String getBasePath() {
-        return new File(BASE_PATH).getAbsolutePath();
+        return new File(basePath).getAbsolutePath();
     }
 
     @Nullable
@@ -168,5 +170,9 @@ public class FakeProject implements Project {
     @Override
     public <T> void putUserData(@NotNull Key<T> key, @Nullable T t) {
 
+    }
+
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
     }
 }
