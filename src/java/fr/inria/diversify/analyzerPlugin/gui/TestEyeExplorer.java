@@ -1,20 +1,16 @@
 package fr.inria.diversify.analyzerPlugin.gui;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.ui.customization.CustomizationUtil;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
-import com.intellij.ui.PopupHandler;
-import com.intellij.ui.components.MultiColumnList;
-import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.IconUtil;
-import fr.inria.diversify.analyzerPlugin.actions.ComplainAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
-import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
+import fr.inria.diversify.analyzerPlugin.actions.searching.FilterAndSortAction;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -24,6 +20,8 @@ import java.awt.*;
  * Created by marodrig on 27/01/2015.
  */
 public class TestEyeExplorer extends SimpleToolWindowPanel {
+
+    private static final Logger logger = Logger.getInstance("#" + TestEyeExplorer.class.getName());
 
     /**
      * Prefix of the all plugin's actions and component
@@ -66,6 +64,9 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
 
     public TestEyeExplorer(Project project) {
         super(true, true);
+
+        logger.info("Hi, I'm logging!");
+
         setIDEObjects(new IDEObjects());
         setContent(pnlContent);
         setToolbar(createToolbarPanel());
@@ -103,6 +104,8 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
 
         m.registerAction(PLUG_NAME_PREFIX + ShowTransformationProperties.class.getSimpleName(),
                 new ShowTransformationProperties(tblProperties));
+
+        m.registerAction(PLUG_NAME_PREFIX + FilterAndSortAction.class.getSimpleName(), new FilterAndSortAction());
     }
 
     /**

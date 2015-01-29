@@ -41,29 +41,4 @@
         </component>
     </project-components>
 
-    <!--
-        <acti<!--
-            <group id="TreeTransformations.Context">
-                <reference id="TestEye.SeekCodePosition"/>
-            </group>
-
-             Add your actions here
-            <action id="SosieAnalyzer 0.1" class="fr.inria.diversify.analyzerPlugin.SosieAnalyzerAction"
-                    text="Sosie Analyzer"
-                    description="The sosie analyzer is a productivity tool to easily navigate through all transformations created by the sosie generator">
-                <add-to-group group-id="ToolsMenu" anchor="first"/>
-            </action>
-
-            <action id="TestEye.SeekCodePosition"
-                    class="fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation"
-                    >
-                <add-to-group group-id="TreeTransformations.Context" anchor="first"/>
-            </action>
-
-              <action class="fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction" id="TestEye.LoadTransformationsAction">
-                <add-to-group group-id="TestEye.LoadingTransformations"></add-to-group>
-              </action>
-
-    </actions>-->
-
 </idea-plugin>
