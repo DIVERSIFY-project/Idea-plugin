@@ -601,4 +601,16 @@ public class TransformationInfo extends CodePosition {
 
         return r.values();
     }
+
+    /**
+     * Get the number of visible transplants
+     * @return The number of visible transplants
+     */
+    public int getVisibleTransplants() {
+        int i = 0;
+        for ( TransplantInfo t : getTransplants() ) {
+            if ( t.isVisible() ) i++;
+        }
+        return i;
+    }
 }
