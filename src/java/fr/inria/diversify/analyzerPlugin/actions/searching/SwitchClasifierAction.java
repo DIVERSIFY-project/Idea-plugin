@@ -25,6 +25,6 @@ public class SwitchClasifierAction extends TestEyeAction {
     public void actionPerformed(AnActionEvent e) {
         TestEyeProjectComponent c = e.getProject().getComponent(TestEyeProjectComponent.class);
         c.switchClassifier(classifierClass);
-        getAction(e, FilterAndSortAction.class).actionPerformed(e);
+        tryExecute(FilterAndSortAction.class, e);
     }
 }

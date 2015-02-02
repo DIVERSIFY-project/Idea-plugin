@@ -11,17 +11,14 @@ import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
  */
 public class HideShowIntersectionAction extends TestEyeAction {
 
-    private final Class<? extends TransformClasifier> classifierClass;
-
-    public HideShowIntersectionAction(Class<? extends TransformClasifier> klass, String description) {
-        super(description, description, IconUtil.getAddIcon());
-        this.classifierClass = klass;
+    public HideShowIntersectionAction() {
+        super("Show intersection", "Show intersection", IconUtil.getAddIcon());
     }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         TestEyeProjectComponent c = e.getProject().getComponent(TestEyeProjectComponent.class);
-        c.switchClassifier(classifierClass);
-        getAction(e, FilterAndSortAction.class).actionPerformed(e);
+        c.switchViewIntersection();
+        tryExecute(FilterAndSortAction.class, e);
     }
 }

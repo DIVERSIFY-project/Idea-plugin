@@ -9,10 +9,12 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.*;
 import fr.inria.diversify.analyzerPlugin.actions.ComplainAction;
+import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
-import fr.inria.diversify.analyzerPlugin.gui.TestEyeExplorer;
+import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
 import fr.inria.diversify.ut.MockInputProgram;
+import junit.framework.Assert;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
@@ -25,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import static fr.inria.diversify.analyzerPlugin.TestHelpers.assertActionCalled;
 import static fr.inria.diversify.analyzerPlugin.ut.actions.ShowTransformationsInTreeTest.assertShowingTransformationsInTree;
 import static junit.framework.TestCase.assertEquals;
 
@@ -63,7 +66,7 @@ public class LoadTransformationsActionTest {
 
     public static ActionManager buildActionManager(Class<?> c, AnAction anAction) {
         ActionManager m = new FakeActionManager();
-        m.registerAction(TestEyeExplorer.PLUG_NAME_PREFIX + c.getSimpleName(), anAction);
+        m.registerAction(TestEyeApplicationComponentImpl.PLUG_NAME_PREFIX + c.getSimpleName(), anAction);
         return m;
     }
 
@@ -86,15 +89,19 @@ public class LoadTransformationsActionTest {
 
         //Load the transformations and then call the post action
         LoadTransformationsAction action = new MockLoadTransformationsAction();
+        action.setIdeObjects(new FakeIDEObjects());
         action.actionPerformed(new FakeAnActionEvent(buildActionManager(st.getClass(), st)));
+
         //Verify the file chooser was called
         new Verifications() {{
             FileChooser.chooseFile(withInstanceOf(FileChooserDescriptor.class), null, null);
             times = 1;
         }};
         //Verify post action was called
-        assertShowingTransformationsInTree(tree);
+        assertActionCalled(action, ShowTransformationsInTree.class, 1);
     }
+
+
 
     /**
      * Test the proper loading of the transformations.

@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataKeys;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
+import fr.inria.diversify.analyzerPlugin.gui.FilterPanel;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 
@@ -59,7 +60,8 @@ public class ShowTransformationsInTree extends TestEyeAction {
             }
         }
         tree.setModel(model);
-        if ( label != null )
-            label.setText("Transformations: " + tCount + " | " + "Pots: " + tpCount);
+        if ( label != null ) label.setText("Transformations: " + tCount + " | " + "Pots: " + tpCount);
+
+        tryExecute(EnableDisableFilterPanel.class, e);
     }
 }

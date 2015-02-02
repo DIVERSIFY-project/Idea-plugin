@@ -1,5 +1,6 @@
 package fr.inria.diversify.analyzerPlugin;
 
+import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.transformation.ast.ASTAdd;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import static fr.inria.diversify.ut.json.SectionTestUtils.list;
+import static junit.framework.TestCase.assertEquals;
 
 /**
  * Created by marodrig on 27/01/2015.
@@ -27,6 +29,15 @@ public class TestHelpers {
         return s.writeToJsonNow();
     }
 
+    /**
+     * Assert that an action was called by another
+     * @param caller Calling action
+     * @param calledClass Called action class
+     * @param count number of times
+     */
+    public static void assertActionCalled(TestEyeAction caller, Class<?> calledClass, int count) {
+        assertEquals(count, (int) ((FakeIDEObjects) caller.getIdeObjects()).tryExecuteCount.get(calledClass.getName()));
+    }
 
     /**
      * Creates a collection of transformations that matches the fake fragments of the mock program

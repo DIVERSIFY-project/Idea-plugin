@@ -209,4 +209,8 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
             visibleClassifiers.put(k, value);
         }
     }
+
+    public void switchViewIntersection() {
+        setShowClassifiersIntersection(!showClassifiersIntersection);
+    }
 }

@@ -2,10 +2,13 @@ package fr.inria.diversify.analyzerPlugin.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
+import fr.inria.diversify.analyzerPlugin.IDEObjects;
+import fr.inria.diversify.analyzerPlugin.IDEObjectsImpl;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.gui.TestEyeExplorer;
 
@@ -18,9 +21,12 @@ import javax.swing.*;
  */
 public abstract class TestEyeAction extends AnAction {
 
+    private static final Logger logger = Logger.getInstance("#" + TestEyeAction.class.getName());
+
     private static final String TEST_EYE_NOT_SET = "Test eye component not set";
 
-    private static final String CANT_FIND_ACTION = "Can't find action ";
+
+    private IDEObjects ideObjects;
 
     public TestEyeAction() {
         super();
@@ -42,31 +48,17 @@ public abstract class TestEyeAction extends AnAction {
         return event.getProject().getComponent(TestEyeProjectComponent.class);
     }
 
-    /**
-     * Returns an action from the action manager given its class
-     *
-     * @param event Event containing the action manager
-     * @param c     Class of the action
-     * @return
-     */
-    public AnAction getAction(AnActionEvent event, Class<?> c) {
-        String actionName = "TestEye." + c.getSimpleName();
 
-        if (event.getActionManager().getAction(actionName) == null)
-            throw new IllegalStateException(CANT_FIND_ACTION + actionName);
-
-        return event.getActionManager().getAction(actionName);
-    }
 
     /**
      * A method that shows a complain text
      *
-     * @param message      Message to show in the complain
-     * @param component    Center component
-     * @param e            Exception that caused the complain
+     * @param message   Message to show in the complain
+     * @param component Center component
+     * @param e         Exception that caused the complain
      */
     protected void softComplain(JComponent component, String message, Exception e) {
-        if ( e != null ) message += e.getMessage();
+        if (e != null) message += e.getMessage();
         JBPopupFactory.getInstance()
                 .createHtmlTextBalloonBuilder("Warning: " + message, MessageType.WARNING, null)
                 .setFadeoutTime(7500)
@@ -77,11 +69,34 @@ public abstract class TestEyeAction extends AnAction {
     /**
      * A method that shows a complain text
      *
-     * @param message      Message to show in the complain
-     * @param e            Exception that caused the complain
+     * @param message Message to show in the complain
+     * @param e       Exception that caused the complain
      */
     protected void hardComplain(String message, Exception e) {
-        JOptionPane.showMessageDialog(null, e.getMessage(), "Unable to load transformations",  JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Unable to load transformations", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Tries to execute an action
+     *
+     * @param actionClass class of the action to execute
+     * @param event       Event to pass on to the action
+     */
+    protected void tryExecute(Class<?> actionClass, AnActionEvent event) {
+        getIdeObjects().getApplicationComponent().tryExecute(actionClass, event);
+    }
+
+    /**
+     * Set the proxy object to access IDE singletons
+     * @param ideObjects
+     */
+    public void setIdeObjects(IDEObjects ideObjects) {
+        this.ideObjects = ideObjects;
+    }
+
+    public IDEObjects getIdeObjects() {
+        //Convention over configuration
+        if ( ideObjects == null ) setIdeObjects(new IDEObjectsImpl());
+        return ideObjects;
+    }
 }

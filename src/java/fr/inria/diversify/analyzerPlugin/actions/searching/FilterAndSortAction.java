@@ -45,7 +45,7 @@ public class FilterAndSortAction extends TestEyeAction {
 
             public void onSuccess() {
                 super.onSuccess();
-                getAction(event, ShowTransformationsInTree.class).actionPerformed(event);
+                tryExecute(ShowTransformationsInTree.class, event);
             }
 
             public void run(@NotNull ProgressIndicator progressIndicator) {

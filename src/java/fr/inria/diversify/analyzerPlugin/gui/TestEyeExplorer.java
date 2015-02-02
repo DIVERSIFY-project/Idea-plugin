@@ -1,16 +1,13 @@
 package fr.inria.diversify.analyzerPlugin.gui;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionPlaces;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
-import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
-import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
+import fr.inria.diversify.analyzerPlugin.IDEObjects;
+import fr.inria.diversify.analyzerPlugin.IDEObjectsImpl;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
-import fr.inria.diversify.analyzerPlugin.actions.searching.FilterAndSortAction;
+import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -23,10 +20,6 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
 
     private static final Logger logger = Logger.getInstance("#" + TestEyeExplorer.class.getName());
 
-    /**
-     * Prefix of the all plugin's actions and component
-     */
-    public static final String PLUG_NAME_PREFIX = "TestEye.";
 
     /**
      * A proxy to access to all IntelliJ IDEA singletons
@@ -38,36 +31,48 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
      */
     public JPanel pnlContent;
 
+    public JPanel getPnlContent () {
+        return pnlContent;
+    }
+
     /**
      * Tree with the visible transformations
      */
     private TreeTransformations treeTransformations;
+
+    public TreeTransformations getTreeTransformations() {
+        return treeTransformations;
+    }
 
     /**
      * Label to show totals
      */
     private JLabel lblTotals;
 
+    public JLabel getLblTotals() {
+        return lblTotals;
+    }
+
     /**
      * Table for transformations properties
      */
     private TransformationsProperties tblProperties;
 
+    public TransformationsProperties getTblProperties() {return tblProperties;}
+
     /**
-     * A proxy to access IDE singleton objects
+     * List with all the filters
      */
-    public class IDEObjects {
-        public ActionManager getActionManager() {
-            return ActionManager.getInstance();
-        }
-    }
+    private FilterPanel lstFilters;
+
+    public FilterPanel getLstFilters() { return lstFilters; }
 
     public TestEyeExplorer(Project project) {
         super(true, true);
 
         logger.info("Hi, I'm logging!");
 
-        setIDEObjects(new IDEObjects());
+        setIDEObjects(new IDEObjectsImpl());
         setContent(pnlContent);
         setToolbar(createToolbarPanel());
         registerActions();
@@ -75,10 +80,12 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
         Object[] s = new Object[]{"Property", "Value"};
         DefaultTableModel dtm = new DefaultTableModel(s, 0);
         tblProperties.setModel(dtm);
+        lstFilters.setEnabled(false);
     }
 
     /**
      * Creates the tool bar panel in the top
+     *
      * @return
      */
     private JPanel createToolbarPanel() {
@@ -97,15 +104,10 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
      */
     private void registerActions() {
         //TODO: Refactor this to a "registrar"
-        ActionManager m = getIDEObjects().getActionManager();
-
-        m.registerAction(PLUG_NAME_PREFIX + ShowTransformationsInTree.class.getSimpleName(),
-                new ShowTransformationsInTree(treeTransformations, lblTotals));
-
-        m.registerAction(PLUG_NAME_PREFIX + ShowTransformationProperties.class.getSimpleName(),
-                new ShowTransformationProperties(tblProperties));
-
-        m.registerAction(PLUG_NAME_PREFIX + FilterAndSortAction.class.getSimpleName(), new FilterAndSortAction());
+        TestEyeApplicationComponentImpl comp =
+                (TestEyeApplicationComponentImpl)getIDEObjects().getApplicationComponent();
+        comp.setExplorer(this);
+        comp.registerActions(ideObjects);
     }
 
     /**
@@ -120,5 +122,7 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
     public void setIDEObjects(IDEObjects objects) {
         ideObjects = objects;
         treeTransformations.setIDEObjects(ideObjects);
+        tblProperties.setIDEObjects(ideObjects);
+        lstFilters.setIdeObject(ideObjects);
     }
 }

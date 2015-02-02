@@ -3,9 +3,13 @@ package fr.inria.diversify.analyzerPlugin.gui;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.treeStructure.Tree;
+import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
+import fr.inria.diversify.analyzerPlugin.actions.searching.SwitchClasifierAction;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -14,6 +18,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -22,7 +27,7 @@ import java.awt.event.MouseListener;
  */
 public class TreeTransformations extends Tree implements com.intellij.openapi.actionSystem.DataProvider {
 
-    private TestEyeExplorer.IDEObjects ideObjects;
+    private IDEObjects ideObjects;
 
     public static final DataKey<TreeTransformations>
             TEST_EYE_TREE_TRANSFORMATIONS = DataKey.create("test.eye.tree.transformations");
@@ -57,7 +62,7 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
     private void installDoubleClick() {
 
         final Tree me = this;
-        final MouseListener listener = new MouseListener() {
+        final MouseListener listener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -69,20 +74,6 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
             public void mousePressed(MouseEvent e) {
                 ActionManager m = ActionManager.getInstance();
                 m.tryToExecute(m.getAction(ShowTransformationProperties.ID), e, me, null, true);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
             }
         };
 
@@ -99,7 +90,7 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
                 final DefaultActionGroup popupGroup = new DefaultActionGroup();
                 popupGroup.add(new SeekCodeTransformation());
                 ActionPopupMenu popupMenu = ideObjects.getActionManager().createActionPopupMenu(
-                        ActionPlaces.ANT_EXPLORER_POPUP, popupGroup);
+                        TreeTransformations.class.getName(), popupGroup);
                 if (popupMenu != null) {
                     popupMenu.getComponent().show(comp, x, y);
                 }
@@ -114,11 +105,11 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
         return s.equals(TEST_EYE_TREE_TRANSFORMATIONS.getName()) ? this : null;
     }
 
-    public TestEyeExplorer.IDEObjects getIDEObjects() {
+    public IDEObjects getIDEObjects() {
         return ideObjects;
     }
 
-    public void setIDEObjects(TestEyeExplorer.IDEObjects ideObjects) {
+    public void setIDEObjects(IDEObjects ideObjects) {
         this.ideObjects = ideObjects;
     }
 

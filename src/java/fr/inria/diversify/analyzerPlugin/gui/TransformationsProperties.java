@@ -1,6 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.gui;
 
 import com.intellij.openapi.actionSystem.DataKey;
+import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
@@ -21,6 +22,8 @@ public class TransformationsProperties extends JTable implements com.intellij.op
 
     public static final DataKey<TransformationsProperties>
             TEST_EYE_PROPERTY_TABLE = DataKey.create("test.eye.property.table");
+
+    private IDEObjects ideObjects;
 
 
     public TransformationsProperties() {
@@ -91,5 +94,9 @@ public class TransformationsProperties extends JTable implements com.intellij.op
     @Override
     public Object getData(String s) {
         return s.equals(TEST_EYE_PROPERTY_TABLE.getName()) ? this : null;
+    }
+
+    public void setIDEObjects(IDEObjects IDEObjects) {
+        this.ideObjects = IDEObjects;
     }
 }

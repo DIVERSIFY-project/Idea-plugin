@@ -31,7 +31,10 @@
     </extensions>
 
     <application-components>
-        <!-- Add your application components here -->
+        <component>
+            <interface-class>fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl</interface-class>
+            <implementation-class>fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl</implementation-class>
+        </component>
     </application-components>
 
     <project-components>

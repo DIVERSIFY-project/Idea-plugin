@@ -63,7 +63,7 @@ public class LoadTransformationsAction extends TestEyeAction {
             c.setInfos(new ArrayList<>(TransformationInfo.fromJSON(getReader(path), c.getProgram())));
             logger.info("Transformations loaded: " + c.getInfos().size());
 
-            getAction(e, ShowTransformationsInTree.class).actionPerformed(e);
+            tryExecute(ShowTransformationsInTree.class, e);
             logger.info("Transformations presented!");
         } catch (Exception ex) {
             hardComplain("Unable to load transformations", ex);
