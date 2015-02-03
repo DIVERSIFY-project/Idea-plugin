@@ -50,6 +50,7 @@ public class FilterPanel extends JBList {
         DefaultListModel model = (DefaultListModel) getModel();
         ActionCheckBox c = (ActionCheckBox)model.elementAt(SHOW_INTERSECTION_INDEX);
         c.setSelected(value);
+        repaint();
     }
 
     /**
@@ -130,8 +131,9 @@ public class FilterPanel extends JBList {
                     ActionCheckBox checkbox = (ActionCheckBox) getModel().getElementAt(index);
                     checkbox.setSelected(!checkbox.isSelected());
                     ideObjects.getActionManager().tryToExecute(checkbox.action, e, e.getComponent(), null, true);
-                    repaint();
+
                 }
+                repaint();
             }
         };
         addMouseListener(listener);

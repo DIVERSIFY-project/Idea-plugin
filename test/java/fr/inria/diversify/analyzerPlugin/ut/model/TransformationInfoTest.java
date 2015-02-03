@@ -4,6 +4,9 @@ import fr.inria.diversify.analyzerPlugin.TestHelpers;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.transformation.Transformation;
+import fr.inria.diversify.transformation.ast.ASTAdd;
+import fr.inria.diversify.transformation.ast.ASTDelete;
+import fr.inria.diversify.transformation.ast.ASTReplace;
 import fr.inria.diversify.ut.MockInputProgram;
 import fr.inria.diversify.ut.json.output.JsonSosieOutputForUT;
 import mockit.Mocked;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by marodrig on 04/09/2014.
@@ -110,16 +114,25 @@ public class TransformationInfoTest {
         assertInfosWhereCreatedProperly(infos);
     }
 
+
     private void assertInfosWhereCreatedProperly(ArrayList<TransformationInfo> infos) {
         assertEquals(2, infos.size());
         assertEquals(3, infos.get(0).getTransplants().size());
         assertEquals(1, infos.get(1).getTransplants().size());
 
+        //Assert the transplant where properly loaded
         assertEquals("add", infos.get(0).getTransplants().get(0).getType());
         assertEquals("replace", infos.get(0).getTransplants().get(1).getType());
         assertEquals("delete", infos.get(0).getTransplants().get(2).getType());
+
+        //Assert transformations where properly set
+        assertNotNull(infos.get(0).getTransplants().get(0).getTransformation());
+        assertEquals(ASTAdd.class, infos.get(0).getTransplants().get(0).getTransformation().getClass());
+
+        assertNotNull(infos.get(0).getTransplants().get(2).getTransformation());
+        assertEquals(ASTDelete.class, infos.get(0).getTransplants().get(2).getTransformation().getClass());
+
+        assertNotNull(infos.get(1).getTransplants().get(0).getTransformation());
+        assertEquals(ASTReplace.class, infos.get(1).getTransplants().get(0).getTransformation().getClass());
     }
-
-
-
 }

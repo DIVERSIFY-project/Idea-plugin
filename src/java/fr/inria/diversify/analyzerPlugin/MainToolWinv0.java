@@ -571,7 +571,7 @@ public class MainToolWinv0 implements ToolWindowFactory {
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         /*String resPath;
         try {
-            resPath = getClass().getResource("/images").toURI().getPath();
+            resPath = getClass().getResource("/icons").toURI().getPath();
             TransplantNodeRenderer renderer = new TransplantNodeRenderer(
                     new ImageIcon(resPath + "/add.png"), new ImageIcon(resPath + "/replace.png"),
                     new ImageIcon(resPath + "/delete.png"), new ImageIcon(resPath + "/tp.png")
@@ -579,7 +579,7 @@ public class MainToolWinv0 implements ToolWindowFactory {
             getTreeTransformations().setCellRenderer(renderer);
 
         } catch (URISyntaxException e) {
-            complain("Cannot load images :(", null);
+            complain("Cannot load icons :(", null);
         }*/
 
         Content content = contentFactory.createContent(pnlContent, "", false);

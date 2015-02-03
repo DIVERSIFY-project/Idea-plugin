@@ -130,7 +130,6 @@ public abstract class TransformClasifier {
     }
 
     protected boolean hasElementOfType(CtElement e, Class<?> toQuery) {
-
         return toQuery.isAssignableFrom(e.getClass()) || getElementsOfType(e, toQuery).size() > 0;
     }
 

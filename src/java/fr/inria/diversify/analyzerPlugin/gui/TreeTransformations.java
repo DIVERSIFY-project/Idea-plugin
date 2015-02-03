@@ -54,6 +54,7 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
         setRootVisible(false);
         installPopup();
         installDoubleClick();
+        setCellRenderer(new TransformationsNodeRenderer());
     }
 
     /**

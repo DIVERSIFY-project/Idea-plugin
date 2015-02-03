@@ -1,7 +1,8 @@
-package fr.inria.diversify.analyzerPlugin;
+package fr.inria.diversify.analyzerPlugin.gui;
 
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
+import icons.TestEyeIcons;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -11,18 +12,20 @@ import java.awt.*;
 /**
  * Created by marodrig on 23/09/2014.
  */
-public class TransplantNodeRenderer extends DefaultTreeCellRenderer {
+public class TransformationsNodeRenderer extends DefaultTreeCellRenderer {
 
     private final Icon delete;
     private final Icon replace;
     private final Icon add;
     private final Icon iconTP;
+    private final Icon warning;
 
-    public TransplantNodeRenderer(Icon add, Icon replace, Icon delete, Icon tp) {
-        this.add = add;
-        this.replace = replace;
-        this.delete = delete;
-        this.iconTP = tp;
+    public TransformationsNodeRenderer() {
+        this.add = TestEyeIcons.AddTransformation;
+        this.replace = TestEyeIcons.ReplaceTransformation;
+        this.delete = TestEyeIcons.DeleteTransformation;
+        this.iconTP = TestEyeIcons.TransplantPoint;
+        this.warning = TestEyeIcons.Warning;
     }
 
     public Component getTreeCellRendererComponent(
@@ -46,6 +49,7 @@ public class TransplantNodeRenderer extends DefaultTreeCellRenderer {
         if ( value instanceof DefaultMutableTreeNode) {
             if ( ((DefaultMutableTreeNode)value).getUserObject() instanceof TransplantInfo) {
                 TransplantInfo t = (TransplantInfo) ((DefaultMutableTreeNode)value).getUserObject();
+
                 if (t.getType().contains("replace")) {
                     setIcon(replace);
                 } else if (t.getType().contains("add")) {

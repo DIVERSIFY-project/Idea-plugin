@@ -75,7 +75,17 @@ public class TransformationInfo extends CodePosition {
         this.hits = hits;
     }
 
-    private String position;
+    /**
+     * Position that the storage says this transformation was.
+     * This may vary when actually finding it in the program's code
+     */
+    private String storagePosition;
+
+    /**
+     * Source that the storage says this transformation has.
+     * This may vary when actually finding it in the program's code
+     */
+    private String storageSource;
 
     private String spoonType;
 
@@ -88,8 +98,6 @@ public class TransformationInfo extends CodePosition {
 
 
     private String type;
-
-    private String source;
 
     private HashMap<AssertInfo, Integer> assertCount;
 
@@ -517,6 +525,18 @@ public class TransformationInfo extends CodePosition {
     }
 
     /**
+     * Create a string out of a variable map
+     * @param v
+     * @return
+     */
+    private String getVariableMapStr(Map<String, String> v) {
+        StringBuilder sb = new StringBuilder("[");
+        if ( v != null ) for (Map.Entry<String, String> k : v.entrySet()) sb.append("; " + k + "->" + v);
+        sb.append("]");
+        return sb.toString();
+    }
+
+    /**
      * Appends transplant from a code fragment
      * @param t Transformation containing the transplant
     */
@@ -533,23 +553,22 @@ public class TransformationInfo extends CodePosition {
         }
 
         if (cf != null) {
-            StringBuilder sb = new StringBuilder("[");
-            if ( v != null ) for (Map.Entry<String, String> k : v.entrySet()) sb.append("; " + k + "->" + v);
-            sb.append("]");
             TransplantInfo ti = new TransplantInfo();
             ti.setPosition(cf.positionString());
             ti.setIndex(t.getIndex());
             ti.setSource(cf.codeFragmentString());
             ti.setSpoonType(cf.getCodeFragmentTypeSimpleName());
             ti.setType(t instanceof ASTReplace ? "replace" : "add");
-            ti.setVariableMap(sb.toString());
+            ti.setVariableMap(getVariableMapStr(v));
             ti.setTransplantationPoint(this);
+            ti.setTransformation(t);
             transplants.add(ti);
         } else {
             TransplantInfo delete = new TransplantInfo();
             delete.setType("delete");
             delete.setIndex(t.getIndex());
             delete.setTransplantationPoint(this);
+            delete.setTransformation(t);
             transplants.add(delete);
         }
     }
@@ -612,5 +631,21 @@ public class TransformationInfo extends CodePosition {
             if ( t.isVisible() ) i++;
         }
         return i;
+    }
+
+    public String getStoragePosition() {
+        return storagePosition;
+    }
+
+    public void setStoragePosition(String storagePosition) {
+        this.storagePosition = storagePosition;
+    }
+
+    public String getStorageSource() {
+        return storageSource;
+    }
+
+    public void setStorageSource(String storageSource) {
+        this.storageSource = storageSource;
     }
 }

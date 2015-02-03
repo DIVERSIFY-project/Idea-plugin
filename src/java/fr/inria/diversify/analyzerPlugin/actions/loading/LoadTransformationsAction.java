@@ -10,6 +10,7 @@ import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTr
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import com.intellij.openapi.diagnostic.Logger;
+import icons.TestEyeIcons;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class LoadTransformationsAction extends TestEyeAction {
     private static final Logger logger = Logger.getInstance("#" + LoadTransformationsAction.class.getName());
 
     public LoadTransformationsAction() {
-        super("Load transformations", "Load transformations", IconUtil.getAddFolderIcon());
+        super("Load transformations", "Load transformations", TestEyeIcons.Open);
     }
 
     protected String userSelectsFile(boolean directory) throws FileNotFoundException {
