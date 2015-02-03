@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin.model.comparators;
+package fr.inria.diversify.analyzerPlugin.model.orders;
 
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 

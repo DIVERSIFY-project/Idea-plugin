@@ -42,12 +42,10 @@ public class FilterAndSortAction extends TestEyeAction {
 
         ProgressManager.getInstance().run(new Task.Backgroundable(event.getProject(),
                 "Sorting and filtering (This will be done only once)...") {
-
             public void onSuccess() {
                 super.onSuccess();
                 tryExecute(ShowTransformationsInTree.class, event);
             }
-
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 try {
                     component.filterAndSort(progressIndicator);

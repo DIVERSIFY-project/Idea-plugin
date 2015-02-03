@@ -1,23 +1,18 @@
 package fr.inria.diversify.analyzerPlugin.components;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
-import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.orders.AlphabeticallOrder;
 import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.factories.SpoonMetaFactory;
 import org.jetbrains.annotations.NotNull;
-import org.kevoree.log.Log;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -70,10 +65,14 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      */
     private ClassifierFactory classifierFactory;
 
+    /**
+     * Order to sort transformations
+     */
+    private Comparator<TransformationInfo> order;
+
 
     public TestEyeProjectComponent(Project project) {
         super(project);
-        visibleClassifiers = new HashMap<>();
     }
 
     /**
@@ -163,19 +162,30 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     }
 
     /**
-     * Get the list of classifiers
+     * Get the list of all classifiers
      *
      * @return
      */
     public List<TransformClasifier> getClassifiers() {
         if (classifiers == null) {
             classifiers = getClassifierFactory().buildClassifiers();
+            visibleClassifiers = new HashMap<>();
             for (TransformClasifier t : classifiers) {
                 visibleClassifiers.put(t.getClass(), true);
             }
         }
 
         return classifiers;
+    }
+
+    /**
+     * Get the list visible classifiers organized by class and
+     *
+     * @return
+     */
+    protected HashMap<Class<? extends TransformClasifier>, Boolean> getVisibleClassifiers() {
+        if ( visibleClassifiers == null ) getClassifiers(); //Init visible classifiers
+        return visibleClassifiers;
     }
 
     public void setClassifierFactory(ClassifierFactory factory) {
@@ -199,7 +209,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
         if (aClass == null) return unclassifiedVisibility;
 
-        return visibleClassifiers.get(aClass);
+        return getVisibleClassifiers().get(aClass);
     }
 
     /**
@@ -210,7 +220,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      */
     public void setVisibleClassifiers(Class<? extends TransformClasifier> aClass, boolean value) {
         if  ( aClass == null ) unclassifiedVisibility = value;
-        else visibleClassifiers.put(aClass, value);
+        else getVisibleClassifiers().put(aClass, value);
     }
 
     public void setShowClassifiersIntersection(boolean value) {
@@ -221,8 +231,8 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * Sets all classifications visibility
      */
     public void setAllClassificationsVisibility(boolean value) {
-        for (Class<? extends TransformClasifier> k : visibleClassifiers.keySet()) {
-            visibleClassifiers.put(k, value);
+        for (Class<? extends TransformClasifier> k : getVisibleClassifiers().keySet()) {
+            setVisibleClassifiers(k, value);
         }
     }
 
@@ -236,7 +246,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      */
     public void filterAndSort(ProgressIndicator progressIndicator) {
         filter(progressIndicator);
-        sort(progressIndicator);
+        sort();
     }
 
 
@@ -260,7 +270,6 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
 
             for (TransplantInfo transplant : info.getTransplants()) {
-
                 transplant.setVisibility(TransplantInfo.Visibility.unclassified);
                 for (TransformClasifier c : getClassifiers()) {
                     float v;
@@ -304,9 +313,41 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
     /**
      * Sort infos using the given comparator
+     */
+    public void sort() {
+        getVisibleInfos().sort(getOrder());
+    }
+
+    public void setOrder(Comparator<TransformationInfo> order) {
+        this.order = order;
+    }
+
+    public Comparator<TransformationInfo> getOrder() {
+        if ( order == null ) order = new AlphabeticallOrder();
+        return order;
+    }
+
+    /**
+     * Hide all transformations
      * @param progressIndicator
      */
-    public void sort(ProgressIndicator progressIndicator) {
+    public void hideAll(ProgressIndicator progressIndicator) {
+        setAllClassificationsVisibility(false);
+        setShowClassifiersIntersection(true);
+        filterAndSort(progressIndicator);
+    }
 
+    /**
+     * Shows all transformations
+     * @param progressIndicator
+     */
+    public void showAll(ProgressIndicator progressIndicator) {
+        setAllClassificationsVisibility(true);
+        setShowClassifiersIntersection(false);
+        filterAndSort(progressIndicator);
+    }
+
+    public boolean getShowClassifiersIntersection() {
+        return showClassifiersIntersection;
     }
 }

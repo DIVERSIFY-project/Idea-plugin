@@ -13,17 +13,26 @@ import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.text.html.ObjectView;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class FilterPanel extends JBList {
 
     private IDEObjects ideObjects;
 
+    private ClassifierFactory classifierFactory;
+
+    private static final int SHOW_INTERSECTION_INDEX = 0;
+
+    //private Collection<ActionCheckBox> actionsChecks;
+
     /**
      * A custom checkbox containin an action
      */
-    private class ActionCheckBox extends JBCheckBox {
+    public class ActionCheckBox extends JBCheckBox {
         public TestEyeAction action;
 
         public ActionCheckBox(TestEyeAction action, boolean checked) {
@@ -35,16 +44,63 @@ public class FilterPanel extends JBList {
     }
 
     /**
+     * Shows/hide the intersection without triggering the event
+     */
+    public void setShowIntersectionNoTriggerEvent(boolean value) {
+        DefaultListModel model = (DefaultListModel) getModel();
+        ActionCheckBox c = (ActionCheckBox)model.elementAt(SHOW_INTERSECTION_INDEX);
+        c.setSelected(value);
+    }
+
+    /**
      * A No border for the checkboxes
      */
     protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
-    public FilterPanel() {
+    public FilterPanel(ClassifierFactory factory) {
+        classifierFactory = factory;
         setCellRenderer(new CellRenderer());
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         installCheckBoxMouseListener();
         installPopup();
         populateListWithClassifiers();
+    }
+
+    public FilterPanel() {
+        this(new ClassifierFactory());
+    }
+
+    public ClassifierFactory getClassifierFactory() {
+        if ( classifierFactory == null ) classifierFactory = new ClassifierFactory();
+        return classifierFactory;
+    }
+
+    /**
+     * Un checks all without triggering their events
+     */
+    public void uncheckAllNoTriggerEvent() {
+        setAllSelected(false);
+        repaint();
+    }
+
+    /**
+     * Checks all without triggering their events
+     */
+    public void checkAllNoTriggerEvent() {
+        setAllSelected(true);
+        repaint();
+    }
+
+    private void setAllSelected(boolean b) {
+        DefaultListModel model = (DefaultListModel) getModel();
+        for ( int i = 0; i < model.size(); i++ ) {
+            if ( model.elementAt(i) instanceof ActionCheckBox ) {
+                ActionCheckBox c = (ActionCheckBox)model.elementAt(i);
+                if ( c.action != null ) {
+                    c.setSelected(b);
+                }
+            }
+        }
     }
 
     /**
@@ -53,10 +109,11 @@ public class FilterPanel extends JBList {
     private void populateListWithClassifiers() {
         DefaultListModel resultList = new DefaultListModel();
         setModel(resultList);
-        resultList.addElement(new ActionCheckBox(new HideShowIntersectionAction(), false));
+        resultList.addElement(new ActionCheckBox(new HideShowIntersectionAction(this), false));
         resultList.addElement(new JLabel("Filters:"));
         final DefaultActionGroup filter = new DefaultActionGroup();
-        for (TransformClasifier c : new ClassifierFactory().buildClassifiers()) {
+
+        for (TransformClasifier c : getClassifierFactory().buildClassifiers()) {
             resultList.addElement(new ActionCheckBox(new SwitchClasifierAction(c.getClass(), c.getDescription()), true));
         }
     }
@@ -85,12 +142,14 @@ public class FilterPanel extends JBList {
      * Installs the popup
      */
     private void installPopup() {
+
+        FilterPanel me = this;
+
         final PopupHandler popupHandler = new PopupHandler() {
             public void invokePopup(Component comp, int x, int y) {
-
                 final DefaultActionGroup popupGroup = new DefaultActionGroup();
-                popupGroup.add(new HideAllClasifierAction());
-                popupGroup.add(new ShowAllClasifierAction());
+                popupGroup.add(new HideAllClasifierAction((FilterPanel)comp));
+                popupGroup.add(new ShowAllClasifierAction((FilterPanel)comp));
                 ActionPopupMenu popupMenu = ideObjects.getActionManager().createActionPopupMenu(
                         FilterPanel.class.getName(), popupGroup);
                 if (popupMenu != null) {
@@ -133,5 +192,4 @@ public class FilterPanel extends JBList {
     public IDEObjects getIdeObject() {
         return ideObjects;
     }
-
 }

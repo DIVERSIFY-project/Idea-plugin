@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin.model.comparators;
+package fr.inria.diversify.analyzerPlugin.model.orders;
 
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
@@ -10,6 +10,6 @@ import java.util.Comparator;
 public class AlphabeticallOrder implements Comparator<TransformationInfo> {
     @Override
     public int compare(TransformationInfo o1, TransformationInfo o2) {
-        return (o2.toString().compareTo(o1.toString()));
+        return (o1.toString().compareTo(o2.toString()));
     }
 }
