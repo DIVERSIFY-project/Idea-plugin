@@ -1,18 +1,19 @@
 package fr.inria.diversify.analyzerPlugin.gui;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPopupMenu;
+import com.intellij.openapi.actionSystem.DataKey;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
-import fr.inria.diversify.analyzerPlugin.actions.searching.SwitchClasifierAction;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
@@ -21,17 +22,20 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by marodrig on 29/01/2015.
  */
-public class TreeTransformations extends Tree implements com.intellij.openapi.actionSystem.DataProvider {
-
-    private IDEObjects ideObjects;
+public class TreeTransformations extends CodePositionTree implements com.intellij.openapi.actionSystem.DataProvider {
 
     public static final DataKey<TreeTransformations>
             TEST_EYE_TREE_TRANSFORMATIONS = DataKey.create("test.eye.tree.transformations");
 
+    private Collection<TransformationInfo> infos;
+    private int transplantCount;
+    private int potCount;
 
     public TreeTransformations() {
         super((TreeModel) getDefaultTreeModel());
@@ -48,36 +52,27 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
         init();
     }
 
-    private void init() {
-        setModel(null);
-        setToggleClickCount(0);
-        setRootVisible(false);
-        installPopup();
+    @Override
+    protected void init() {
+        super.init();
         installDoubleClick();
+        installPopup();
         setCellRenderer(new TransformationsNodeRenderer());
     }
 
     /**
      * Installs the double click
      */
-    private void installDoubleClick() {
-
-        final Tree me = this;
+    @Override
+    protected void installDoubleClick() {
+        super.installDoubleClick();
         final MouseListener listener = new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    ActionManager.getInstance().tryToExecute(new SeekCodeTransformation(), e, me, null, true);
-                }
-            }
-
             @Override
             public void mousePressed(MouseEvent e) {
                 ActionManager m = ActionManager.getInstance();
-                m.tryToExecute(m.getAction(ShowTransformationProperties.ID), e, me, null, true);
+                m.tryToExecute(m.getAction(ShowTransformationProperties.ID), e, e.getComponent(), null, true);
             }
         };
-
         addMouseListener(listener);
     }
 
@@ -87,10 +82,9 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
     private void installPopup() {
         final PopupHandler popupHandler = new PopupHandler() {
             public void invokePopup(Component comp, int x, int y) {
-
                 final DefaultActionGroup popupGroup = new DefaultActionGroup();
                 popupGroup.add(new SeekCodeTransformation());
-                ActionPopupMenu popupMenu = ideObjects.getActionManager().createActionPopupMenu(
+                ActionPopupMenu popupMenu = getIDEObjects().getActionManager().createActionPopupMenu(
                         TreeTransformations.class.getName(), popupGroup);
                 if (popupMenu != null) {
                     popupMenu.getComponent().show(comp, x, y);
@@ -106,22 +100,47 @@ public class TreeTransformations extends Tree implements com.intellij.openapi.ac
         return s.equals(TEST_EYE_TREE_TRANSFORMATIONS.getName()) ? this : null;
     }
 
-    public IDEObjects getIDEObjects() {
-        return ideObjects;
-    }
 
-    public void setIDEObjects(IDEObjects ideObjects) {
-        this.ideObjects = ideObjects;
+    /**
+     * Set the infos to show in the interface
+     * @param infos Infos to show in the interface
+     */
+    public void setInfos(Collection<TransformationInfo> infos) {
+        this.infos = infos;
+        transplantCount = 0;
+        potCount = 0;
+
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Transformations");
+        DefaultTreeModel model = new DefaultTreeModel(root);
+
+        for (TransformationInfo tp : infos) {
+            DefaultMutableTreeNode rep = new DefaultMutableTreeNode(tp);
+            for (TransplantInfo t : tp.getTransplants()) {
+                if (t.getVisibility() == TransplantInfo.Visibility.show) {
+                    transplantCount++;
+                    rep.insert(new DefaultMutableTreeNode(t), rep.getChildCount());
+                }
+            }
+            if (rep.getChildCount() > 0) {
+                potCount++;
+                model.insertNodeInto(rep, root, root.getChildCount());
+            }
+        }
+        setModel(model);
     }
 
     /**
-     * Gets the user object (CodePosition) of the selected component of a tree
-     *
-     * @return A CodePosition object contained in the node
+     * Get the infos being shown in the interface
      */
-    public CodePosition getSelectedCodePosition() {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-                getLastSelectedPathComponent();
-        return node == null ? null : (CodePosition) node.getUserObject();
+    public Collection<TransformationInfo> getInfos() {
+        return infos;
+    }
+
+    public int getTransplantCount() {
+        return transplantCount;
+    }
+
+    public int getPotCount() {
+        return potCount;
     }
 }

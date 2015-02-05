@@ -6,6 +6,7 @@ import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 /**
  * Created by marodrig on 03/11/2014.
  */
+@Deprecated
 public abstract class WinAction {
 
     private MainToolWinv0 mainToolWin;

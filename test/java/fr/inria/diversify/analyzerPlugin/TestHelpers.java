@@ -1,14 +1,20 @@
 package fr.inria.diversify.analyzerPlugin;
 
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.transformation.ast.ASTAdd;
 import fr.inria.diversify.transformation.ast.ASTDelete;
 import fr.inria.diversify.transformation.ast.ASTReplace;
+import fr.inria.diversify.ut.MockInputProgram;
 import fr.inria.diversify.ut.json.output.JsonSosieOutputForUT;
+import mockit.Expectations;
+import mockit.Verifications;
 import org.json.JSONObject;
 
+import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static fr.inria.diversify.ut.json.SectionTestUtils.list;
@@ -18,6 +24,34 @@ import static junit.framework.TestCase.assertEquals;
  * Created by marodrig on 27/01/2015.
  */
 public class TestHelpers {
+
+    /**
+     * Creates an Array list of Transformation info
+     * @return An array of transformation info
+     */
+    public static ArrayList<TransformationInfo> getInfos() {
+        return  new ArrayList<>(
+                TransformationInfo.fromTransformations(createTransformations(new MockInputProgram())));
+    }
+
+    /**
+     * Verify tht a complain action was called
+     */
+    public static void verifyHardComplain() {
+        new Verifications() {{
+            JOptionPane.showMessageDialog(null, anyString, anyString, JOptionPane.ERROR_MESSAGE);
+        }};
+    }
+
+    /**
+     * Mock the Show messages dialog
+     * @return
+     */
+    public static Expectations expectHardComplain() {
+        return new Expectations() {{
+            JOptionPane.showMessageDialog(null, anyString, anyString, JOptionPane.ERROR_MESSAGE);
+        }};
+    }
 
     /**
      * Create a valid JSON file out of some transformations

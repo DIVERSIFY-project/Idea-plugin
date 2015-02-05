@@ -17,6 +17,7 @@ import java.util.Iterator;
  * <p/>
  * Created by marodrig on 20/11/2014.
  */
+@Deprecated
 public class DepthsDistributionAction extends WinAction {
 
     private HashMap<Integer, Integer> histogram;

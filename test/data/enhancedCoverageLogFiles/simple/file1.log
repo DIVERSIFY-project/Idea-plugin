@@ -1,0 +1,11 @@
+#Type;Millis;ID; Count ; depth / mindepht; mean depth; max depth
+#Perfect example
+TB;1;1
+T;2;5;8
+AS;3;3
+AS;4;4
+T;8;6;6
+AS;10;4
+TC;12;5;3;6;7;8
+ASC;12;3;4
+TE;13;

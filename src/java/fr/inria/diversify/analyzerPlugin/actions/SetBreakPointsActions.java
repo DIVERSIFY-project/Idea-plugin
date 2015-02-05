@@ -19,6 +19,7 @@ import java.util.Collection;
 /**
  * Created by marodrig on 23/12/2014.
  */
+@Deprecated
 public class SetBreakPointsActions extends WinAction {
 
     private final CodePosition codePosition;

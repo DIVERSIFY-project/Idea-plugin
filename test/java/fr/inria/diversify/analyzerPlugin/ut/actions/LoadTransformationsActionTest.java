@@ -2,19 +2,16 @@ package fr.inria.diversify.analyzerPlugin.ut.actions;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.*;
-import fr.inria.diversify.analyzerPlugin.actions.ComplainAction;
-import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
+import fr.inria.diversify.analyzerPlugin.gui.TreeTransformations;
 import fr.inria.diversify.ut.MockInputProgram;
-import junit.framework.Assert;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
@@ -28,7 +25,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.assertActionCalled;
-import static fr.inria.diversify.analyzerPlugin.ut.actions.ShowTransformationsInTreeTest.assertShowingTransformationsInTree;
+import static fr.inria.diversify.analyzerPlugin.TestHelpers.expectHardComplain;
+import static fr.inria.diversify.analyzerPlugin.TestHelpers.verifyHardComplain;
 import static junit.framework.TestCase.assertEquals;
 
 /**
@@ -53,20 +51,14 @@ public class LoadTransformationsActionTest {
     }
 
     /**
-     * A stub complain action
+     * Builds a fake action manager with a set of actions inside
+     * @param actions
+     * @return
      */
-    class MyComplainAction extends AnAction {
-        public int callCount = 0;
-
-        @Override
-        public void actionPerformed(AnActionEvent anActionEvent) {
-            callCount++;
-        }
-    }
-
-    public static ActionManager buildActionManager(Class<?> c, AnAction anAction) {
+    public static ActionManager buildActionManager(AnAction... actions) {
         ActionManager m = new FakeActionManager();
-        m.registerAction(TestEyeApplicationComponentImpl.PLUG_NAME_PREFIX + c.getSimpleName(), anAction);
+        for (AnAction a : actions)
+            m.registerAction(TestEyeApplicationComponentImpl.PLUG_NAME_PREFIX + a.getClass().getSimpleName(), a);
         return m;
     }
 
@@ -75,32 +67,45 @@ public class LoadTransformationsActionTest {
      */
     @Test
     public void testLoadTransformations(@Mocked final FileChooser anyChooser) {
-        new Expectations() {{
-            //Mocks the IntelliJ idea API...
-            FileChooser.chooseFile(
-                    withInstanceOf(FileChooserDescriptor.class), null, null);
-            result = new MyFakeVirtualFile(); //Returns a fixed path
-        }};
 
-        //Register the post action
-        Tree tree = new Tree();
+        //Mocks the IntelliJ idea API File chooser...
+        expectFileChooser();
+
+        //Register the post action to be called after the LoadTransformations
+        TreeTransformations tree = new TreeTransformations();
         tree.setModel(null);
         ShowTransformationsInTree st = new ShowTransformationsInTree(tree, new JBLabel());
 
-        //Load the transformations and then call the post action
+        //Load the transformations and call the post action
         LoadTransformationsAction action = new MockLoadTransformationsAction();
         action.setIdeObjects(new FakeIDEObjects());
-        action.actionPerformed(new FakeAnActionEvent(buildActionManager(st.getClass(), st)));
+        action.actionPerformed(new FakeAnActionEvent(buildActionManager(st)));
 
         //Verify the file chooser was called
-        new Verifications() {{
-            FileChooser.chooseFile(withInstanceOf(FileChooserDescriptor.class), null, null);
-            times = 1;
-        }};
+        verifyFileChooser();
         //Verify post action was called
         assertActionCalled(action, ShowTransformationsInTree.class, 1);
     }
 
+    /**
+     * Verify the file chooser was called
+     */
+    public static void verifyFileChooser() {
+        new Verifications() {{
+            FileChooser.chooseFile(withInstanceOf(FileChooserDescriptor.class), null, null);
+            times = 1;
+        }};
+    }
+
+    /**
+     * Mocks the IntelliJ idea API File chooser...
+     */
+    public static void expectFileChooser() {
+        new Expectations() {{
+            FileChooser.chooseFile(withInstanceOf(FileChooserDescriptor.class), null, null);
+            result = new MyFakeVirtualFile(); //Returns a fixed path
+        }};
+    }
 
 
     /**
@@ -109,26 +114,17 @@ public class LoadTransformationsActionTest {
     @Test
     public void testComplain(@Mocked final FileChooser anyChooser,
                              @Mocked final JOptionPane anyPane) {
-        new Expectations() {{
-            JOptionPane.showMessageDialog(null, anyString, anyString, JOptionPane.ERROR_MESSAGE);
-        }};
 
-        new Expectations() {{
-            //Mocks the IntelliJ idea API...
-            FileChooser.chooseFile(
-                    withInstanceOf(FileChooserDescriptor.class), null, null);
-            result = new MyFakeVirtualFile(); //Returns a fixed path
-        }};
+        expectHardComplain();
 
-        MyComplainAction complain = new MyComplainAction();
         //Will try to do it's thing without proper environment
         LoadTransformationsAction action = new LoadTransformationsAction();
-        action.actionPerformed(new FakeAnActionEvent(buildActionManager(ComplainAction.class, complain)));
+        action.actionPerformed(null); //<-This will certainly make it complain
 
-        //Verify tht a complain action was called
-        new Verifications() {{
-            JOptionPane.showMessageDialog(null, anyString, anyString, JOptionPane.ERROR_MESSAGE);
-        }};
+        verifyHardComplain();
     }
+
+
+
 
 }

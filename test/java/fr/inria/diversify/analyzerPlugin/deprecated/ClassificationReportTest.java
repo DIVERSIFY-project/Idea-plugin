@@ -17,7 +17,8 @@ import static org.junit.Assert.assertTrue;
 public class ClassificationReportTest {
 
     @Test
-    @Ignore
+    @Ignore("Deprecated")
+    @Deprecated
     public void testDoReport() throws IOException, JSONException {
         String s = "C:\\MarcelStuff\\projects\\DIVERSE\\programs\\single-sosies-pools\\ISSTA";
         ClassificationReport report = new ClassificationReport();

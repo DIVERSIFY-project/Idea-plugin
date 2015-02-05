@@ -15,6 +15,7 @@ import javax.swing.*;
  *
  * Created by marodrig on 03/11/2014.
  */
+@Deprecated
 public class ComplainAction extends WinAction {
 
     private final String error;

@@ -10,6 +10,7 @@ import fr.inria.diversify.analyzerPlugin.actions.display.EnableDisableFilterPane
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.gui.FilterPanel;
+import fr.inria.diversify.analyzerPlugin.gui.TreeTransformations;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.ut.MockInputProgram;
 import com.intellij.ui.treeStructure.Tree;
@@ -49,7 +50,7 @@ public class ShowTransformationsInTreeTest {
      */
     @Test
     public void testShowInJTree() {
-        Tree tree = new Tree();
+        TreeTransformations tree = new TreeTransformations();
         ShowTransformationsInTree t = new ShowTransformationsInTree(tree, new JBLabel());
         t.setIdeObjects(new FakeIDEObjects());
         t.actionPerformed(getActionEvent());
@@ -63,7 +64,7 @@ public class ShowTransformationsInTreeTest {
     @Test
     public void testShowInTotalBottomLabel() {
         JBLabel label = new JBLabel();
-        ShowTransformationsInTree t = new ShowTransformationsInTree(new Tree(), label);
+        ShowTransformationsInTree t = new ShowTransformationsInTree(new TreeTransformations(), label);
         t.setIdeObjects(new FakeIDEObjects());
         t.actionPerformed(getActionEvent());
         assertEquals("Transformations: 4 | Pots: 2", label.getText());

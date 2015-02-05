@@ -52,6 +52,7 @@ import java.util.List;
 /**
  * Created by marodrig on 26/08/2014.
  */
+@Deprecated
 public class MainToolWinv0 implements ToolWindowFactory {
 
     private static String UNCLASSIFIED_TEXT = "Unclassified";

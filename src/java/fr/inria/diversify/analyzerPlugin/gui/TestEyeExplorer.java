@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.IDEObjectsImpl;
+import fr.inria.diversify.analyzerPlugin.actions.loading.LoadEnhancedCoverageAction;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
 
@@ -64,6 +65,8 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
      * List with all the filters
      */
     private FilterPanel lstFilters;
+    private EnhancedCoverageTree tree1;
+    private JPanel pnlCoverage;
 
     public FilterPanel getLstFilters() { return lstFilters; }
 
@@ -83,19 +86,20 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
         lstFilters.setEnabled(false);
     }
 
+
     /**
      * Creates the tool bar panel in the top
      *
      * @return
      */
     private JPanel createToolbarPanel() {
-        final DefaultActionGroup group = new DefaultActionGroup();
-        group.add(new LoadTransformationsAction());
-        final ActionToolbar actionToolBar = getIDEObjects().getActionManager().createActionToolbar(
-                ActionPlaces.ANT_EXPLORER_TOOLBAR, group, true);
+        final DefaultActionGroup mainGroup = new DefaultActionGroup();
+        mainGroup.add(new LoadTransformationsAction());
+        mainGroup.add(new LoadEnhancedCoverageAction());
+        final ActionToolbar mainToolBar = getIDEObjects().getActionManager().createActionToolbar(
+                ActionPlaces.ANT_EXPLORER_TOOLBAR, mainGroup, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());
-        buttonsPanel.add(actionToolBar.getComponent(), BorderLayout.CENTER);
-
+        buttonsPanel.add(mainToolBar.getComponent(), BorderLayout.CENTER);
         return buttonsPanel;
     }
 

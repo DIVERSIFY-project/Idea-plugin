@@ -82,7 +82,8 @@ public class PluginDataFormatterTest {
      * Test the conversion from a pool of multisosies
      */
     @Test
-    @Ignore
+    @Ignore("Deprecated")
+    @Deprecated
     public void testConvertFromMultiSosie() throws Exception {
         testConvertFromTransformationsJSON("multisosiefile_size2.json");
     }
@@ -91,7 +92,8 @@ public class PluginDataFormatterTest {
      * Test the conversion of a pool of sosies
      */
     @Test
-    @Ignore
+    @Ignore("Deprecated")
+    @Deprecated
     public void testConvertFromSosiePool() throws Exception {
         testConvertFromTransformationsJSON("sosiepool_size2.json");
     }
@@ -100,7 +102,8 @@ public class PluginDataFormatterTest {
      * Test the convertion from JSON transformation file (multisosie or pool of sosies) and a log dir of verbose logger
      */
     @Test
-    @Ignore
+    @Ignore("Deprecated")
+    @Deprecated
     public void testScattered() throws Exception {
         //Load from scattered resources
         PluginDataLoader formatter = new PluginDataLoader();
@@ -119,7 +122,8 @@ public class PluginDataFormatterTest {
      * Test the convertion from JSON transformation file (multisosie or pool of sosies) and a log dir of verbose logger
      */
     @Test
-    @Ignore
+    @Ignore("Deprecated")
+    @Deprecated
     public void testFromJSONAndThenScattered() throws Exception {
         //Load from scattered resources
         PluginDataLoader formatter = new PluginDataLoader();
@@ -134,7 +138,8 @@ public class PluginDataFormatterTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Deprecated")
+    @Deprecated
     public void reportProjects() throws Exception {
         /*
         PluginDataLoader formatter1 = reportBenoitNumbers("COMMON COLLECTION",
@@ -275,6 +280,7 @@ public class PluginDataFormatterTest {
             System.out.println();
         }
     }
+
 
     private PluginDataLoader reportBenoitNumbers(String name, String json, String log) throws LoadingException {
 

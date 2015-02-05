@@ -40,6 +40,7 @@ public class FakeProject implements Project {
 
     @Override
     public String getBasePath() {
+        if ( basePath == null ) return new File(BASE_PATH).getAbsolutePath();
         return new File(basePath).getAbsolutePath();
     }
 

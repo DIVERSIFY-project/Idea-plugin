@@ -12,6 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * Created by marodrig on 03/11/2014.
  */
+@Deprecated
 public class PerformCurrentTransformation extends WinAction {
 
     private static String TEMP_MOD = "_mod";

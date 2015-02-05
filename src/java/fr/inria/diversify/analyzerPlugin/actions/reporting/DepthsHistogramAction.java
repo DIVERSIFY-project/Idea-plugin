@@ -16,6 +16,7 @@ import java.util.Map;
  * <p/>
  * Created by marodrig on 20/11/2014.
  */
+@Deprecated
 public class DepthsHistogramAction extends WinAction {
 
     private HashMap<Integer, Integer> histogram;

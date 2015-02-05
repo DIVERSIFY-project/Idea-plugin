@@ -21,7 +21,8 @@ public class MainToolWinTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Deprecated")
+    @Deprecated
     public void testCreation() throws Exception {
         //Test that no weird things occur during creation
         MainToolWinv0 m = new MainToolWinv0();
@@ -32,8 +33,8 @@ public class MainToolWinTest {
      * Test the proper showing of the representation data
      */
     @Test
+    @Ignore("Deprecated")
     @Deprecated
-    @Ignore
     public void testRepresentationToJTree() throws Exception {
         MainToolWinv0 m = new MainToolWinv0();
         m.setThrowErrors(true);
@@ -63,8 +64,8 @@ public class MainToolWinTest {
      * Test the proper showing of the representation data
      */
     @Test
+    @Ignore("Deprecated")
     @Deprecated
-    @Ignore
     public void testInstruLogToJTree() throws Exception {
         MainToolWinv0 m = new MainToolWinv0();
         m.setThrowErrors(true);
@@ -85,8 +86,8 @@ public class MainToolWinTest {
     }
 
     @Test
+    @Ignore("Deprecated")
     @Deprecated
-    @Ignore
     public void testPerformTransformation() throws Exception {
         MainToolWinv0 m = new MainToolWinv0();
         m.setThrowErrors(true);

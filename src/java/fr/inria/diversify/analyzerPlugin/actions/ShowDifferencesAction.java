@@ -7,6 +7,7 @@ import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 /**
  * Created by marodrig on 29/11/2014.
  */
+@Deprecated
 public class ShowDifferencesAction extends WinAction {
 
     CodePosition data;

@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import fr.inria.diversify.analyzerPlugin.FakeProject;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.diversification.InputProgram;
-import junit.framework.Assert;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertNotNull;

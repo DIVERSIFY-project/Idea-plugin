@@ -14,6 +14,7 @@ import java.util.Collection;
  *
  * Created by marodrig on 20/11/2014.
  */
+@Deprecated
 public class DepthsReportsAction extends WinAction {
 
     public DepthsReportsAction(MainToolWinv0 mainToolWin) {
