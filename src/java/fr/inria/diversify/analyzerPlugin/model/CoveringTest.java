@@ -5,7 +5,7 @@ package fr.inria.diversify.analyzerPlugin.model;
  */
 public class CoveringTest {
 
-    private TestRepresentation test;
+    private TestInfo test;
 
     private int minDepth;
 
@@ -15,11 +15,11 @@ public class CoveringTest {
 
     private int hits;
 
-    public TestRepresentation getTest() {
+    public TestInfo getTest() {
         return test;
     }
 
-    public void setTest(TestRepresentation test) {
+    public void setTest(TestInfo test) {
         this.test = test;
     }
 

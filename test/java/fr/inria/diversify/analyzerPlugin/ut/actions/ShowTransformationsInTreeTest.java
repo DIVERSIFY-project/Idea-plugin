@@ -38,7 +38,8 @@ public class ShowTransformationsInTreeTest {
     private AnActionEvent getActionEvent() {
         //Create the transformations
         List<TransformationInfo> infos  = new ArrayList<>(
-                TransformationInfo.fromTransformations(createTransformations(new MockInputProgram())));
+                TransformationInfo.fromTransformations(createTransformations(new MockInputProgram()),
+                        new ArrayList<String>()));
         //Make a fake project
         FakeProject f = new FakeProject();
         f.getComponent(TestEyeProjectComponent.class).setVisibleInfos(infos);

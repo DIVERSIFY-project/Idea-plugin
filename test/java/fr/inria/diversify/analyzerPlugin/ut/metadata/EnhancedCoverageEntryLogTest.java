@@ -24,8 +24,8 @@ public class EnhancedCoverageEntryLogTest {
     @Test
     public void tesdtFromLine_TP() throws LoadingException {
         EnhancedCoverageEntry e = new EnhancedCoverageEntry("My File", 1, testMap());
-        e.fromLine("T;2;1;8", ";");
-        assertEquals(2, e.getMillis());
+        e.fromLine("T;12345678902;1;8", ";");
+        assertEquals(12345678902L, e.getMillis());
         assertEquals("Pos:1", e.getPosition());
         assertEquals(8, e.getMeanDepth());
     }
@@ -33,26 +33,26 @@ public class EnhancedCoverageEntryLogTest {
     @Test
     public void testFromLine_TestBegin() throws LoadingException {
         EnhancedCoverageEntry e = new EnhancedCoverageEntry("My File", 1, testMap());
-        e.fromLine("TB;1;2", ";");
+        e.fromLine("TB;12345678901;2", ";");
         assertEquals("TB", e.getType());
-        assertEquals(1, e.getMillis());
+        assertEquals(12345678901L, e.getMillis());
         assertEquals("Pos:2", e.getPosition());
     }
 
     @Test
     public void testFromLine_TestEnd() throws LoadingException {
         EnhancedCoverageEntry e = new EnhancedCoverageEntry("My File", 1, testMap());
-        e.fromLine("TE;1", ";");
+        e.fromLine("TE;12345678901", ";");
         assertEquals("TE", e.getType());
-        assertEquals(1, e.getMillis());
+        assertEquals(12345678901L, e.getMillis());
     }
 
     @Test
     public void testFromLine_TPCount() throws LoadingException {
         EnhancedCoverageEntry e = new EnhancedCoverageEntry("My File", 1, testMap());
-        e.fromLine("TC;12;2;3;6;7;8", ";");
+        e.fromLine("TC;123456789012;2;3;6;7;8", ";");
         assertEquals("TC", e.getType());
-        assertEquals(12, e.getMillis());
+        assertEquals(123456789012L, e.getMillis());
         assertEquals("Pos:2", e.getPosition());
         assertEquals(3, e.getExecutions());
         assertEquals(6, e.getMinDepth());
@@ -63,9 +63,9 @@ public class EnhancedCoverageEntryLogTest {
     @Test
     public void testFromLine_AssertCount() throws LoadingException {
         EnhancedCoverageEntry e = new EnhancedCoverageEntry("My File", 1, testMap());
-        e.fromLine("ASC;12;1;4", ";");
+        e.fromLine("ASC;123456789012;1;4", ";");
         assertEquals("ASC", e.getType());
-        assertEquals(12, e.getMillis());
+        assertEquals(123456789012L, e.getMillis());
         assertEquals("Pos:1", e.getPosition());
         assertEquals(4, e.getExecutions());
     }
@@ -73,15 +73,15 @@ public class EnhancedCoverageEntryLogTest {
     @Test
     public void testFromLine_Assert() throws LoadingException {
         EnhancedCoverageEntry e = new EnhancedCoverageEntry("My File", 1, testMap());
-        e.fromLine("AS;10;1", ";");
+        e.fromLine("AS;123456789010;1", ";");
         assertEquals("AS", e.getType());
-        assertEquals(10, e.getMillis());
+        assertEquals(123456789010L, e.getMillis());
         assertEquals("Pos:1", e.getPosition());
     }
 
     @Test(expected = LoadingException.class)
     public void testFromLine_Exception() throws LoadingException {
         EnhancedCoverageEntry e = new EnhancedCoverageEntry("My File", 1, testMap());
-        e.fromLine("AS;10;10", ";");
+        e.fromLine("AS;123456789010;10", ";");
     }
 }

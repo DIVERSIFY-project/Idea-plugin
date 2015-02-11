@@ -2,7 +2,7 @@ package fr.inria.diversify.analyzerPlugin.deprecated;
 
 import fr.inria.diversify.analyzerPlugin.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataLoader;
-import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TestInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -187,7 +187,7 @@ public class PluginDataFormatterTest {
      */
     private void reportAll(String[] name, PluginDataLoader[] formatter) {
         Iterator<TransformationInfo>[] r = new Iterator[formatter.length];
-        Iterator<TestRepresentation>[] t = new Iterator[formatter.length];
+        Iterator<TestInfo>[] t = new Iterator[formatter.length];
         for (int i = 0; i < formatter.length; i++) {
             r[i] = formatter[i].getRepresentations().iterator();
             t[i] = formatter[i].getDeclaredTest().iterator();
@@ -206,7 +206,7 @@ public class PluginDataFormatterTest {
         System.out.println();
 
         TransformationInfo[] trans = new TransformationInfo[formatter.length];
-        TestRepresentation[] test = new TestRepresentation[formatter.length];
+        TestInfo[] test = new TestInfo[formatter.length];
 
         boolean allEmpty = false;
         while (allEmpty == false) {

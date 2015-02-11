@@ -18,4 +18,7 @@ public class TestEyeIcons {
     public static final Icon Warning = load("/icons/Warning.png"); // 16x16
     public static final Icon Open = load("/icons/menu-open.png"); // 16x16
     public static final Icon OpenLog = load("/icons/testSourceFolder.png"); // 16x16
+    public static final Icon Test = load("/icons/test.png"); // 16x16
+    public static final Icon Assert = load("/icons/assert.png"); // 16x16
+    public static final Icon Save = load("/icons/save.png"); // 16x16
 }

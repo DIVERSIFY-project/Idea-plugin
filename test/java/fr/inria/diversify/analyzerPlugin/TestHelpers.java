@@ -27,11 +27,14 @@ public class TestHelpers {
 
     /**
      * Creates an Array list of Transformation info
+     *
      * @return An array of transformation info
      */
     public static ArrayList<TransformationInfo> getInfos() {
-        return  new ArrayList<>(
-                TransformationInfo.fromTransformations(createTransformations(new MockInputProgram())));
+        return new ArrayList<>(
+                TransformationInfo.fromTransformations(
+                        createTransformations(new MockInputProgram()),
+                        new ArrayList<String>()));
     }
 
     /**
@@ -45,6 +48,7 @@ public class TestHelpers {
 
     /**
      * Mock the Show messages dialog
+     *
      * @return
      */
     public static Expectations expectHardComplain() {
@@ -55,19 +59,21 @@ public class TestHelpers {
 
     /**
      * Create a valid JSON file out of some transformations
+     *
      * @param p
      * @return
      */
     public static JSONObject createTransformationsJSON(InputProgram p) {
-        JsonSosieOutputForUT s = new JsonSosieOutputForUT(createTransformations(p), "");
+        JsonSosieOutputForUT s = new JsonSosieOutputForUT(createTransformations(p), "", "", "");
         return s.writeToJsonNow();
     }
 
     /**
      * Assert that an action was called by another
-     * @param caller Calling action
+     *
+     * @param caller      Calling action
      * @param calledClass Called action class
-     * @param count number of times
+     * @param count       number of times
      */
     public static void assertActionCalled(TestEyeAction caller, Class<?> calledClass, int count) {
         assertEquals(count, (int) ((FakeIDEObjects) caller.getIdeObjects()).tryExecuteCount.get(calledClass.getName()));
@@ -75,22 +81,27 @@ public class TestHelpers {
 
     /**
      * Creates a collection of transformations that matches the fake fragments of the mock program
-     * @return
+     *
      * @param p
+     * @return
      */
     public static List<Transformation> createTransformations(InputProgram p) {
         ASTAdd add = new ASTAdd();
+        add.setIndex(0);
         add.setTransplantationPoint(p.getCodeFragments().get(2));
         add.setTransplant(p.getCodeFragments().get(1));
 
         ASTReplace r1 = new ASTReplace();
+        r1.setIndex(1);
         r1.setTransplantationPoint(p.getCodeFragments().get(2));
         r1.setTransplant(p.getCodeFragments().get(1));
 
         ASTDelete del = new ASTDelete();
+        del.setIndex(2);
         del.setTransplantationPoint(p.getCodeFragments().get(2));
 
         ASTReplace r = new ASTReplace();
+        r.setIndex(3);
         r.setTransplantationPoint(p.getCodeFragments().get(1));
         r.setTransplant(p.getCodeFragments().get(2));
 

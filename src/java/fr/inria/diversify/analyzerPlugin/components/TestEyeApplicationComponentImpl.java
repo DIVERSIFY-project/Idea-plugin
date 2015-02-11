@@ -6,10 +6,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ApplicationComponent;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
-import fr.inria.diversify.analyzerPlugin.actions.display.EnableDisableFilterPanel;
-import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
-import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
+import fr.inria.diversify.analyzerPlugin.actions.display.*;
 import fr.inria.diversify.analyzerPlugin.actions.searching.FilterAndSortAction;
+import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
 import fr.inria.diversify.analyzerPlugin.gui.TestEyeExplorer;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,10 +74,19 @@ public class TestEyeApplicationComponentImpl implements ApplicationComponent, Te
         registerAction(PLUG_NAME_PREFIX + ShowTransformationProperties.class.getSimpleName(),
                 new ShowTransformationProperties(explorer.getTblProperties()));
 
+        registerAction(PLUG_NAME_PREFIX + ShowCoverageInfo.class.getSimpleName(),
+                new ShowCoverageInfo(explorer.getTreeTransformations(), explorer.getTreeCoverage()));
+
         registerAction(PLUG_NAME_PREFIX + FilterAndSortAction.class.getSimpleName(), new FilterAndSortAction());
 
         registerAction(PLUG_NAME_PREFIX + EnableDisableFilterPanel.class.getSimpleName(),
                 new EnableDisableFilterPanel(explorer.getLstFilters()));
+
+        registerAction(PLUG_NAME_PREFIX + SeekCodeTransformation.class.getSimpleName(),
+                new SeekCodeTransformation(explorer.getTreeTransformations()));
+
+        registerAction(PLUG_NAME_PREFIX + ShowErrorsAction.class.getSimpleName(),
+                new ShowErrorsAction(explorer.getLstErrors()));
 
     }
 

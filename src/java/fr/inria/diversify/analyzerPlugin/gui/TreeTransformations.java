@@ -5,11 +5,10 @@ import com.intellij.openapi.actionSystem.ActionPopupMenu;
 import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.ui.PopupHandler;
-import com.intellij.ui.treeStructure.Tree;
-import fr.inria.diversify.analyzerPlugin.IDEObjects;
+import fr.inria.diversify.analyzerPlugin.actions.display.ShowCoverageInfo;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
+import fr.inria.diversify.analyzerPlugin.actions.replay.ApplyTransformation;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
-import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +21,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -38,12 +36,12 @@ public class TreeTransformations extends CodePositionTree implements com.intelli
     private int potCount;
 
     public TreeTransformations() {
-        super((TreeModel) getDefaultTreeModel());
+        super(getDefaultTreeModel());
         init();
     }
 
     public TreeTransformations(TreeNode root) {
-        super((TreeModel) (new DefaultTreeModel(root, false)));
+        super(new DefaultTreeModel(root, false));
         init();
     }
 
@@ -71,6 +69,7 @@ public class TreeTransformations extends CodePositionTree implements com.intelli
             public void mousePressed(MouseEvent e) {
                 ActionManager m = ActionManager.getInstance();
                 m.tryToExecute(m.getAction(ShowTransformationProperties.ID), e, e.getComponent(), null, true);
+                m.tryToExecute(m.getAction(ShowCoverageInfo.ID), e, e.getComponent(), null, true);
             }
         };
         addMouseListener(listener);
@@ -82,8 +81,12 @@ public class TreeTransformations extends CodePositionTree implements com.intelli
     private void installPopup() {
         final PopupHandler popupHandler = new PopupHandler() {
             public void invokePopup(Component comp, int x, int y) {
+                CodePositionTree me = (CodePositionTree)comp;
                 final DefaultActionGroup popupGroup = new DefaultActionGroup();
-                popupGroup.add(new SeekCodeTransformation());
+                popupGroup.add(new SeekCodeTransformation(me));
+                if ( me.getSelectedCodePosition() instanceof TransplantInfo ) {
+                    popupGroup.add(new ApplyTransformation((CodePositionTree) comp));
+                }
                 ActionPopupMenu popupMenu = getIDEObjects().getActionManager().createActionPopupMenu(
                         TreeTransformations.class.getName(), popupGroup);
                 if (popupMenu != null) {
@@ -123,7 +126,7 @@ public class TreeTransformations extends CodePositionTree implements com.intelli
             }
             if (rep.getChildCount() > 0) {
                 potCount++;
-                model.insertNodeInto(rep, root, root.getChildCount());
+                root.insert(rep, root.getChildCount());
             }
         }
         setModel(model);

@@ -42,6 +42,10 @@
             <implementation-class>fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent
             </implementation-class>
         </component>
+        <component>
+            <implementation-class>fr.inria.diversify.analyzerPlugin.components.InfoLoaderComponent
+            </implementation-class>
+        </component>
     </project-components>
 
 </idea-plugin>

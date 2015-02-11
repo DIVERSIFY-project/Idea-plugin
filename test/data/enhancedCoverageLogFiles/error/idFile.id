@@ -1,0 +1,6 @@
+1 <CtMethodImpl>TestMethod1:1
+2 <CtMethodImpl>TestMethod2:2
+3 <CtInvocationImpl>assert1:10
+4 <CtInvocationImpl>assert2:100
+5 <CtInvocationImpl>org.MyOtherClass:100
+6 <CtInvocationImpl>org.MyOtherClass:10

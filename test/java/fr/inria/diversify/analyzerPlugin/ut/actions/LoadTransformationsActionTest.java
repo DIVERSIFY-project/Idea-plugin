@@ -5,13 +5,13 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.*;
+import fr.inria.diversify.analyzerPlugin.actions.display.ShowErrorsAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
+import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.gui.TreeTransformations;
-import fr.inria.diversify.ut.MockInputProgram;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
@@ -20,9 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.swing.*;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.FileNotFoundException;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.assertActionCalled;
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.expectHardComplain;
@@ -36,19 +34,6 @@ import static junit.framework.TestCase.assertEquals;
  */
 @RunWith(JMockit.class)
 public class LoadTransformationsActionTest {
-
-    /**
-     * Mocks the LoadTransformationsAction so the factory method getReader returns a ByteInputStream
-     */
-    public class MockLoadTransformationsAction extends LoadTransformationsAction {
-        @Override
-        protected InputStreamReader getReader(String streamPath) {
-            assertEquals(MyFakeVirtualFile.ABSOLUTE_PATH, streamPath);
-            return new InputStreamReader(
-                    new ByteArrayInputStream(TestHelpers.createTransformationsJSON(
-                            new MockInputProgram()).toString().getBytes(StandardCharsets.UTF_8)));
-        }
-    }
 
     /**
      * Builds a fake action manager with a set of actions inside
@@ -66,10 +51,14 @@ public class LoadTransformationsActionTest {
      * Test the proper loading of the transformations.
      */
     @Test
-    public void testLoadTransformations(@Mocked final FileChooser anyChooser) {
+    public void testLoadTransformations(@Mocked final FileChooser anyChooser,
+                                        @Mocked final TestEyeProjectComponent anyComponent) throws FileNotFoundException {
 
         //Mocks the IntelliJ idea API File chooser...
         expectFileChooser();
+        new Expectations() {{
+            anyComponent.loadInfos(anyString);
+        }};
 
         //Register the post action to be called after the LoadTransformations
         TreeTransformations tree = new TreeTransformations();
@@ -77,13 +66,17 @@ public class LoadTransformationsActionTest {
         ShowTransformationsInTree st = new ShowTransformationsInTree(tree, new JBLabel());
 
         //Load the transformations and call the post action
-        LoadTransformationsAction action = new MockLoadTransformationsAction();
+        LoadTransformationsAction action = new LoadTransformationsAction();
         action.setIdeObjects(new FakeIDEObjects());
         action.actionPerformed(new FakeAnActionEvent(buildActionManager(st)));
 
+        new Verifications(){{
+            anyComponent.loadInfos(anyString);
+        }};
         //Verify the file chooser was called
         verifyFileChooser();
         //Verify post action was called
+        assertActionCalled(action, ShowErrorsAction.class, 1);
         assertActionCalled(action, ShowTransformationsInTree.class, 1);
     }
 

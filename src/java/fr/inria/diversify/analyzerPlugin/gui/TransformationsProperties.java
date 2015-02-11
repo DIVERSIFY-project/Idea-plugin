@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.util.Collection;
 
 /**
  * Created by marodrig on 29/01/2015.
@@ -25,9 +26,38 @@ public class TransformationsProperties extends JTable implements com.intellij.op
 
     private IDEObjects ideObjects;
 
+    public class PropertyRenderer implements TableCellRenderer {
+
+        public TableCellRenderer defaultRenderer;
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+            try {
+                if (row == 9 && column == 1) {
+                    EventLogList logList = new EventLogList();
+                    logList.setMessages((Collection<String>) value);
+                    return logList;
+                }
+                return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            } catch (ClassCastException e) {
+                return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+        }
+    }
+
+    private PropertyRenderer lstRenderer;
+
 
     public TransformationsProperties() {
         super();
+        lstRenderer = new PropertyRenderer();
+    }
+
+    @Override
+    public TableCellRenderer getCellRenderer(int row, int column) {
+        lstRenderer.defaultRenderer = super.getCellRenderer(row, column);
+        return lstRenderer;
     }
 
     public void showTransformations(final CodePosition data) {
@@ -47,6 +77,7 @@ public class TransformationsProperties extends JTable implements com.intellij.op
             dtm.addRow(new Object[]{"Total transplants", rep.getTransplants().size()});
             dtm.addRow(new Object[]{"Nb of Var Diff", rep.getVarDiff()});
             dtm.addRow(new Object[]{"Nb of Call Diff", rep.getCallDiff()});
+            dtm.addRow(new Object[]{"Messages", rep.getLogMessages()});
         }
         dtm.addRow(new Object[]{"Source", data.getSource()});
         if (data instanceof TransplantInfo) {
@@ -83,7 +114,7 @@ public class TransformationsProperties extends JTable implements com.intellij.op
                 CodePosition p = data;
                 if (p instanceof TransplantInfo) {
                     TransplantInfo t = (TransplantInfo) p;
-                    JTable table = (JTable)e.getSource();
+                    JTable table = (JTable) e.getSource();
                     t.setTags((String) table.getValueAt(4, 1));
                 }
             }

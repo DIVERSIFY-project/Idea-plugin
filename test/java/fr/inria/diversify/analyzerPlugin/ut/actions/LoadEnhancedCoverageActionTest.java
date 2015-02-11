@@ -5,6 +5,8 @@ import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.*;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowCoverageInfo;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadEnhancedCoverageAction;
+import fr.inria.diversify.analyzerPlugin.gui.CodePositionTree;
+import fr.inria.diversify.analyzerPlugin.gui.EnhancedCoverageTree;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageReader;
 import fr.inria.diversify.analyzerPlugin.model.metadata.SyringeDataReader;
@@ -50,7 +52,8 @@ public class LoadEnhancedCoverageActionTest {
         //Register the post action
         LoadEnhancedCoverageAction action = new LoadEnhancedCoverageAction();
         action.setIdeObjects(new FakeIDEObjects());
-        action.actionPerformed(new FakeAnActionEvent(buildActionManager(new ShowCoverageInfo(new Tree()))));
+        action.actionPerformed(new FakeAnActionEvent(
+                buildActionManager(new ShowCoverageInfo(new CodePositionTree(), new EnhancedCoverageTree()))));
 
         verifyFileChooser();
 

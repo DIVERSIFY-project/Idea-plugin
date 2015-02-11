@@ -6,13 +6,13 @@ import java.util.Set;
 /**
  * Created by marodrig on 04/09/2014.
  */
-public class TestRepresentation extends CodePosition {
+public class TestInfo extends CodePosition {
 
     private HashSet<AssertInfo> asserts;
 
     private long endTime;
 
-    public TestRepresentation() {
+    public TestInfo() {
         asserts = new HashSet<AssertInfo>();
     }
 
@@ -37,7 +37,7 @@ public class TestRepresentation extends CodePosition {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof TestRepresentation && toString().equals(o.toString());
+        return o instanceof TestInfo && toString().equals(o.toString());
     }
 
     @Override

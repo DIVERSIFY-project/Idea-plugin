@@ -9,15 +9,15 @@ import fr.inria.diversify.transformation.ast.ASTReplace;
 import fr.inria.diversify.transformation.ast.ASTTransformation;
 import fr.inria.diversify.util.Log;
 import org.apache.commons.io.FileUtils;
-import org.apache.xmlbeans.impl.xb.ltgfmt.Code;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Represents Transplantation point. Contains the data of the transformation needed for the plugin in a more
@@ -32,6 +32,7 @@ public class TransformationInfo extends CodePosition {
     private int appliedTransformIndex = -1;
     private int varDiff;
     private int callDiff;
+    private List<String> logMessages;
 
     public long getTotalAssertionHits() {
         return totalAssertionHits;
@@ -59,11 +60,11 @@ public class TransformationInfo extends CodePosition {
         hits = hits + i;
     }
 
-    public HashMap<TestRepresentation, PertTestCoverageData> getTests() {
+    public HashMap<TestInfo, PertTestCoverageData> getTests() {
         return tests;
     }
 
-    public void setTest(HashMap<TestRepresentation, PertTestCoverageData> test) {
+    public void setTest(HashMap<TestInfo, PertTestCoverageData> test) {
         this.tests = test;
     }
 
@@ -94,14 +95,14 @@ public class TransformationInfo extends CodePosition {
     private List<TransplantInfo> transplants;
 
     //Data associated to the test
-    private HashMap<TestRepresentation, PertTestCoverageData> tests;
+    private HashMap<TestInfo, PertTestCoverageData> tests;
 
 
     private String type;
 
     private HashMap<AssertInfo, Integer> assertCount;
 
-    private HashMap<TestRepresentation, Integer> testCount;
+    private HashMap<TestInfo, Integer> testCount;
 
     /*
     public TransformationRepresentation(String potPosition) {
@@ -114,11 +115,10 @@ public class TransformationInfo extends CodePosition {
      */
     public TransformationInfo() {
         transplants = new ArrayList<TransplantInfo>();
-        tests = new HashMap<TestRepresentation, PertTestCoverageData>();
+        tests = new HashMap<TestInfo, PertTestCoverageData>();
         assertCount = new HashMap<AssertInfo, Integer>();
-        testCount = new HashMap<TestRepresentation, Integer>();
+        testCount = new HashMap<TestInfo, Integer>();
     }
-
 
 
     /**
@@ -127,7 +127,7 @@ public class TransformationInfo extends CodePosition {
      * @param rep Assert that we want to query for
      * @return
      */
-    public int getTestHits(TestRepresentation rep) {
+    public int getTestHits(TestInfo rep) {
         return testCount.containsKey(rep) ? testCount.get(rep) : 0;
     }
 
@@ -155,7 +155,7 @@ public class TransformationInfo extends CodePosition {
     /**
      * Sets the first depth found for this transformation
      */
-    public void setDepth(TestRepresentation test, int depth, int stackDepth) {
+    public void setDepth(TestInfo test, int depth, int stackDepth) {
         PertTestCoverageData perTest;
         if (!this.tests.containsKey(test)) {
             perTest = new PertTestCoverageData(test);
@@ -170,7 +170,7 @@ public class TransformationInfo extends CodePosition {
     /**
      * Sets all the depth values found for this transformation
      */
-    public void updateDepth(TestRepresentation test, int minDepth, int meanDepth, int maxDepth,
+    public void updateDepth(TestInfo test, int minDepth, int meanDepth, int maxDepth,
                             int stackMin, int stackMean, int stackMax) {
         PertTestCoverageData perTest;
         if (!this.tests.containsKey(test)) {
@@ -194,7 +194,7 @@ public class TransformationInfo extends CodePosition {
      * @param test assertion hit after the TP
      * @param hits number of hits
      */
-    public void addTestHit(TestRepresentation test, int hits) {
+    public void addTestHit(TestInfo test, int hits) {
         PertTestCoverageData perTest;
         if (!this.tests.containsKey(test)) {
             perTest = new PertTestCoverageData(test);
@@ -251,7 +251,6 @@ public class TransformationInfo extends CodePosition {
     public void setPosition(String value) {
         position = value;
     }
-
 
 
     /**
@@ -443,7 +442,7 @@ public class TransformationInfo extends CodePosition {
     public void setDiffReport(String diffReport) {
         StringBuilder sb = new StringBuilder(diffReport);
         this.diffReport = sb.toString();
-        Log.info("Diff at " + this.getPosition() +  " set to " + diffReport);
+        Log.info("Diff at " + this.getPosition() + " set to " + diffReport);
     }
 
     public int getVarDiff() {
@@ -468,7 +467,7 @@ public class TransformationInfo extends CodePosition {
     @Deprecated
     public void fromJSONObject(JSONObject object, JSONObject tags) throws JSONException {
         JSONObject tp = object.getJSONObject("transplantationPoint");
-        if ( tp.has("sourceCode") ) setSource(tp.getString("sourceCode"));
+        if (tp.has("sourceCode")) setSource(tp.getString("sourceCode"));
         else setSource(tp.getString("sourcecode"));
         setPosition(tp.getString("position"));
         setSpoonType(tp.getString("type"));
@@ -501,7 +500,7 @@ public class TransformationInfo extends CodePosition {
             JSONObject tp = jt.getJSONObject("transplant");
             TransplantInfo t = new TransplantInfo();
             t.setPosition(tp.getString("position"));
-            if ( tp.has("sourceCode") )  t.setSource(tp.getString("sourceCode"));
+            if (tp.has("sourceCode")) t.setSource(tp.getString("sourceCode"));
             else t.setSource(tp.getString("sourcecode"));
             t.setSpoonType(tp.getString("type"));
             t.setIndex(jt.getInt("tindex"));
@@ -526,30 +525,32 @@ public class TransformationInfo extends CodePosition {
 
     /**
      * Create a string out of a variable map
+     *
      * @param v
      * @return
      */
     private String getVariableMapStr(Map<String, String> v) {
         StringBuilder sb = new StringBuilder("[");
-        if ( v != null ) for (Map.Entry<String, String> k : v.entrySet()) sb.append("; " + k + "->" + v);
+        if (v != null) for (Map.Entry<String, String> k : v.entrySet()) sb.append("; " + k + "->" + v);
         sb.append("]");
         return sb.toString();
     }
 
     /**
      * Appends transplant from a code fragment
+     *
      * @param t Transformation containing the transplant
-    */
+     */
     public void appendTransplant(ASTTransformation t) {
         CodeFragment cf = null;
         Map<String, String> v = null;
-        if ( t instanceof ASTAdd) {
-            cf = ((ASTAdd)t).getTransplant();
-            v = ((ASTAdd)t).getVarMapping();
+        if (t instanceof ASTAdd) {
+            cf = ((ASTAdd) t).getTransplant();
+            v = ((ASTAdd) t).getVarMapping();
         }
-        if ( t instanceof ASTReplace ) {
-            cf = ((ASTReplace)t).getTransplant();
-            v = ((ASTReplace)t).getVarMapping();
+        if (t instanceof ASTReplace) {
+            cf = ((ASTReplace) t).getTransplant();
+            v = ((ASTReplace) t).getVarMapping();
         }
 
         if (cf != null) {
@@ -575,45 +576,82 @@ public class TransformationInfo extends CodePosition {
 
     /**
      * Reads a set of transformations from a JSON file in
-     * @param program Program where the transformations where performed
+     *
+     * @param program  Program where the transformations where performed
      * @param jsonPath JSON file path
      * @return A list of transformations
      */
     public static Collection<TransformationInfo> fromJSON(String jsonPath, InputProgram program) {
         JsonSosiesInput input = new JsonSosiesInput(jsonPath, program);
-        return fromTransformations(input.read());
+        Collection<Transformation> f = input.read();
+        return fromTransformations(f, input.getLoadMessages());
     }
 
-    /**
+    /*
+     * Reads a set of transformations from a stream with a JSON file in it. Also, recovers the log messages raised
+     * @param program Program where the transformations where performed
+     * @param stream Stream with the JSON file in it
+     * @param logMsgs Log messages raised
+     * @return A list of transformations
+    public static Collection<TransformationInfo> fromJSON(InputStreamReader stream, InputProgram program,
+                                                          List<String> logMsgs) {
+        JsonSosiesInput input = new JsonSosiesInput(stream, program);
+        if ( logMsgs != null ) logMsgs.addAll(input.getLoadMessages());
+        return fromTransformations(input.read());
+    }*/
+
+    /*
      * Reads a set of transformations from a stream with a JSON file in it
      * @param program Program where the transformations where performed
      * @param stream Stream with the JSON file in it
      * @return A list of transformations
-     */
     public static Collection<TransformationInfo> fromJSON(InputStreamReader stream, InputProgram program) {
-        JsonSosiesInput input = new JsonSosiesInput(stream, program);
-        return fromTransformations(input.read());
-    }
+        return fromJSON(stream, program, null);
+    }*/
 
     /**
      * Returns a collection of TransformationInfo out a collection of Transformations
+     *
      * @param transformations A collection of transformations
      * @return A list of transformations
      */
-    public static Collection<TransformationInfo> fromTransformations(Collection<Transformation> transformations) {
+    public static Collection<TransformationInfo> fromTransformations(
+            Collection<Transformation> transformations, Collection<String> msgs) {
+
+        //Parsing of the logs and indexing them
+        HashMap<Integer, ArrayList<String>> parsings = new HashMap<>();
+        Pattern p = Pattern.compile("Transf \\d+");
+        for (String s : msgs) {
+            if (s.startsWith("ERROR") || s.startsWith("WARNING") && s.contains("Transf")) {
+                //String[] nmbrs = s.replaceAll("[^0-9]+", " ").trim().split(" ");
+                //int index = Integer.parseInt(nmbrs[0]);
+                Matcher m = p.matcher(s);
+                if (m.find()) {
+                    int index = Integer.parseInt(m.group().split(" ")[1]);
+                    if (parsings.containsKey(index)) parsings.get(index).add(s);
+                    else parsings.put(index, new ArrayList<>(Arrays.asList(new String[]{s})));
+                }
+            }
+        }
+
         HashMap<String, TransformationInfo> r = new HashMap<>();
 
-        for ( Transformation t : transformations ) {
-            if ( t instanceof ASTTransformation ) {
-                ASTTransformation astt = (ASTTransformation)t;
+        for (Transformation t : transformations) {
+            if (t instanceof ASTTransformation) {
+                ASTTransformation astt = (ASTTransformation) t;
                 String pos = astt.getTransplantationPoint().positionString();
                 TransformationInfo ti = null;
-                if ( !r.containsKey(pos) ) {
+                if (!r.containsKey(pos)) {
                     ti = new TransformationInfo();
                     ti.fromTransformation(astt);
+                    if (parsings.containsKey(astt.getIndex()))
+                         ti.getLogMessages().addAll(parsings.get(astt.getIndex()));
                     r.put(pos, ti);
                 } else {
-                    r.get(pos).appendTransplant(astt);
+                    ti = r.get(pos);
+                    if (parsings.containsKey(astt.getIndex()))
+                        ti.getLogMessages().addAll(parsings.get(astt.getIndex()));
+                    ti.appendTransplant(astt);
                 }
             }
         }
@@ -623,12 +661,13 @@ public class TransformationInfo extends CodePosition {
 
     /**
      * Get the number of visible transplants
+     *
      * @return The number of visible transplants
      */
     public int getVisibleTransplants() {
         int i = 0;
-        for ( TransplantInfo t : getTransplants() ) {
-            if ( t.isVisible() ) i++;
+        for (TransplantInfo t : getTransplants()) {
+            if (t.isVisible()) i++;
         }
         return i;
     }
@@ -647,5 +686,14 @@ public class TransformationInfo extends CodePosition {
 
     public void setStorageSource(String storageSource) {
         this.storageSource = storageSource;
+    }
+
+    public void setLogMessages(List<String> logMessages) {
+        this.logMessages = logMessages;
+    }
+
+    public List<String> getLogMessages() {
+        if ( logMessages == null ) logMessages = new ArrayList<>();
+        return logMessages;
     }
 }

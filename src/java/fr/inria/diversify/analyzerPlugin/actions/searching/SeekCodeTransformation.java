@@ -12,6 +12,7 @@ import com.intellij.util.IconUtil;
 import fr.inria.diversify.analyzerPlugin.MainToolWinv0;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.WinAction;
+import fr.inria.diversify.analyzerPlugin.gui.CodePositionTree;
 import fr.inria.diversify.analyzerPlugin.gui.TreeTransformations;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
 
@@ -27,13 +28,16 @@ public class SeekCodeTransformation extends TestEyeAction {
 
     private boolean includeMethodName;
 
+    private CodePositionTree tree;
+
     /**
      * Position to travel to
      */
     private CodePosition codePosition;
 
-    public SeekCodeTransformation() {
-        super("Load transformations", "Load transformations", IconUtil.getAddFolderIcon());
+    public SeekCodeTransformation(CodePositionTree tree) {
+        super("Seek code", "Load transformations", IconUtil.getAddFolderIcon());
+        this.tree = tree;
     }
 
 
@@ -42,7 +46,7 @@ public class SeekCodeTransformation extends TestEyeAction {
     public void actionPerformed(AnActionEvent event) {
 
         //Get the Tranformation's tree thanks tho the data context magic in IntelliJ IDEA framework
-        TreeTransformations tree = event.getData(TreeTransformations.TEST_EYE_TREE_TRANSFORMATIONS);
+        //CodePositionTree tree = event.getData(CodePositionTree.TEST_EYE_CODE_POSITION_TREE);
 
         CodePosition data = tree.getSelectedCodePosition();
 

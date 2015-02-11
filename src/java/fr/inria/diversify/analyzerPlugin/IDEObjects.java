@@ -3,6 +3,7 @@ package fr.inria.diversify.analyzerPlugin;
 import com.intellij.openapi.actionSystem.ActionManager;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponent;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
+import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 
 /**
  *  A proxy interface to access the IDE objects
@@ -15,5 +16,4 @@ public interface IDEObjects {
     ActionManager getActionManager();
 
     TestEyeApplicationComponent getApplicationComponent();
-
 }

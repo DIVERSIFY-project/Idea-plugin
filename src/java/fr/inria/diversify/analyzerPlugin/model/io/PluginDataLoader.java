@@ -2,7 +2,7 @@ package fr.inria.diversify.analyzerPlugin.model.io;
 
 import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
 import fr.inria.diversify.analyzerPlugin.LoadingException;
-import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TestInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.util.Log;
 import org.json.JSONArray;
@@ -104,7 +104,7 @@ public class PluginDataLoader {
 
     private ArrayList<Exception> errors;
 
-    private HashSet<TestRepresentation> declaredTest;
+    private HashSet<TestInfo> declaredTest;
 
     HashMap<String, TransformationInfo> representations;
 
@@ -290,7 +290,7 @@ public class PluginDataLoader {
         //HashSet<String> assertsExecuted = new HashSet<String>();
         HashSet<String> coveringAsserts = new HashSet<String>();
         HashSet<String> coveringTests = new HashSet<String>();
-        declaredTest = new HashSet<TestRepresentation>();
+        declaredTest = new HashSet<TestInfo>();
 
         //To collect information regarding the errors
         int iteration = 0;
@@ -355,7 +355,7 @@ public class PluginDataLoader {
 
         //Sort them by registration moment
         Collections.sort(entries);
-        TestRepresentation currentTest = null;
+        TestInfo currentTest = null;
         iteration = 0;
 
         //Move entries to elements
@@ -363,7 +363,7 @@ public class PluginDataLoader {
             iteration++;
             try {
                 if (el.type.equals(NEW_TEST)) {
-                    currentTest = new TestRepresentation();
+                    currentTest = new TestInfo();
                     currentTest.setPosition(el.position);
                     currentTest.setRegisterTime(el.millis);
                     testExecutedCount++; //Count total test executions
@@ -383,7 +383,7 @@ public class PluginDataLoader {
                 } else {
                     if (currentTest == null) continue; //Ignore elements outside a test
                     if (el.type.equals(TP)) {
-                        TestRepresentation test = currentTest;
+                        TestInfo test = currentTest;
                         //Obtain the TP by its position
                         //Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
                         TransformationInfo r = representations.get(el.position);
@@ -552,7 +552,7 @@ public class PluginDataLoader {
     /**
      * All executed test in the program
      */
-    public HashSet<TestRepresentation> getDeclaredTest() {
+    public HashSet<TestInfo> getDeclaredTest() {
         return declaredTest;
     }
 

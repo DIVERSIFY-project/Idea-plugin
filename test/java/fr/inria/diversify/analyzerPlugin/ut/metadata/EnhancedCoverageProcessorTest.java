@@ -31,15 +31,15 @@ public class EnhancedCoverageProcessorTest {
 
         ArrayList<EntryLog> result = new ArrayList<>();
         EnhancedCoverageEntry e;
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("TB;1;1", ";");
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("T;2;5;8", ";");
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("AS;3;3", ";");
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("AS;4;4", ";");
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("T;8;6;6", ";");
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("AS;10;4", ";");
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("TC;12;5;3;6;7;8", ";");
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("ASC;12;3;4", ";");
-        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("TE;13;", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("TB;12345678901;1", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("T;12345678902;5;8", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("AS;12345678903;3", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("AS;12345678904;4", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("T;12345678908;6;6", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("AS;123456789010;4", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("TC;123456789012;5;3;6;7;8", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("ASC;123456789012;3;4", ";");
+        e = new EnhancedCoverageEntry("My File",1, m);result.add(e);e.fromLine("TE;123456789013;", ";");
         return result;
     }
 
@@ -78,8 +78,8 @@ public class EnhancedCoverageProcessorTest {
         EnhancedCoverageProcessor p = new EnhancedCoverageProcessor(infos);
         List<EntryLog> logs = getLogs();
         EnhancedCoverageEntry e;
-        e = new EnhancedCoverageEntry("My File",1, logs.get(0).getIdMap());logs.add(e);e.fromLine("T;2;5;8", ";");
-        e = new EnhancedCoverageEntry("My File",1, logs.get(0).getIdMap());logs.add(e);e.fromLine("T;2;6;8", ";");
+        e = new EnhancedCoverageEntry("My File",1, logs.get(0).getIdMap());logs.add(e);e.fromLine("T;12345678902;5;8", ";");
+        e = new EnhancedCoverageEntry("My File",1, logs.get(0).getIdMap());logs.add(e);e.fromLine("T;12345678902;6;8", ";");
         p.process(logs);
 
         assertEquals(5, infos.get(0).getHits());

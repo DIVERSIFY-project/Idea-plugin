@@ -2,7 +2,7 @@ package fr.inria.diversify.analyzerPlugin.model.metadata;
 
 import fr.inria.diversify.analyzerPlugin.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
-import fr.inria.diversify.analyzerPlugin.model.TestRepresentation;
+import fr.inria.diversify.analyzerPlugin.model.TestInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class EnhancedCoverageProcessor implements EntryProcessor {
 
     @Override
     public void process(Collection<EntryLog> entries) throws LoadingException {
-        TestRepresentation currentTest = null;
+        TestInfo currentTest = null;
 
         HashSet<TransformationInfo> tcpThisTest = new HashSet<TransformationInfo>(); //Transplant point reached in this test
         HashMap<String, AssertInfo> assertsThisTest = new HashMap<String, AssertInfo>();
@@ -55,7 +55,7 @@ public class EnhancedCoverageProcessor implements EntryProcessor {
         //HashSet<String> assertsExecuted = new HashSet<String>();
         HashSet<String> coveringAsserts = new HashSet<String>();
         HashSet<String> coveringTests = new HashSet<String>();
-        HashSet<TestRepresentation> declaredTest = new HashSet<TestRepresentation>();
+        HashSet<TestInfo> declaredTest = new HashSet<TestInfo>();
 
 
         //Move entries to elements
@@ -65,7 +65,7 @@ public class EnhancedCoverageProcessor implements EntryProcessor {
             iteration++;
             try {
                 if (el.getType().equals(NEW_TEST)) {
-                    currentTest = new TestRepresentation();
+                    currentTest = new TestInfo();
                     currentTest.setPosition(el.getPosition());
                     currentTest.setRegisterTime(el.getMillis());
                     testExecutedCount++; //Count total test executions
@@ -85,7 +85,7 @@ public class EnhancedCoverageProcessor implements EntryProcessor {
                 } else {
                     if (currentTest == null) continue; //Ignore elements outside a test
                     if (el.getType().equals(TP)) {
-                        TestRepresentation test = currentTest;
+                        TestInfo test = currentTest;
                         //Obtain the TP by its position
                         //Integer index = Integer.parseInt(idMap.get(Integer.parseInt(el.position)));
                         TransformationInfo r = getRepresentations().get(el.getPosition());

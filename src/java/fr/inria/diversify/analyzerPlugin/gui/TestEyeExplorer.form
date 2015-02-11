@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="pnlContent" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="284" height="513"/>
+      <xy x="20" y="20" width="389" height="513"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -137,7 +137,7 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="96c70" class="fr.inria.diversify.analyzerPlugin.gui.EnhancedCoverageTree" binding="tree1" default-binding="true">
+                          <component id="96c70" class="fr.inria.diversify.analyzerPlugin.gui.EnhancedCoverageTree" binding="treeCoverage">
                             <constraints/>
                             <properties/>
                           </component>
@@ -145,6 +145,29 @@
                       </scrollpane>
                     </children>
                   </grid>
+                </children>
+              </grid>
+              <grid id="c00a3" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <tabbedpane title="Errors"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <scrollpane id="e4439">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="e0276" class="fr.inria.diversify.analyzerPlugin.gui.EventLogList" binding="lstErrors">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
               </grid>
             </children>

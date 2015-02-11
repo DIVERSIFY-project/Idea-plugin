@@ -13,9 +13,9 @@ public class PertTestCoverageData {
     private Integer meanDepth = null;
     private Integer minDepth = null;
 
-    TestRepresentation test;
+    TestInfo test;
 
-    public PertTestCoverageData(TestRepresentation test) {
+    public PertTestCoverageData(TestInfo test) {
         this.test = test;
     }
 
@@ -83,7 +83,7 @@ public class PertTestCoverageData {
         if (stackMinDepth == null) stackMinDepth = stackDepth;
     }
 
-    public TestRepresentation getTest() {
+    public TestInfo getTest() {
         return test;
     }
 

@@ -19,13 +19,10 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.actions.*;
-import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
-import fr.inria.diversify.analyzerPlugin.actions.replay.PerformCurrentTransformation;
 import fr.inria.diversify.analyzerPlugin.actions.reporting.DepthsDistributionAction;
 import fr.inria.diversify.analyzerPlugin.actions.reporting.DepthsHistogramAction;
 import fr.inria.diversify.analyzerPlugin.actions.reporting.DepthsReportsAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SearchPosition;
-import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataExport;
@@ -888,8 +885,8 @@ public class MainToolWinv0 implements ToolWindowFactory {
      * Performs the transplant on the code in the selected transformations
      */
     public void performCurrentSelectedTransformation(String pomPath, String srcDir) throws IOException {
-        PerformCurrentTransformation perform = new PerformCurrentTransformation(this, pomPath, srcDir);
-        perform.execute();
+        //PerformCurrentTransformation perform = new PerformCurrentTransformation(this, pomPath, srcDir);
+        //perform.execute();
     }
 
 

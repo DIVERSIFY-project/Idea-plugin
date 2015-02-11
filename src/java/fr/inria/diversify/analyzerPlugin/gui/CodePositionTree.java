@@ -1,6 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.gui;
 
 import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.DataKey;
 import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
@@ -19,6 +20,9 @@ import java.awt.event.MouseListener;
  * Created by marodrig on 03/02/2015.
  */
 public class CodePositionTree extends Tree {
+
+    public static final DataKey<CodePositionTree>
+            TEST_EYE_CODE_POSITION_TREE = DataKey.create("test.eye.code.position.tree");
 
     private IDEObjects ideObjects;
 
@@ -48,12 +52,13 @@ public class CodePositionTree extends Tree {
      * Installs the double click
      */
     protected void installDoubleClick() {
-        final Tree me = this;
+        final CodePositionTree me = this;
         final MouseListener listener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    ActionManager.getInstance().tryToExecute(new SeekCodeTransformation(), e, e.getComponent(), null, true);
+                    ActionManager.getInstance().tryToExecute(
+                            new SeekCodeTransformation(me), e, e.getComponent(), null, true);
                 }
             }
         };

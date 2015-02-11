@@ -11,14 +11,23 @@ import fr.inria.diversify.analyzerPlugin.model.orders.AlphabeticallOrder;
 import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.factories.SpoonMetaFactory;
+import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
+import fr.inria.diversify.transformation.Transformation;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
  * Created by marodrig on 27/01/2015.
  */
 public class TestEyeProjectComponent extends AbstractProjectComponent {
+
+    public static String TEMP_MOD = "/.modBackup";
 
     /**
      * Constant to assign to the "unclassified" category when filtering
@@ -70,6 +79,11 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      */
     private Comparator<TransformationInfo> order;
 
+    /**
+     * Errors registered so far
+     */
+    private List<String> logMessages;
+
 
     public TestEyeProjectComponent(Project project) {
         super(project);
@@ -97,6 +111,14 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
             throw new IllegalStateException("Error while indexing program");
         }
     }
+
+    @Override
+    public void projectOpened() {
+        if ( new File(myProject.getBasePath() + TEMP_MOD).exists() ) {
+
+        }
+    }
+
 
     @NotNull
     @Override
@@ -346,8 +368,36 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
         setShowClassifiersIntersection(false);
         filterAndSort(progressIndicator);
     }
-
     public boolean getShowClassifiersIntersection() {
         return showClassifiersIntersection;
+    }
+
+
+    /**
+     * Loads the infos from a file
+     * @param filePath Path of the file containing the transformations
+     * @throws FileNotFoundException
+     */
+    public void loadInfos(String filePath) throws FileNotFoundException {
+        loadInfos(new InputStreamReader(new FileInputStream(filePath)));
+    }
+
+    /**
+     * Loads the infos from a JSON residing in the reader
+     * @param reader
+     */
+    public void loadInfos(InputStreamReader reader) {
+        JsonSosiesInput input = new JsonSosiesInput(reader, getProgram());
+        Collection<Transformation> ts = input.read();
+        setInfos(new ArrayList<>(TransformationInfo.fromTransformations(ts, input.getLoadMessages())));
+        setLogMessages(input.getLoadMessages());
+    }
+
+    public void setLogMessages(List<String> logMessages) {
+        this.logMessages = logMessages;
+    }
+
+    public List<String> getLogMessages() {
+        return logMessages;
     }
 }

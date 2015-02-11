@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.IDEObjectsImpl;
+import fr.inria.diversify.analyzerPlugin.actions.SaveTransformationsAction;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadEnhancedCoverageAction;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
@@ -65,8 +66,19 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
      * List with all the filters
      */
     private FilterPanel lstFilters;
-    private EnhancedCoverageTree tree1;
+
+    /**
+     * Tree showing the coverage information
+     */
+    private EnhancedCoverageTree treeCoverage;
+
+    //useless here...
     private JPanel pnlCoverage;
+
+    /**
+     * List with all errors
+     */
+    private EventLogList lstErrors;
 
     public FilterPanel getLstFilters() { return lstFilters; }
 
@@ -96,6 +108,7 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
         final DefaultActionGroup mainGroup = new DefaultActionGroup();
         mainGroup.add(new LoadTransformationsAction());
         mainGroup.add(new LoadEnhancedCoverageAction());
+        mainGroup.add(new SaveTransformationsAction());
         final ActionToolbar mainToolBar = getIDEObjects().getActionManager().createActionToolbar(
                 ActionPlaces.ANT_EXPLORER_TOOLBAR, mainGroup, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());
@@ -128,5 +141,17 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
         treeTransformations.setIDEObjects(ideObjects);
         tblProperties.setIDEObjects(ideObjects);
         lstFilters.setIdeObject(ideObjects);
+    }
+
+    public EnhancedCoverageTree getTreeCoverage() {
+        return treeCoverage;
+    }
+
+    public EventLogList getLstErrors() {
+        return lstErrors;
+    }
+
+    public void setLstErrors(EventLogList lstErrors) {
+        this.lstErrors = lstErrors;
     }
 }

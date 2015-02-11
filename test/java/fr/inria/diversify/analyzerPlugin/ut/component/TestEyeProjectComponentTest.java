@@ -1,5 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.ut.component;
 
+import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.project.Project;
 import fr.inria.diversify.analyzerPlugin.FakeProject;
@@ -11,12 +12,27 @@ import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
 import fr.inria.diversify.analyzerPlugin.model.orders.AlphabeticallOrder;
 import fr.inria.diversify.analyzerPlugin.model.orders.TotalTransplantsOrder;
 import fr.inria.diversify.diversification.InputProgram;
+import fr.inria.diversify.persistence.json.input.JsonHeaderInput;
+import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
+import fr.inria.diversify.ut.MockInputProgram;
+import fr.inria.diversify.ut.json.input.JsonHeaderInputTest;
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformations;
+import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformationsJSON;
+import static fr.inria.diversify.ut.json.SectionTestUtils.createTransformationsJSONObjectWithErrors;
 import static junit.framework.Assert.*;
 
 /**
@@ -24,6 +40,7 @@ import static junit.framework.Assert.*;
  *
  * Created by marodrig on 02/02/2015.
  */
+@RunWith(JMockit.class)
 public class TestEyeProjectComponentTest {
 
     public static class MyClassiferFactory extends ClassifierFactory {
@@ -38,11 +55,16 @@ public class TestEyeProjectComponentTest {
 
     }
 
+    /**
+     * Get a set of infos to test with
+     * @param program
+     * @return
+     */
     private static List<TransformationInfo> getInfos(InputProgram program) {
         //Create a list of transformations
         List<TransformationInfo> infos  = new ArrayList<>(
                 TransformationInfo.fromTransformations(
-                        createTransformations(program)));
+                        createTransformations(program), new ArrayList<String>()));
         return infos;
     }
 
@@ -50,8 +72,12 @@ public class TestEyeProjectComponentTest {
         return initComponent(new FakeProject());
     }
 
+    /**
+     * Inits a component to test, setting a group of infos and a classification factory
+     * @param p
+     * @return
+     */
     public static TestEyeProjectComponent initComponent(Project p) {
-
         //Returns a component loaded with a MockInputProgram
         TestEyeProjectComponent component = p.getComponent(TestEyeProjectComponent.class);
         //Create a list of transformations
@@ -133,7 +159,7 @@ public class TestEyeProjectComponentTest {
     }
 
     /**
-     * Test the filtering functionality when unclassified is true
+     * Test the hide all functionality
      */
     @Test
     public void testHideAll() {
@@ -144,14 +170,47 @@ public class TestEyeProjectComponentTest {
     }
 
     /**
-     * Test the filtering functionality when unclassified is true
+     * Test the show all functionality
      */
     @Test
-    public void testshowAll() {
+    public void testShowAll() {
         TestEyeProjectComponent component = initComponent();
         component.switchClassifier(ReplaceClassifier.class);
         component.showAll(new ProgressIndicatorBase());
         assertEquals(2, component.getVisibleInfos().size());
         assertFalse(component.getShowClassifiersIntersection());
+    }
+
+    /**
+     * Test the load infos functionality. OK case
+     */
+    @Test
+    public void testLoadInfos(@Mocked final JsonHeaderInput anyHeader) {
+        InputProgram p = new MockInputProgram();
+        TestEyeProjectComponent component = new TestEyeProjectComponent(new FakeProject());
+        component.setProgram(p);
+
+        //Read the transformations
+        JSONObject obj = createTransformationsJSON(p);
+        InputStreamReader r = new InputStreamReader(
+                new ByteArrayInputStream(obj.toString().getBytes(StandardCharsets.UTF_8)));
+        component.loadInfos(r);
+        assertEquals(2, component.getInfos().size());
+    }
+
+    /**
+     * Test the load infos functionality with errors
+     */
+    @Test
+    public void testLoadInfos_WithErrors(@Mocked final JsonHeaderInput anyHeader) throws JSONException {
+        InputProgram p = new MockInputProgram();
+        JSONObject obj = createTransformationsJSONObjectWithErrors(p);
+        TestEyeProjectComponent component = new TestEyeProjectComponent(new FakeProject());
+        component.setProgram(p);
+        //Read the transformations
+        InputStreamReader r = new InputStreamReader(
+                new ByteArrayInputStream(obj.toString().getBytes(StandardCharsets.UTF_8)));
+        component.loadInfos(r);
+        assertEquals(3, component.getLogMessages().size());
     }
 }

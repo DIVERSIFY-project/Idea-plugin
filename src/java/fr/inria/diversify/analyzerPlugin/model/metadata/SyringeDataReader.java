@@ -48,7 +48,7 @@ public class SyringeDataReader {
 
         absFile = new File(logDirectory).getAbsoluteFile();
         for (File f : absFile.listFiles()) {
-            if (f.isFile()) {
+            if (f.isFile() && (f.getName().endsWith(".log") || f.getName().startsWith("log"))) {
                 try {
                     Collection<EntryLog> entries = read(idMap, f.getName(), new FileReader(f));
                     result.addAll(entries);
@@ -120,7 +120,7 @@ public class SyringeDataReader {
                 }
             }
         } catch (Exception e) {
-            new LoadingException(iteration, fileName, e);
+            throw new LoadingException(iteration, fileName, e);
         }
 
         return result;

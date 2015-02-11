@@ -1,13 +1,12 @@
 package fr.inria.diversify.analyzerPlugin.it.metadata;
 
+import fr.inria.diversify.analyzerPlugin.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageEntryFactory;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;
-import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageReader;
 import fr.inria.diversify.analyzerPlugin.model.metadata.SyringeDataReader;
 import fr.inria.diversify.ut.MockInputProgram;
 import org.junit.Test;
-
 import java.util.ArrayList;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformations;
@@ -17,7 +16,7 @@ import static junit.framework.TestCase.assertEquals;
 /**
  * Created by marodrig on 04/02/2015.
  */
-public class EnhancedCoverageTest {
+public class SyringeEnhancedCoverageTest {
 
     /**
      * Test one file
@@ -27,8 +26,9 @@ public class EnhancedCoverageTest {
     public void testSimpleRead() throws Exception {
         ArrayList<TransformationInfo> infos = getInfos();
 
-        EnhancedCoverageReader reader = new EnhancedCoverageReader(infos);
-        reader.read("idFile.id", "test/data/enhancedCoverageLogFiles/simple");
+        SyringeDataReader syringe = new SyringeDataReader(
+                new EnhancedCoverageEntryFactory(), new EnhancedCoverageProcessor(infos));
+        syringe.read("idFile.id", "test/data/enhancedCoverageLogFiles/simple");
 
         assertEquals(4, infos.get(0).getHits());
         assertEquals(1, infos.get(1).getHits());
@@ -50,13 +50,25 @@ public class EnhancedCoverageTest {
     @Test
     public void testMultiThreadRead() throws Exception {
         ArrayList<TransformationInfo> infos = getInfos();
-
-        EnhancedCoverageReader reader = new EnhancedCoverageReader(infos);
-        reader.read("idFile.id", "test/data/enhancedCoverageLogFiles/multi");
+        SyringeDataReader syringe = new SyringeDataReader(
+                new EnhancedCoverageEntryFactory(), new EnhancedCoverageProcessor(infos));
+        syringe.read("idFile.id", "test/data/enhancedCoverageLogFiles/multi");
 
         assertEquals(5, infos.get(0).getHits());
         assertEquals(2, infos.get(1).getHits());
 
+    }
+
+    /**
+     * Test multi-reading file
+     * @throws Exception
+     */
+    @Test(expected = LoadingException.class)
+    public void testLoadException() throws Exception {
+        ArrayList<TransformationInfo> infos = getInfos();
+        SyringeDataReader syringe = new SyringeDataReader(
+                new EnhancedCoverageEntryFactory(), new EnhancedCoverageProcessor(infos));
+        syringe.read("idFile.id", "test/data/enhancedCoverageLogFiles/error");
     }
 
 }

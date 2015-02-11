@@ -66,6 +66,9 @@ public class TransformationsNodeRenderer extends DefaultTreeCellRenderer {
                 if ( t.getAppliedTransplant() != null ) {
                     setFont(getFont().deriveFont(Font.BOLD));
                 }
+                if ( t.getLogMessages().size() > 0 ) {
+                    setIcon(TestEyeIcons.Warning);
+                }
             }
         }
 

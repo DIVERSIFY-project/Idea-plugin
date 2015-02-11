@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin;
+ package fr.inria.diversify.analyzerPlugin;
 
 import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.extensions.ExtensionPointName;

@@ -6,10 +6,12 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.IconUtil;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
+import fr.inria.diversify.analyzerPlugin.actions.display.ShowErrorsAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import com.intellij.openapi.diagnostic.Logger;
+import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
 import icons.TestEyeIcons;
 
 import java.io.*;
@@ -36,17 +38,6 @@ public class LoadTransformationsAction extends TestEyeAction {
         return fv == null ? null : fv.getCanonicalPath();
     }
 
-    /**
-     * Returns the input reader.
-     * @param streamPath Path of the input stream in the file
-     * @return A InputStreamReader
-     * @throws FileNotFoundException
-     */
-    protected InputStreamReader getReader(String streamPath) throws FileNotFoundException {
-        return new InputStreamReader(new FileInputStream(streamPath));
-    }
-
-
     @Override
     public void actionPerformed(AnActionEvent e) {
         //Returns if the user cancels
@@ -61,10 +52,12 @@ public class LoadTransformationsAction extends TestEyeAction {
             //Load the transformations
             logger.info("Program source code dir: " + c.getProgram().getSourceCodeDir());
             logger.info("Program base dir: " + c.getProgram().getProgramDir());
-            c.setInfos(new ArrayList<>(TransformationInfo.fromJSON(getReader(path), c.getProgram())));
+
+            c.loadInfos(path);
             logger.info("Transformations loaded: " + c.getInfos().size());
 
             tryExecute(ShowTransformationsInTree.class, e);
+            tryExecute(ShowErrorsAction.class, e);
             logger.info("Transformations presented!");
         } catch (Exception ex) {
             hardComplain("Unable to load transformations", ex);

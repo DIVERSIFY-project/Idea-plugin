@@ -1,14 +1,19 @@
 package fr.inria.diversify.analyzerPlugin.ut.model;
 
+import fr.inria.diversify.analyzerPlugin.FakeProject;
 import fr.inria.diversify.analyzerPlugin.TestHelpers;
+import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.diversification.InputProgram;
+import fr.inria.diversify.persistence.json.input.JsonHeaderInput;
+import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
 import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.transformation.ast.ASTAdd;
 import fr.inria.diversify.transformation.ast.ASTDelete;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import fr.inria.diversify.ut.MockInputProgram;
 import fr.inria.diversify.ut.json.output.JsonSosieOutputForUT;
+import junit.framework.Assert;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 import org.json.JSONException;
@@ -21,8 +26,11 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
+import static fr.inria.diversify.ut.json.SectionTestUtils.createTransformationsJSONObjectWithErrors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -45,7 +53,7 @@ public class TransformationInfoTest {
     private JSONObject createTransformation(JSONObject pot, JSONObject transplant) throws JSONException {
         JSONObject transformation = new JSONObject();
         transformation.put("transplantationPoint", pot);
-        if ( transplant != null ) {
+        if (transplant != null) {
             transformation.put("transplant", transplant);
         }
         transformation.put("tindex", 0);
@@ -89,20 +97,19 @@ public class TransformationInfoTest {
 
     /**
      * Turns transformations in a JSON into a plugin friendly data format
-     */
-    @Test
-    public void testFromJson(@Mocked FileWriter anyWriter) {
-        //Write the transformations
-        InputProgram p = new MockInputProgram();
-        List<Transformation> t = TestHelpers.createTransformations(p);
-        JsonSosieOutputForUT out = new JsonSosieOutputForUT(t, "/uzr/h0m3/my.jzon");
-        out.write(); //We need to mock the File writer so no writing to file is done
 
-        InputStreamReader r = new InputStreamReader(
-                new ByteArrayInputStream(out.getJSONObject().toString().getBytes(StandardCharsets.UTF_8)));
-        ArrayList<TransformationInfo> infos = new ArrayList<>(TransformationInfo.fromJSON(r, p));
-        assertInfosWhereCreatedProperly(infos);
-    }
+     @Test public void testFromJson() {
+     //Write the transformations
+     InputProgram p = new MockInputProgram();
+     List<Transformation> t = TestHelpers.createTransformations(p);
+     JsonSosieOutputForUT out = new JsonSosieOutputForUT(t, "/uzr/h0m3/my.jzon", "myProj/pom.xml", "myGen/pom.xml");
+     JSONObject obj = out.writeToJsonNow(); //We need to mock the File writer so no writing to file is done
+
+     InputStreamReader r = new InputStreamReader(
+     new ByteArrayInputStream(obj.toString().getBytes(StandardCharsets.UTF_8)));
+     ArrayList<TransformationInfo> infos = new ArrayList<>(TransformationInfo.fromJSON(r, p));
+     assertInfosWhereCreatedProperly(infos);
+     }*/
 
     /**
      * Turns transformations into a plugin friendly data format
@@ -110,8 +117,38 @@ public class TransformationInfoTest {
     @Test
     public void testFromTransformations() {
         List<Transformation> t = TestHelpers.createTransformations(new MockInputProgram());
-        ArrayList<TransformationInfo> infos = new ArrayList<>(TransformationInfo.fromTransformations(t));
+        ArrayList<TransformationInfo> infos = new ArrayList<>(
+                TransformationInfo.fromTransformations(t, new ArrayList<String>()));
         assertInfosWhereCreatedProperly(infos);
+    }
+
+    @Test
+    public void testLinkErrorWithTransformation() {
+        List<Transformation> t = TestHelpers.createTransformations(new MockInputProgram());
+
+        List<String> errors = Arrays.asList(new String[]{
+                "WARNING: Transf 0. asdaasd a99 as 0a a9",
+                "WARNING: Transf 1. aduuuadd a99 as 0a a9",
+                "ERROR  : Transf 3 aduuuadd a99 as 0a a9.."
+        });
+        ArrayList<TransformationInfo> infos = new ArrayList<>(TransformationInfo.fromTransformations(t, errors));
+        assertEquals(2, infos.get(0).getLogMessages().size());
+        assertEquals(1, infos.get(1).getLogMessages().size());
+    }
+
+    /**
+     * Test the from transformations with errors
+     */
+    @Test
+    public void testFromTransformations_WithErrors(@Mocked final JsonHeaderInput anyHeader) throws JSONException {
+        InputProgram p = new MockInputProgram();
+        JSONObject obj = createTransformationsJSONObjectWithErrors(p);
+        //Read the transformations
+        InputStreamReader r = new InputStreamReader(
+                new ByteArrayInputStream(obj.toString().getBytes(StandardCharsets.UTF_8)));
+        JsonSosiesInput input = new JsonSosiesInput(r, p);
+        Collection<Transformation> infos = input.read();
+        assertEquals(2, TransformationInfo.fromTransformations(infos, input.getLoadMessages()).size());
     }
 
 

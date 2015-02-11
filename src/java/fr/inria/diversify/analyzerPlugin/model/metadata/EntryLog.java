@@ -61,7 +61,7 @@ public class EntryLog implements Comparable {
      */
     protected void fromLineData(String[] lineData) throws LoadingException {
         type = lineData[0];
-        millis = Integer.parseInt(lineData[1]);
+        millis = Long.parseLong(lineData[1]);
     }
 
     public HashMap<Integer, String> getIdMap() {
