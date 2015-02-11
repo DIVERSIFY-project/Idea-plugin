@@ -46,30 +46,20 @@ public class TransformationsNodeRenderer extends DefaultTreeCellRenderer {
 
         setFont(getFont().deriveFont(Font.PLAIN));
 
-        if ( value instanceof DefaultMutableTreeNode) {
-            if ( ((DefaultMutableTreeNode)value).getUserObject() instanceof TransplantInfo) {
-                TransplantInfo t = (TransplantInfo) ((DefaultMutableTreeNode)value).getUserObject();
+        if (value instanceof DefaultMutableTreeNode) {
+            if (((DefaultMutableTreeNode) value).getUserObject() instanceof TransplantInfo) {
+                TransplantInfo t = (TransplantInfo) ((DefaultMutableTreeNode) value).getUserObject();
 
-                if (t.getType().contains("replace")) {
-                    setIcon(replace);
-                } else if (t.getType().contains("add")) {
-                    setIcon(add);
-                } else if (t.getType().contains("delete")) {
-                    setIcon(delete);
-                }
+                if (t.getType().contains("replace")) setIcon(replace);
+                else if (t.getType().contains("add")) setIcon(add);
+                else if (t.getType().contains("delete")) setIcon(delete);
 
-                if (t.isApplied()) {
-                    setFont(getFont().deriveFont(Font.BOLD));
-                }
-            } else if  ( ((DefaultMutableTreeNode)value).getUserObject() instanceof TransformationInfo) {
-                TransformationInfo t = (TransformationInfo) ((DefaultMutableTreeNode)value).getUserObject();
-                if ( t.getAppliedTransplant() != null ) {
-                    setFont(getFont().deriveFont(Font.BOLD));
-                }
-                if ( t.getLogMessages().size() > 0 ) {
-                    setIcon(TestEyeIcons.Warning);
+                if (t.isApplied()) setFont(getFont().deriveFont(Font.BOLD));
+            } else if (((DefaultMutableTreeNode) value).getUserObject() instanceof TransformationInfo) {
+                TransformationInfo t = (TransformationInfo) ((DefaultMutableTreeNode) value).getUserObject();
 
-                }
+                if (t.getAppliedTransplant() != null) setFont(getFont().deriveFont(Font.BOLD));
+                if (t.getLogMessages().size() > 0) setIcon(TestEyeIcons.Warning);
             }
         }
 
