@@ -68,6 +68,7 @@ public class TransformationsNodeRenderer extends DefaultTreeCellRenderer {
                 }
                 if ( t.getLogMessages().size() > 0 ) {
                     setIcon(TestEyeIcons.Warning);
+
                 }
             }
         }
