@@ -7,6 +7,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowCoverageInfo;
+import fr.inria.diversify.analyzerPlugin.actions.display.ShowErrorsAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageEntryFactory;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;
@@ -51,6 +52,9 @@ public class LoadEnhancedCoverageAction extends TestEyeAction {
 
             //Show them
             tryExecute(ShowCoverageInfo.class, e);
+            //The errors to
+            c.getLogMessages().addAll(reader.getProcessingErrors());
+            tryExecute(ShowErrorsAction.class, e);
         } catch (Exception ex) {
             hardComplain("Unable to load transformations", ex);
         }

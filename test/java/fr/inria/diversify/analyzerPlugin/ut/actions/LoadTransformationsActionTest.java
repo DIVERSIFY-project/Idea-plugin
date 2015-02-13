@@ -107,14 +107,15 @@ public class LoadTransformationsActionTest {
     @Test
     public void testComplain(@Mocked final FileChooser anyChooser,
                              @Mocked final JOptionPane anyPane) {
-
         expectHardComplain();
 
         //Will try to do it's thing without proper environment
         LoadTransformationsAction action = new LoadTransformationsAction();
+        action.setIdeObjects(new FakeIDEObjects());
         action.actionPerformed(null); //<-This will certainly make it complain
 
         verifyHardComplain();
+        assertActionCalled(action, ShowErrorsAction.class, 1);
     }
 
 

@@ -5,9 +5,7 @@ import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
 import fr.inria.diversify.analyzerPlugin.model.TestInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 import static fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageEntry.*;
 
@@ -26,6 +24,11 @@ public class EnhancedCoverageProcessor implements EntryProcessor {
 
     private HashMap<String, TransformationInfo> representations;
 
+    /**
+     * Errors during the processing of the coverage
+     */
+    private List<String> errors;
+
     public EnhancedCoverageProcessor(Collection<TransformationInfo> representations) {
         this.representations = new HashMap<>();
         for ( TransformationInfo r : representations ) {
@@ -36,6 +39,8 @@ public class EnhancedCoverageProcessor implements EntryProcessor {
     @Override
     public void process(Collection<EntryLog> entries) throws LoadingException {
         TestInfo currentTest = null;
+
+        errors = new ArrayList<>();
 
         HashSet<TransformationInfo> tcpThisTest = new HashSet<TransformationInfo>(); //Transplant point reached in this test
         HashMap<String, AssertInfo> assertsThisTest = new HashMap<String, AssertInfo>();
@@ -142,7 +147,9 @@ public class EnhancedCoverageProcessor implements EntryProcessor {
                     }
                 }
             } catch (Exception e) {
-                throw new LoadingException(iteration, "Error processing", e);
+                errors.add("At iteration " + iteration + ". Got exception " +
+                        e.getClass().getSimpleName() + ". Msg: " + e.getMessage() );
+                //throw new LoadingException(iteration, "Error processing", e);
             }
         }
     }
@@ -177,5 +184,10 @@ public class EnhancedCoverageProcessor implements EntryProcessor {
 
     public HashMap<String, TransformationInfo> getRepresentations() {
         return representations;
+    }
+
+    public List<String> getErrors() {
+        if ( errors == null ) errors = new ArrayList<>();
+        return errors;
     }
 }

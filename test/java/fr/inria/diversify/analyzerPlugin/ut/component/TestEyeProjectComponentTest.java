@@ -12,10 +12,13 @@ import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
 import fr.inria.diversify.analyzerPlugin.model.orders.AlphabeticallOrder;
 import fr.inria.diversify.analyzerPlugin.model.orders.TotalTransplantsOrder;
 import fr.inria.diversify.diversification.InputProgram;
+import fr.inria.diversify.persistence.PersistenceException;
 import fr.inria.diversify.persistence.json.input.JsonHeaderInput;
 import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
+import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.ut.MockInputProgram;
 import fr.inria.diversify.ut.json.input.JsonHeaderInputTest;
+import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 import org.json.JSONException;
@@ -28,6 +31,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformations;
@@ -37,14 +42,16 @@ import static junit.framework.Assert.*;
 
 /**
  * Test the project component
- *
+ * <p/>
  * Created by marodrig on 02/02/2015.
  */
 @RunWith(JMockit.class)
 public class TestEyeProjectComponentTest {
 
+    /**
+     * A classifier factory building two classifiers to test classifying functionality
+     */
     public static class MyClassiferFactory extends ClassifierFactory {
-
         @Override
         public List<TransformClasifier> buildClassifiers() {
             ArrayList<TransformClasifier> clasifiers = new ArrayList<TransformClasifier>();
@@ -52,17 +59,17 @@ public class TestEyeProjectComponentTest {
             clasifiers.add(new NonReplaceClassifier());
             return clasifiers;
         }
-
     }
 
     /**
      * Get a set of infos to test with
+     *
      * @param program
      * @return
      */
     private static List<TransformationInfo> getInfos(InputProgram program) {
         //Create a list of transformations
-        List<TransformationInfo> infos  = new ArrayList<>(
+        List<TransformationInfo> infos = new ArrayList<>(
                 TransformationInfo.fromTransformations(
                         createTransformations(program), new ArrayList<String>()));
         return infos;
@@ -74,6 +81,7 @@ public class TestEyeProjectComponentTest {
 
     /**
      * Inits a component to test, setting a group of infos and a classification factory
+     *
      * @param p
      * @return
      */
@@ -212,5 +220,31 @@ public class TestEyeProjectComponentTest {
                 new ByteArrayInputStream(obj.toString().getBytes(StandardCharsets.UTF_8)));
         component.loadInfos(r);
         assertEquals(3, component.getLogMessages().size());
+    }
+
+    /**
+     * Test the load infos functionality with errors
+     */
+    @Test
+    public void testLoadInfos_WithHeaderErrors(@Mocked final JsonHeaderInput anyHeader) throws JSONException {
+        //Mock the header so always thrown an exception
+        new Expectations() {{
+            anyHeader.read((HashMap<Integer, Transformation>) any);
+            result = new PersistenceException("Boo");
+        }};
+
+        InputProgram p = new MockInputProgram();
+        JSONObject obj = createTransformationsJSON(p);
+        TestEyeProjectComponent component = new TestEyeProjectComponent(new FakeProject());
+        component.setProgram(p);
+        //Read the transformations
+        InputStreamReader r = new InputStreamReader(
+                new ByteArrayInputStream(obj.toString().getBytes(StandardCharsets.UTF_8)));
+        try {
+            component.loadInfos(r);
+            fail("Exception expected");
+        } catch (PersistenceException e) {
+            //Yohoo catched!
+        }
     }
 }

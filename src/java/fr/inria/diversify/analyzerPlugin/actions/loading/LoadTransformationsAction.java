@@ -61,6 +61,7 @@ public class LoadTransformationsAction extends TestEyeAction {
             logger.info("Transformations presented!");
         } catch (Exception ex) {
             hardComplain("Unable to load transformations", ex);
+            tryExecute(ShowErrorsAction.class, e);
         }
     }
 }

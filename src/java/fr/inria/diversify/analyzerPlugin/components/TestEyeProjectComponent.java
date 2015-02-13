@@ -11,15 +11,14 @@ import fr.inria.diversify.analyzerPlugin.model.orders.AlphabeticallOrder;
 import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.factories.SpoonMetaFactory;
+import fr.inria.diversify.persistence.PersistenceException;
 import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
 import fr.inria.diversify.transformation.Transformation;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -114,11 +113,32 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
     @Override
     public void projectOpened() {
-        if ( new File(myProject.getBasePath() + TEMP_MOD).exists() ) {
-
-        }
+        restoreBackUp();
     }
 
+    @Override
+    public void projectClosed() {
+        restoreBackUp();
+    }
+
+    /**
+     * The apply transplant saves backups of the original source so they can be restored.
+     * This method restores such back ups.
+     * <p/>
+     * Done listening to: https://soundcloud.com/mixpak/machel-montano-go-down
+     * * Wine it!*
+     */
+    private void restoreBackUp() {
+        try {
+            String s = myProject.getBasePath();
+            File f = new File(s + TEMP_MOD);
+            if (f.exists()) {
+                Files.walkFileTree(f.toPath(), new RestoreBackupFileVisitor(s + TEMP_MOD, getProgram().getSourceCodeDir()));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @NotNull
     @Override
@@ -206,7 +226,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * @return
      */
     protected HashMap<Class<? extends TransformClasifier>, Boolean> getVisibleClassifiers() {
-        if ( visibleClassifiers == null ) getClassifiers(); //Init visible classifiers
+        if (visibleClassifiers == null) getClassifiers(); //Init visible classifiers
         return visibleClassifiers;
     }
 
@@ -217,7 +237,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     }
 
     public ClassifierFactory getClassifierFactory() {
-        if ( classifierFactory == null ) classifierFactory = new ClassifierFactory();
+        if (classifierFactory == null) classifierFactory = new ClassifierFactory();
         return classifierFactory;
     }
 
@@ -241,7 +261,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * @param value
      */
     public void setVisibleClassifiers(Class<? extends TransformClasifier> aClass, boolean value) {
-        if  ( aClass == null ) unclassifiedVisibility = value;
+        if (aClass == null) unclassifiedVisibility = value;
         else getVisibleClassifiers().put(aClass, value);
     }
 
@@ -264,6 +284,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
     /**
      * Filter and sort all infos
+     *
      * @param progressIndicator
      */
     public void filterAndSort(ProgressIndicator progressIndicator) {
@@ -274,6 +295,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
     /**
      * Filter the transformations by the visible classifiers
+     *
      * @param progressIndicator
      */
     private void filter(ProgressIndicator progressIndicator) {
@@ -345,12 +367,13 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     }
 
     public Comparator<TransformationInfo> getOrder() {
-        if ( order == null ) order = new AlphabeticallOrder();
+        if (order == null) order = new AlphabeticallOrder();
         return order;
     }
 
     /**
      * Hide all transformations
+     *
      * @param progressIndicator
      */
     public void hideAll(ProgressIndicator progressIndicator) {
@@ -361,6 +384,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
     /**
      * Shows all transformations
+     *
      * @param progressIndicator
      */
     public void showAll(ProgressIndicator progressIndicator) {
@@ -368,6 +392,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
         setShowClassifiersIntersection(false);
         filterAndSort(progressIndicator);
     }
+
     public boolean getShowClassifiersIntersection() {
         return showClassifiersIntersection;
     }
@@ -375,6 +400,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
     /**
      * Loads the infos from a file
+     *
      * @param filePath Path of the file containing the transformations
      * @throws FileNotFoundException
      */
@@ -384,13 +410,21 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
     /**
      * Loads the infos from a JSON residing in the reader
+     *
      * @param reader
      */
     public void loadInfos(InputStreamReader reader) {
         JsonSosiesInput input = new JsonSosiesInput(reader, getProgram());
-        Collection<Transformation> ts = input.read();
-        setInfos(new ArrayList<>(TransformationInfo.fromTransformations(ts, input.getLoadMessages())));
-        setLogMessages(input.getLoadMessages());
+        getLogMessages().clear();
+        try {
+            Collection<Transformation> ts = input.read();
+            setInfos(new ArrayList<>(TransformationInfo.fromTransformations(ts, input.getLoadMessages())));
+        } catch (PersistenceException e) {
+            //Save all errors and warnings
+            getLogMessages().addAll(input.getLoadMessages());
+            throw e;
+        }
+        getLogMessages().addAll(input.getLoadMessages());
     }
 
     public void setLogMessages(List<String> logMessages) {
@@ -398,6 +432,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     }
 
     public List<String> getLogMessages() {
+        if (logMessages == null) logMessages = new ArrayList<>();
         return logMessages;
     }
 }

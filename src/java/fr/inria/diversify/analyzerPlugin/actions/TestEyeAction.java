@@ -73,7 +73,7 @@ public abstract class TestEyeAction extends AnAction {
      * @param e       Exception that caused the complain
      */
     protected void hardComplain(String message, Exception e) {
-        JOptionPane.showMessageDialog(null, e.getMessage(), "Unable to load transformations", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, e.getMessage(), e.getClass().getSimpleName() +  ". Unable to load transformations", JOptionPane.ERROR_MESSAGE);
     }
 
     /**

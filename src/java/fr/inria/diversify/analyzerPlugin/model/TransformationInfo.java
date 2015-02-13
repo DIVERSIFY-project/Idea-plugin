@@ -400,10 +400,18 @@ public class TransformationInfo extends CodePosition {
             if (appliedTransformIndex == -1) {
                 throw new IndexOutOfBoundsException("This transplant does not belogs to the TP");
             }
+
+            //Make a backup of the source
             makeOriginalSourceBackUp(transf, srcDir, destDir);
 
+            //Delete if the transformed file exists to avoid rewriting exceptions on the "apply" method
+            File destFile = new File(destDir);
+            if ( destFile.exists() ) destFile.delete();
+
+            //Apply transformation
             transf.apply(destDir);
 
+            //Copy the modified source back to production
             copyModifiedSource(transf, srcDir, destDir);
         }
     }

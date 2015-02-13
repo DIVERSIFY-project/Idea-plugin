@@ -129,4 +129,8 @@ public class SyringeDataReader {
     public Collection<EntryLog> getEntries() {
         return entries;
     }
+
+    public List<String> getProcessingErrors() {
+        return processor.getErrors();
+    }
 }

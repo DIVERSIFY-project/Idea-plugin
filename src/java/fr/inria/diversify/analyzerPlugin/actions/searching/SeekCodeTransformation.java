@@ -15,6 +15,7 @@ import fr.inria.diversify.analyzerPlugin.actions.WinAction;
 import fr.inria.diversify.analyzerPlugin.gui.CodePositionTree;
 import fr.inria.diversify.analyzerPlugin.gui.TreeTransformations;
 import fr.inria.diversify.analyzerPlugin.model.CodePosition;
+import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 
 import javax.swing.*;
 
@@ -49,6 +50,11 @@ public class SeekCodeTransformation extends TestEyeAction {
         //CodePositionTree tree = event.getData(CodePositionTree.TEST_EYE_CODE_POSITION_TREE);
 
         CodePosition data = tree.getSelectedCodePosition();
+
+        if ( data instanceof TransplantInfo ) {
+            TransplantInfo ti = (TransplantInfo)data;
+            if ( ti.getType().contains("delete") ) data = ti.getTransplantationPoint();
+        }
 
         Project project = event.getProject();
 
