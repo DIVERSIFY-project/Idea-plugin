@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -367,10 +366,16 @@ public class TransformationInfo extends CodePosition {
      * @param srcDir  Source dir dir where the transformation code is going to be restored
      * @param destDir Destination dir where the original code is
      */
-    private void restoreSourceFile(ASTTransformation transf, String srcDir, String destDir) throws IOException {
+    private void restoreTransformation(ASTTransformation transf, String srcDir, String destDir) throws IOException {
+
         String filePath = transf.getTransplantationPoint().getSourceClass().getQualifiedName().replaceAll("\\.", "/");
         String sourcePath = srcDir + File.separator + filePath + ".java";
         filePath = destDir + File.separator + filePath + "." + "java.backup";
+        try {
+            transf.restore(destDir);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         FileUtils.copyFile(new File(filePath), new File(sourcePath));
     }
 
@@ -387,20 +392,23 @@ public class TransformationInfo extends CodePosition {
      */
     public void switchTransformation(TransplantInfo transplant, String srcDir, String destDir) throws Exception {
 
-        int index = transplants.indexOf(transplant);
-
-        //We work only with ASTTransformations
-        ASTTransformation transf = (ASTTransformation) transplant.getTransformation();
-
-        if (index == appliedTransformIndex) {
-            restoreSourceFile(transf, srcDir, destDir);
-            appliedTransformIndex = -1;
-        } else {
-            appliedTransformIndex = index;
-            if (appliedTransformIndex == -1) {
-                throw new IndexOutOfBoundsException("This transplant does not belogs to the TP");
+        //Restore all applied transplants
+        for ( TransplantInfo t : transplants ) {
+            if ( t.isApplied() ) {
+                restoreTransformation((ASTTransformation) t.getTransformation(), srcDir, destDir);
+                t.setTransformationApplied(false);
             }
+        }
 
+        int index = transplants.indexOf(transplant);
+        if (index == -1) throw new IndexOutOfBoundsException("This transplant does not belogs to the TP");
+
+        //If the transplant was not applied, it means that the user wants to apply
+        if ( index != appliedTransformIndex) {
+            //We work only with ASTTransformations
+            ASTTransformation transf = (ASTTransformation)transplant.getTransformation();
+
+            appliedTransformIndex = index;
             //Make a backup of the source
             makeOriginalSourceBackUp(transf, srcDir, destDir);
 
@@ -413,6 +421,8 @@ public class TransformationInfo extends CodePosition {
 
             //Copy the modified source back to production
             copyModifiedSource(transf, srcDir, destDir);
+        } else {
+            appliedTransformIndex = -1;
         }
     }
 
@@ -511,7 +521,7 @@ public class TransformationInfo extends CodePosition {
             if (tp.has("sourceCode")) t.setSource(tp.getString("sourceCode"));
             else t.setSource(tp.getString("sourcecode"));
             t.setSpoonType(tp.getString("type"));
-            t.setIndex(jt.getInt("tindex"));
+            //t.setIndex(jt.getInt("tindex"));
             t.setType(jt.getString("name"));
             String sIndex = String.valueOf(t.getIndex());
             if (tags.has(sIndex)) {
@@ -525,7 +535,7 @@ public class TransformationInfo extends CodePosition {
         } else {
             TransplantInfo delete = new TransplantInfo();
             delete.setType("delete");
-            delete.setIndex(jt.getInt("tindex"));
+            //delete.setIndex(jt.getInt("tindex"));
             delete.setTransplantationPoint(this);
             transplants.add(delete);
         }
@@ -626,22 +636,22 @@ public class TransformationInfo extends CodePosition {
     public static Collection<TransformationInfo> fromTransformations(
             Collection<Transformation> transformations, Collection<String> msgs) {
 
-        //Parsing of the logs and indexing them
-        HashMap<Integer, ArrayList<String>> parsings = new HashMap<>();
-        Pattern p = Pattern.compile("Transf \\d+");
+        //Parsing of the logs and indexing them in the messages
+        HashMap<UUID, ArrayList<String>> parsings = new HashMap<>();
+        Pattern p = Pattern.compile(
+                "Transf [a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
         for (String s : msgs) {
             if (s.startsWith("ERROR") || s.startsWith("WARNING") && s.contains("Transf")) {
-                //String[] nmbrs = s.replaceAll("[^0-9]+", " ").trim().split(" ");
-                //int index = Integer.parseInt(nmbrs[0]);
                 Matcher m = p.matcher(s);
                 if (m.find()) {
-                    int index = Integer.parseInt(m.group().split(" ")[1]);
+                    UUID index = UUID.fromString(m.group().split(" ")[1]);
                     if (parsings.containsKey(index)) parsings.get(index).add(s);
                     else parsings.put(index, new ArrayList<>(Arrays.asList(new String[]{s})));
                 }
             }
         }
 
+        //Load the transformations info
         HashMap<String, TransformationInfo> r = new HashMap<>();
 
         for (Transformation t : transformations) {

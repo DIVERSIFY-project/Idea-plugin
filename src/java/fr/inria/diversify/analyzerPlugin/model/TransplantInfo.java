@@ -11,6 +11,7 @@ import fr.inria.diversify.transformation.ast.ASTDelete;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Representation of the Transplant containing necessary data for the plugin to work
@@ -69,7 +70,7 @@ public class TransplantInfo extends CodePosition {
     /**
      * Index of the transplant. Kind of an I.D.
      */
-    private int index;
+    private UUID index;
 
     /**
      * A coma separated set of tags to identify the transplant.
@@ -149,11 +150,11 @@ public class TransplantInfo extends CodePosition {
         return type + (getPosition() == null ? "" : "-" + getPosition());
     }
 
-    public void setIndex(int index) {
+    public void setIndex(UUID index) {
         this.index = index;
     }
 
-    public int getIndex() {
+    public UUID getIndex() {
         return index;
     }
 

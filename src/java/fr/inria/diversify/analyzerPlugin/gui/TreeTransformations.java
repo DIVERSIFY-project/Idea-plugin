@@ -9,8 +9,10 @@ import fr.inria.diversify.analyzerPlugin.actions.display.ShowCoverageInfo;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationProperties;
 import fr.inria.diversify.analyzerPlugin.actions.replay.ApplyTransformation;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
+import fr.inria.diversify.analyzerPlugin.actions.searching.SortVisiblesAction;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
+import fr.inria.diversify.analyzerPlugin.model.orders.*;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -87,6 +89,15 @@ public class TreeTransformations extends CodePositionTree implements com.intelli
                 if ( me.getSelectedCodePosition() instanceof TransplantInfo ) {
                     popupGroup.add(new ApplyTransformation((CodePositionTree) comp));
                 }
+                popupGroup.addSeparator();
+                popupGroup.add(new SortVisiblesAction(new AlphabeticallOrder()));
+                popupGroup.add(new SortVisiblesAction(new AssertsHitsOrder()));
+                popupGroup.add(new SortVisiblesAction(new AssertsOrder()));
+                popupGroup.add(new SortVisiblesAction(new TestsOrder()));
+                popupGroup.add(new SortVisiblesAction(new HitOrder()));
+                popupGroup.add(new SortVisiblesAction(new VarDiffOrder()));
+                popupGroup.add(new SortVisiblesAction(new CallDiffOrder()));
+
                 ActionPopupMenu popupMenu = getIDEObjects().getActionManager().createActionPopupMenu(
                         TreeTransformations.class.getName(), popupGroup);
                 if (popupMenu != null) {

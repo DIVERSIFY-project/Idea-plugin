@@ -12,6 +12,7 @@ import fr.inria.diversify.transformation.ast.ASTAdd;
 import fr.inria.diversify.transformation.ast.ASTDelete;
 import fr.inria.diversify.transformation.ast.ASTReplace;
 import fr.inria.diversify.ut.MockInputProgram;
+import fr.inria.diversify.ut.json.SectionTestUtils;
 import fr.inria.diversify.ut.json.output.JsonSosieOutputForUT;
 import junit.framework.Assert;
 import mockit.Mocked;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static fr.inria.diversify.ut.json.SectionTestUtils.*;
 import static fr.inria.diversify.ut.json.SectionTestUtils.createTransformationsJSONObjectWithErrors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -122,16 +124,23 @@ public class TransformationInfoTest {
         assertInfosWhereCreatedProperly(infos);
     }
 
+    /**
+     * Test that errors are linked with the transformations
+     */
     @Test
     public void testLinkErrorWithTransformation() {
+        //Create a set of transformations
         List<Transformation> t = TestHelpers.createTransformations(new MockInputProgram());
 
+        //Create a list of errors
         List<String> errors = Arrays.asList(new String[]{
-                "WARNING: Transf 0. asdaasd a99 as 0a a9",
-                "WARNING: Transf 1. aduuuadd a99 as 0a a9",
-                "ERROR  : Transf 3 aduuuadd a99 as 0a a9.."
+                "WARNING: Transf " + TEST_ID_1 + ". asdaasd a99 as 0a a9",
+                "WARNING: Transf " + TEST_ID_2 + ". aduuuadd a99 as 0a a9",
+                "ERROR  : Transf " + TEST_ID_4 + " aduuuadd a99 as 0a a9.."
         });
+        //Loads the transformations and links them with the errors
         ArrayList<TransformationInfo> infos = new ArrayList<>(TransformationInfo.fromTransformations(t, errors));
+        //Check that the errors are OK
         assertEquals(2, infos.get(0).getLogMessages().size());
         assertEquals(1, infos.get(1).getLogMessages().size());
     }

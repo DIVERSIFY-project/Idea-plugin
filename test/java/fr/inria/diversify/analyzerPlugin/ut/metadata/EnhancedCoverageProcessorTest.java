@@ -3,16 +3,13 @@ package fr.inria.diversify.analyzerPlugin.ut.metadata;
 import fr.inria.diversify.analyzerPlugin.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.metadata.*;
-import fr.inria.diversify.ut.MockInputProgram;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformations;
-import static fr.inria.diversify.analyzerPlugin.TestHelpers.getInfos;
+import static fr.inria.diversify.analyzerPlugin.TestHelpers.createInfos;
 import static junit.framework.TestCase.assertEquals;
 
 /**
@@ -49,7 +46,7 @@ public class EnhancedCoverageProcessorTest {
      */
     @Test
     public void testSimpleRead() throws Exception {
-        ArrayList<TransformationInfo> infos = getInfos();
+        ArrayList<TransformationInfo> infos = createInfos();
 
         EnhancedCoverageProcessor p = new EnhancedCoverageProcessor(infos);
         p.process(getLogs());
@@ -73,7 +70,7 @@ public class EnhancedCoverageProcessorTest {
      */
     @Test
     public void testMultiThreadRead() throws Exception {
-        ArrayList<TransformationInfo> infos = getInfos();
+        ArrayList<TransformationInfo> infos = createInfos();
 
         EnhancedCoverageProcessor p = new EnhancedCoverageProcessor(infos);
         List<EntryLog> logs = getLogs();

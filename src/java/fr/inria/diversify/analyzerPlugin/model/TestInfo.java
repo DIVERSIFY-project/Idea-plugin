@@ -12,6 +12,11 @@ public class TestInfo extends CodePosition {
 
     private long endTime;
 
+    public TestInfo(String pos) {
+        this();
+        this.setPosition(pos);
+    }
+
     public TestInfo() {
         asserts = new HashSet<AssertInfo>();
     }

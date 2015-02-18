@@ -30,10 +30,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformations;
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformationsJSON;
@@ -229,7 +226,7 @@ public class TestEyeProjectComponentTest {
     public void testLoadInfos_WithHeaderErrors(@Mocked final JsonHeaderInput anyHeader) throws JSONException {
         //Mock the header so always thrown an exception
         new Expectations() {{
-            anyHeader.read((HashMap<Integer, Transformation>) any);
+            anyHeader.read((HashMap<UUID, Transformation>) any);
             result = new PersistenceException("Boo");
         }};
 

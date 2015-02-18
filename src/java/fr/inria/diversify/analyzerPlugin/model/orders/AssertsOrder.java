@@ -7,9 +7,15 @@ import java.util.Comparator;
 /**
  * Created by marodrig on 02/02/2015.
  */
-public class AssertsOrder implements Comparator<TransformationInfo> {
+public class AssertsOrder implements Order {
     @Override
     public int compare(TransformationInfo o1, TransformationInfo o2) {
         return o2.getAsserts().size() - o1.getAsserts().size();
+    }
+
+
+    @Override
+    public String getDescription() {
+        return "Sort by exercising asserts";
     }
 }

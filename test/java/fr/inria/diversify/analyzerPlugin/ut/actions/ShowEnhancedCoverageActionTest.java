@@ -1,28 +1,22 @@
 package fr.inria.diversify.analyzerPlugin.ut.actions;
 
 import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.*;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowCoverageInfo;
-import fr.inria.diversify.analyzerPlugin.actions.loading.LoadEnhancedCoverageAction;
-import fr.inria.diversify.analyzerPlugin.gui.CodePositionTree;
 import fr.inria.diversify.analyzerPlugin.gui.EnhancedCoverageTree;
-import fr.inria.diversify.analyzerPlugin.gui.TreeTransformations;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import java.util.ArrayList;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.expectHardComplain;
-import static fr.inria.diversify.analyzerPlugin.TestHelpers.getInfos;
+import static fr.inria.diversify.analyzerPlugin.TestHelpers.createInfos;
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.verifyHardComplain;
 import static fr.inria.diversify.analyzerPlugin.ut.metadata.EnhancedCoverageProcessorTest.getLogs;
 import static junit.framework.TestCase.assertEquals;
@@ -39,7 +33,7 @@ public class ShowEnhancedCoverageActionTest {
      */
     @Test
     public void testPerformAction() throws LoadingException {
-        ArrayList<TransformationInfo> infos = getInfos();
+        ArrayList<TransformationInfo> infos = createInfos();
         EnhancedCoverageProcessor p = new EnhancedCoverageProcessor(infos);
         p.process(getLogs());
 

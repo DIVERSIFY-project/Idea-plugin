@@ -15,6 +15,14 @@ public class PertTestCoverageData {
 
     TestInfo test;
 
+    public PertTestCoverageData(TestInfo test, int hits, int depth) {
+        this.test = test;
+        this.hits = hits;
+        this.maxDepth = depth;
+        this.meanDepth = depth;
+        this.minDepth = depth;
+    }
+
     public PertTestCoverageData(TestInfo test) {
         this.test = test;
     }

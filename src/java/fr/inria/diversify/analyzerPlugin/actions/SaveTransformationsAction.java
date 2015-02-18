@@ -2,6 +2,7 @@ package fr.inria.diversify.analyzerPlugin.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
 import icons.TestEyeIcons;
 
 /**
@@ -15,6 +16,8 @@ public class SaveTransformationsAction extends TestEyeAction {
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {
+
+        //JsonSosiesInput
 
     }
 }
