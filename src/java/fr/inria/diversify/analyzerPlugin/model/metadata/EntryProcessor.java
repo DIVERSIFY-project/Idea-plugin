@@ -1,7 +1,5 @@
 package fr.inria.diversify.analyzerPlugin.model.metadata;
 
-import fr.inria.diversify.analyzerPlugin.LoadingException;
-
 import java.util.Collection;
 import java.util.List;
 

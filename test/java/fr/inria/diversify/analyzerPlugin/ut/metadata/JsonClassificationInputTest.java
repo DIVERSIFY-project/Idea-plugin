@@ -55,7 +55,7 @@ public class JsonClassificationInputTest {
 
         //Read the data
         JsonSosiesInput input = new JsonSosiesInputForUT(getReaderFromJson(out), p);
-        JsonClassificationInput sectionInput = new JsonClassificationInput();
+        JsonClassificationInput sectionInput = new JsonClassificationInput(new ArrayList<TransformationInfo>());
         sectionInput.setJsonObject(out);
         input.setSection(JsonClassificationInput.class, sectionInput);
         input.read();

@@ -1,14 +1,12 @@
 package fr.inria.diversify.analyzerPlugin.model.metadata;
 
-import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
-import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
-import fr.inria.diversify.analyzerPlugin.model.TestInfo;
-import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
+import fr.inria.diversify.analyzerPlugin.model.*;
 import fr.inria.diversify.transformation.Transformation;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
@@ -21,6 +19,10 @@ import static fr.inria.diversify.analyzerPlugin.model.metadata.JsonCoverageOutpu
  * Created by marodrig on 17/02/2015.
  */
 public class JsonCoverageInput extends JsonTestEyeSectionInput {
+
+    public JsonCoverageInput(Collection<TransformationInfo> infos) {
+        super(infos);
+    }
 
     @Override
     public void read(HashMap<UUID, Transformation> transformations) {

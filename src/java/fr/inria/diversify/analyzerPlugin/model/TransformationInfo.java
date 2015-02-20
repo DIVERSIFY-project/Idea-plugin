@@ -714,4 +714,14 @@ public class TransformationInfo extends CodePosition {
         if ( logMessages == null ) logMessages = new ArrayList<>();
         return logMessages;
     }
+
+    public static Collection<Transformation> toTransformations(Collection<TransformationInfo> infos) {
+        ArrayList<Transformation> result = new ArrayList<>();
+        for ( TransformationInfo info : infos ) {
+            for ( TransplantInfo t : info.getTransplants() ) {
+                result.add(t.getTransformation());
+            }
+        }
+        return result;
+    }
 }

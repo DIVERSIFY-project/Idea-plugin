@@ -1,6 +1,5 @@
 package fr.inria.diversify.analyzerPlugin.model.metadata;
 
-import fr.inria.diversify.analyzerPlugin.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
 import fr.inria.diversify.analyzerPlugin.model.TestInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;

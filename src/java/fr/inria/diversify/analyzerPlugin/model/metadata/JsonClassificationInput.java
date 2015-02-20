@@ -7,6 +7,7 @@ import fr.inria.diversify.transformation.Transformation;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -17,10 +18,15 @@ import java.util.UUID;
  */
 public class JsonClassificationInput extends JsonTestEyeSectionInput {
 
+    public JsonClassificationInput(Collection<TransformationInfo> infos) {
+        super(infos);
+    }
+
     @Override
     public void read(HashMap<UUID, Transformation> transformations) {
         super.read(transformations);
         try {
+            if ( !getJsonObject().has(JsonClassificationOutput.TAGS) ) return;
             JSONObject tags = getJsonObject().getJSONObject(JsonClassificationOutput.TAGS);
             for (TransplantInfo ti : getTransplantInfos().values()) {
                 String id = ti.getIndex().toString();

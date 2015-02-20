@@ -16,6 +16,13 @@ public class JsonTestEyeSectionInput extends JsonSectionInput {
 
     private HashMap<UUID, TransplantInfo> transplantInfos;
 
+    private Collection<TransformationInfo> transformationInfos;
+
+    public JsonTestEyeSectionInput(Collection<TransformationInfo> infos) {
+        super();
+        setTransformationInfos(infos);
+    }
+
     public HashMap<UUID, TransplantInfo> getTransplantInfos() {
         if ( transplantInfos == null ) transplantInfos = new HashMap<>();
         return transplantInfos;
@@ -26,8 +33,8 @@ public class JsonTestEyeSectionInput extends JsonSectionInput {
     }
 
     protected void readTransformationsInfos(HashMap<UUID, Transformation> transformations) {
-        Collection<TransformationInfo> ts = TransformationInfo.fromTransformations(transformations.values(), getLoadMessages());
-        for (TransformationInfo ti : ts) {
+        transformationInfos = TransformationInfo.fromTransformations(transformations.values(), getLoadMessages());
+        for (TransformationInfo ti : transformationInfos) {
             for (TransplantInfo tp : ti.getTransplants()) {
                 getTransplantInfos().put(tp.getTransformation().getIndex(), tp);
             }
@@ -36,8 +43,16 @@ public class JsonTestEyeSectionInput extends JsonSectionInput {
 
     @Override
     public void read(HashMap<UUID, Transformation> transformations) {
-        if ( getTransplantInfos().size() == 0 ) {
+        if ( getTransformationInfos().size() == 0 ) {
             readTransformationsInfos(transformations);
         }
+    }
+
+    public Collection<TransformationInfo> getTransformationInfos() {
+        return transformationInfos;
+    }
+
+    public void setTransformationInfos(Collection<TransformationInfo> infos) {
+        transformationInfos = infos;
     }
 }

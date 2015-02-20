@@ -1,15 +1,13 @@
 package fr.inria.diversify.analyzerPlugin.ut.actions;
 
 import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.ui.treeStructure.Tree;
 import fr.inria.diversify.analyzerPlugin.*;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowCoverageInfo;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadEnhancedCoverageAction;
 import fr.inria.diversify.analyzerPlugin.gui.CodePositionTree;
 import fr.inria.diversify.analyzerPlugin.gui.EnhancedCoverageTree;
-import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageReader;
-import fr.inria.diversify.analyzerPlugin.model.metadata.SyringeDataReader;
+import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;

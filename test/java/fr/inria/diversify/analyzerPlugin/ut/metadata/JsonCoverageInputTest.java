@@ -53,7 +53,7 @@ public class JsonCoverageInputTest {
 
         //Read the data
         JsonSosiesInput input = new JsonSosiesInputForUT(getReaderFromJson(out), p);
-        JsonCoverageInput sectionInput = new JsonCoverageInput();
+        JsonCoverageInput sectionInput = new JsonCoverageInput(new ArrayList<TransformationInfo>());
         sectionInput.setJsonObject(out);
         input.setSection(JsonCoverageInput.class, sectionInput);
         input.read();

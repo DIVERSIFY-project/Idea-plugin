@@ -1,6 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.ut.metadata;
 
 import fr.inria.diversify.analyzerPlugin.TestHelpers;
+import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.metadata.JsonTestEyeSectionInput;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
@@ -8,6 +9,8 @@ import fr.inria.diversify.ut.MockInputProgram;
 import fr.inria.diversify.ut.json.input.JsonSosiesInputForUT;
 import org.json.JSONObject;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static fr.inria.diversify.ut.json.SectionTestUtils.TEST_ID_1;
 import static fr.inria.diversify.ut.json.SectionTestUtils.TEST_ID_2;
@@ -29,7 +32,7 @@ public class JsonTestEyeSectionInputTest {
         JSONObject o = TestHelpers.createTransformationsJSON(p);
 
         JsonSosiesInput input = new JsonSosiesInputForUT(getReaderFromJson(o), p);
-        JsonTestEyeSectionInput ti = new JsonTestEyeSectionInput();
+        JsonTestEyeSectionInput ti = new JsonTestEyeSectionInput(new ArrayList<TransformationInfo>());
         input.setSection(JsonTestEyeSectionInput.class, ti);
         input.read();
 

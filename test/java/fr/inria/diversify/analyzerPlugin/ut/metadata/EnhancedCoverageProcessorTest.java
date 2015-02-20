@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.ut.metadata;
 
-import fr.inria.diversify.analyzerPlugin.LoadingException;
+import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.metadata.*;
 import org.junit.Test;

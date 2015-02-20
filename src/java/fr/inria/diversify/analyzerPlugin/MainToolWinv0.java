@@ -28,6 +28,7 @@ import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataExport;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataLoader;
 import fr.inria.diversify.analyzerPlugin.model.*;
+import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
 import fr.inria.diversify.diversification.InputConfiguration;
 import fr.inria.diversify.diversification.InputProgram;

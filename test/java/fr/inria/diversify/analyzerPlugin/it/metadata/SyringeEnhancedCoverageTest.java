@@ -1,6 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.it.metadata;
 
-import fr.inria.diversify.analyzerPlugin.LoadingException;
+import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageEntryFactory;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;

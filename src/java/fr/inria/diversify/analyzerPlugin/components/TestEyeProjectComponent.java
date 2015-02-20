@@ -7,18 +7,25 @@ import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.metadata.JsonClassificationInput;
+import fr.inria.diversify.analyzerPlugin.model.metadata.JsonClassificationOutput;
+import fr.inria.diversify.analyzerPlugin.model.metadata.JsonCoverageInput;
+import fr.inria.diversify.analyzerPlugin.model.metadata.JsonCoverageOutput;
 import fr.inria.diversify.analyzerPlugin.model.orders.AlphabeticallOrder;
 import fr.inria.diversify.buildSystem.maven.MavenDependencyResolver;
+import fr.inria.diversify.diversification.InputConfiguration;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.factories.SpoonMetaFactory;
 import fr.inria.diversify.persistence.PersistenceException;
 import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
+import fr.inria.diversify.persistence.json.output.JsonSosiesOutput;
 import fr.inria.diversify.transformation.Transformation;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -27,6 +34,11 @@ import java.util.*;
 public class TestEyeProjectComponent extends AbstractProjectComponent {
 
     public static String TEMP_MOD = "/.modBackup";
+
+    /**
+     * Name of the file containing the transformations
+     */
+    private String transformationsFilePath;
 
     /**
      * Constant to assign to the "unclassified" category when filtering
@@ -405,6 +417,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * @throws FileNotFoundException
      */
     public void loadInfos(String filePath) throws FileNotFoundException {
+        setTransformationsFilePath(filePath);
         loadInfos(new InputStreamReader(new FileInputStream(filePath)));
     }
 
@@ -414,17 +427,40 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * @param reader
      */
     public void loadInfos(InputStreamReader reader) {
+
+        JsonCoverageInput c = new JsonCoverageInput(new ArrayList<TransformationInfo>());
+        JsonClassificationInput ca = new JsonClassificationInput(c.getTransformationInfos());
+
         JsonSosiesInput input = new JsonSosiesInput(reader, getProgram());
+        input.setSection(JsonCoverageInput.class, c);
+        input.setSection(JsonClassificationInput.class, ca);
+
         getLogMessages().clear();
         try {
-            Collection<Transformation> ts = input.read();
-            setInfos(new ArrayList<>(TransformationInfo.fromTransformations(ts, input.getLoadMessages())));
+            input.read();
+            setInfos(new ArrayList<>(c.getTransformationInfos()));
         } catch (PersistenceException e) {
             //Save all errors and warnings
             getLogMessages().addAll(input.getLoadMessages());
             throw e;
         }
         getLogMessages().addAll(input.getLoadMessages());
+    }
+
+    /**
+     * Save all infos including tagging and coverage
+     */
+    public void saveInfos() {
+        String filePath = transformationsFilePath + ".testEye.json";
+        Collection<Transformation> ts = TransformationInfo.toTransformations(infos);
+        JsonSosiesOutput output = new JsonSosiesOutput(ts,
+                filePath, getProgram().getProgramDir() + "\\pom.xml",
+                InputConfiguration.LATEST_GENERATOR_VERSION);
+
+        output.setSection(JsonClassificationOutput.class, new JsonClassificationOutput(infos));
+        output.setSection(JsonCoverageOutput.class, new JsonCoverageOutput(infos));
+
+        output.write();
     }
 
     public void setLogMessages(List<String> logMessages) {
@@ -434,5 +470,15 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     public List<String> getLogMessages() {
         if (logMessages == null) logMessages = new ArrayList<>();
         return logMessages;
+    }
+
+
+
+    public String getTransformationsFilePath() {
+        return transformationsFilePath;
+    }
+
+    public void setTransformationsFilePath(String transformationsFilePath) {
+        this.transformationsFilePath = transformationsFilePath;
     }
 }
