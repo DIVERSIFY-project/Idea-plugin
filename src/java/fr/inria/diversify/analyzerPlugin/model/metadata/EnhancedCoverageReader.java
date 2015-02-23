@@ -1,6 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.model.metadata;
 
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
+import fr.inria.diversify.syringe.processor.SyringeDataReader;
 
 import java.util.Collection;
 

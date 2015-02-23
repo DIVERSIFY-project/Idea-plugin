@@ -1,9 +1,9 @@
 package fr.inria.diversify.analyzerPlugin.model.io;
 
 import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
-import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TestInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
+import fr.inria.diversify.syringe.processor.LoadingException;
 import fr.inria.diversify.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;

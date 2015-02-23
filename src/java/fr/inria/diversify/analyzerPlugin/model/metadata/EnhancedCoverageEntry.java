@@ -1,5 +1,8 @@
 package fr.inria.diversify.analyzerPlugin.model.metadata;
 
+import fr.inria.diversify.syringe.processor.EntryLog;
+import fr.inria.diversify.syringe.processor.LoadingException;
+
 import java.util.HashMap;
 
 /**

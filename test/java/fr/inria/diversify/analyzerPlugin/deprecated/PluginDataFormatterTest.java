@@ -1,9 +1,9 @@
 package fr.inria.diversify.analyzerPlugin.deprecated;
 
-import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataLoader;
 import fr.inria.diversify.analyzerPlugin.model.TestInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
+import fr.inria.diversify.syringe.processor.LoadingException;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -284,6 +284,7 @@ public class PluginDataFormatterTest {
 
     private PluginDataLoader reportBenoitNumbers(String name, String json, String log) throws LoadingException {
 
+        /*
         System.out.println("Project: " + name);
 
         //Load from scattered resources
@@ -305,7 +306,7 @@ public class PluginDataFormatterTest {
         System.out.println("\nTotal hits over a TP: " + formatter.getPotsTotalHitCount());
 
         System.out.println("\n ------------- \n");
-
-        return formatter;
+*/
+        return null; // formatter;
     }
 }

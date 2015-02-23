@@ -9,10 +9,7 @@ import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowCoverageInfo;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowErrorsAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
-import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageEntryFactory;
-import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageReader;
-import fr.inria.diversify.analyzerPlugin.model.metadata.SyringeDataReader;
 import icons.TestEyeIcons;
 
 import java.io.FileNotFoundException;

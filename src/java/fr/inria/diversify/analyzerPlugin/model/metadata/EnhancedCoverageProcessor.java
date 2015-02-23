@@ -3,6 +3,9 @@ package fr.inria.diversify.analyzerPlugin.model.metadata;
 import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
 import fr.inria.diversify.analyzerPlugin.model.TestInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
+import fr.inria.diversify.syringe.processor.EntryLog;
+import fr.inria.diversify.syringe.processor.EntryProcessor;
+import fr.inria.diversify.syringe.processor.LoadingException;
 
 import java.util.*;
 

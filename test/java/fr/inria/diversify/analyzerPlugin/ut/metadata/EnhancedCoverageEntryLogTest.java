@@ -1,7 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.ut.metadata;
 
-import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageEntry;
+import fr.inria.diversify.syringe.processor.LoadingException;
 import org.junit.Test;
 
 import java.util.HashMap;

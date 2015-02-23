@@ -1,8 +1,10 @@
 package fr.inria.diversify.analyzerPlugin.ut.metadata;
 
-import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
-import fr.inria.diversify.analyzerPlugin.model.metadata.*;
+import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageEntry;
+import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;
+import fr.inria.diversify.syringe.processor.EntryLog;
+import fr.inria.diversify.syringe.processor.LoadingException;
 import org.junit.Test;
 
 import java.util.ArrayList;

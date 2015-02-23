@@ -1,13 +1,14 @@
 package fr.inria.diversify.analyzerPlugin.ut.actions;
 
 import com.intellij.openapi.fileChooser.FileChooser;
-import fr.inria.diversify.analyzerPlugin.*;
+import fr.inria.diversify.analyzerPlugin.FakeAnActionEvent;
+import fr.inria.diversify.analyzerPlugin.FakeIDEObjects;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowCoverageInfo;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadEnhancedCoverageAction;
 import fr.inria.diversify.analyzerPlugin.gui.CodePositionTree;
 import fr.inria.diversify.analyzerPlugin.gui.EnhancedCoverageTree;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageReader;
-import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
+import fr.inria.diversify.syringe.processor.LoadingException;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
@@ -18,13 +19,8 @@ import org.junit.runner.RunWith;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 
-import static fr.inria.diversify.analyzerPlugin.TestHelpers.assertActionCalled;
-import static fr.inria.diversify.analyzerPlugin.TestHelpers.expectHardComplain;
-import static fr.inria.diversify.analyzerPlugin.TestHelpers.verifyHardComplain;
-import static fr.inria.diversify.analyzerPlugin.ut.actions.LoadTransformationsActionTest.buildActionManager;
-import static fr.inria.diversify.analyzerPlugin.ut.actions.LoadTransformationsActionTest.expectFileChooser;
-import static fr.inria.diversify.analyzerPlugin.ut.actions.LoadTransformationsActionTest.verifyFileChooser;
-import static junit.framework.TestCase.assertEquals;
+import static fr.inria.diversify.analyzerPlugin.TestHelpers.*;
+import static fr.inria.diversify.analyzerPlugin.ut.actions.LoadTransformationsActionTest.*;
 
 /**
  * Test class for the LoadTransformationsAction

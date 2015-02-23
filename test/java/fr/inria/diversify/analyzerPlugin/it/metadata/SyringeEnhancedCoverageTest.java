@@ -1,10 +1,10 @@
 package fr.inria.diversify.analyzerPlugin.it.metadata;
 
-import fr.inria.diversify.analyzerPlugin.model.metadata.LoadingException;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageEntryFactory;
 import fr.inria.diversify.analyzerPlugin.model.metadata.EnhancedCoverageProcessor;
-import fr.inria.diversify.analyzerPlugin.model.metadata.SyringeDataReader;
+import fr.inria.diversify.syringe.processor.LoadingException;
+import fr.inria.diversify.syringe.processor.SyringeDataReader;
 import org.junit.Test;
 import java.util.ArrayList;
 
