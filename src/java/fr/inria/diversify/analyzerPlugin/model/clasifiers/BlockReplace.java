@@ -8,7 +8,7 @@ import spoon.reflect.declaration.CtElement;
 /**
  * Created by marodrig on 24/10/2014.
  */
-public class BlockReplace extends TransformClasifier {
+public class BlockReplace extends TransformClassifier {
     @Override
     public boolean isUserFilter() {
         return false;

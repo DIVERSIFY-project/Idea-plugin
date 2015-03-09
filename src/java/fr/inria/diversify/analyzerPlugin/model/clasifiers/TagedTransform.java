@@ -5,7 +5,7 @@ import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 /**
  * Created by marodrig on 10/10/2014.
  */
-public abstract class TagedTransform extends TransformClasifier {
+public abstract class TagedTransform extends TransformClassifier {
 
     @Override
     public boolean isUserFilter() {

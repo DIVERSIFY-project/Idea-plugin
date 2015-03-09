@@ -7,7 +7,7 @@ import spoon.reflect.declaration.CtElement;
 /**
  * Created by marodrig on 24/10/2014.
  */
-public class InnocuousMethodCallReplace extends TransformClasifier {
+public class InnocuousMethodCallReplace extends TransformClassifier {
     @Override
     public boolean isUserFilter() {
         return false;
@@ -31,7 +31,7 @@ public class InnocuousMethodCallReplace extends TransformClasifier {
 
     @Override
     public int getWeight() {
-        return MEDIUM;
+        return STRONG;
     }
 
     @Override

@@ -18,11 +18,13 @@ import java.util.List;
  * <p/>
  * Created by marodrig on 06/10/2014.
  */
-public abstract class TransformClasifier {
+public abstract class TransformClassifier {
 
     protected static int STRONG = 10;
     protected static int MEDIUM = 5;
-    protected static int WEAK = 1;
+    protected static int WEAK = -1;
+    protected static int USELESS = -5;
+    protected static int PLAIN_BAD = -10;
 
     /**
      * indicate if this class is just user interface commodity filter or if it s a real classification function

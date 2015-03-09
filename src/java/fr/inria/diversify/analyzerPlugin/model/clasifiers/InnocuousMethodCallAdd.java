@@ -7,7 +7,7 @@ import spoon.reflect.declaration.CtElement;
 /**
  * Created by marodrig on 24/10/2014.
  */
-public class InnocuousMethodCallAdd extends TransformClasifier {
+public class InnocuousMethodCallAdd extends TransformClassifier {
     @Override
     public boolean isUserFilter() {
         return false;

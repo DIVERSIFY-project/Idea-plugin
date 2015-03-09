@@ -91,6 +91,8 @@ public class TreeTransformations extends CodePositionTree implements com.intelli
                 }
                 popupGroup.addSeparator();
                 popupGroup.add(new SortVisiblesAction(new AlphabeticallOrder()));
+                popupGroup.add(new SortVisiblesAction(new Strength(), true));
+                popupGroup.add(new SortVisiblesAction(new TotalTransplantsOrder()));
                 popupGroup.add(new SortVisiblesAction(new AssertsHitsOrder()));
                 popupGroup.add(new SortVisiblesAction(new AssertsOrder()));
                 popupGroup.add(new SortVisiblesAction(new TestsOrder()));

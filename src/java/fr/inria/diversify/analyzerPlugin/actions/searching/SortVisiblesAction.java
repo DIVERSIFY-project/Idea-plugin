@@ -22,11 +22,22 @@ import java.util.Comparator;
  */
 public class SortVisiblesAction extends TestEyeAction {
 
+    private final boolean filter;
     private Comparator<TransformationInfo> comparator;
 
-    public SortVisiblesAction(Order comparator) {
+    /**
+     * Indicates the comparator and if the set of transformations must be filtered before the sorting
+     * @param comparator Comparator to compare to
+     * @param filter Indicate if we must filter
+     */
+    public SortVisiblesAction(Order comparator, boolean filter) {
         super(comparator.getDescription(), comparator.getDescription(), TestEyeIcons.Sort);
         this.comparator = comparator;
+        this.filter = filter;
+    }
+
+    public SortVisiblesAction(Order comparator) {
+        this(comparator, false);
     }
 
     @Override
@@ -46,7 +57,8 @@ public class SortVisiblesAction extends TestEyeAction {
             public void run(@NotNull ProgressIndicator progressIndicator) {
                 try {
                     component.setOrder(comparator);
-                    component.sort();
+                    if ( filter ) component.filterAndSort(progressIndicator);
+                    else component.sort();
                 } catch (Exception e) {
                     hardComplain("Cannot filter " , e);
                 }

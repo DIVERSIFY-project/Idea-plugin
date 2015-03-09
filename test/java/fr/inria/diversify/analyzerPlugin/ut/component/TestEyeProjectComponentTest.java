@@ -1,6 +1,5 @@
 package fr.inria.diversify.analyzerPlugin.ut.component;
 
-import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.project.Project;
 import fr.inria.diversify.analyzerPlugin.FakeProject;
@@ -8,16 +7,14 @@ import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 import fr.inria.diversify.analyzerPlugin.model.orders.AlphabeticallOrder;
 import fr.inria.diversify.analyzerPlugin.model.orders.TotalTransplantsOrder;
 import fr.inria.diversify.diversification.InputProgram;
 import fr.inria.diversify.persistence.PersistenceException;
 import fr.inria.diversify.persistence.json.input.JsonHeaderInput;
-import fr.inria.diversify.persistence.json.input.JsonSosiesInput;
 import fr.inria.diversify.transformation.Transformation;
 import fr.inria.diversify.ut.MockInputProgram;
-import fr.inria.diversify.ut.json.input.JsonHeaderInputTest;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
@@ -26,7 +23,6 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -50,8 +46,8 @@ public class TestEyeProjectComponentTest {
      */
     public static class MyClassiferFactory extends ClassifierFactory {
         @Override
-        public List<TransformClasifier> buildClassifiers() {
-            ArrayList<TransformClasifier> clasifiers = new ArrayList<TransformClasifier>();
+        public List<TransformClassifier> buildClassifiers() {
+            ArrayList<TransformClassifier> clasifiers = new ArrayList<TransformClassifier>();
             clasifiers.add(new ReplaceClassifier());
             clasifiers.add(new NonReplaceClassifier());
             return clasifiers;

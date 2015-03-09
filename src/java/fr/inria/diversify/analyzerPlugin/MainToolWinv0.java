@@ -24,7 +24,7 @@ import fr.inria.diversify.analyzerPlugin.actions.reporting.DepthsHistogramAction
 import fr.inria.diversify.analyzerPlugin.actions.reporting.DepthsReportsAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SearchPosition;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataExport;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataLoader;
 import fr.inria.diversify.analyzerPlugin.model.*;
@@ -77,7 +77,7 @@ public class MainToolWinv0 implements ToolWindowFactory {
 
     private HashMap<String, Boolean> filterVisible;
 
-    private List<TransformClasifier> classifiers;
+    private List<TransformClassifier> classifiers;
 
     private Collection<TransformationInfo> visibleRepresentations;
 
@@ -87,7 +87,7 @@ public class MainToolWinv0 implements ToolWindowFactory {
 
     private boolean showClassifIntersection = false;
 
-    protected List<TransformClasifier> getClassifiers() {
+    protected List<TransformClassifier> getClassifiers() {
         if (classifiers == null) {
             classifiers = buildClasifiers();
         }
@@ -382,7 +382,7 @@ public class MainToolWinv0 implements ToolWindowFactory {
                 }
             };
 
-            for (TransformClasifier tc : getClassifiers()) {
+            for (TransformClassifier tc : getClassifiers()) {
                 final JBCheckboxMenuItem checkItem = new JBCheckboxMenuItem(tc.getDescription());
                 getFilterVisible().put(tc.getDescription(), true);
                 subMenu.add(checkItem);
@@ -429,7 +429,7 @@ public class MainToolWinv0 implements ToolWindowFactory {
      *
      * @return A list containing the classifiers
      */
-    private List<TransformClasifier> buildClasifiers() {
+    private List<TransformClassifier> buildClasifiers() {
         return new ClassifierFactory().buildClassifiers();
     }
 
@@ -487,7 +487,7 @@ public class MainToolWinv0 implements ToolWindowFactory {
                                 break;
                             }
                             transplant.setVisibility(TransplantInfo.Visibility.unclassified);
-                            for (TransformClasifier c : getClassifiers()) {
+                            for (TransformClassifier c : getClassifiers()) {
                                 float v;
                                 //the only way classification functions modify the score assigned
                                 //is by user input, therefore only user filters must be reclassified each time

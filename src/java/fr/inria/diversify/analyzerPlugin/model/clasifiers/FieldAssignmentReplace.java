@@ -7,7 +7,7 @@ import spoon.reflect.declaration.CtElement;
 /**
  * Created by marodrig on 24/10/2014.
  */
-public class FieldAssignmentReplace extends TransformClasifier {
+public class FieldAssignmentReplace extends TransformClassifier {
     @Override
     public boolean isUserFilter() {
         return false;

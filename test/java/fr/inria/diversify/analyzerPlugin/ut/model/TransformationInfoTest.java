@@ -35,6 +35,7 @@ import static fr.inria.diversify.ut.json.SectionTestUtils.*;
 import static fr.inria.diversify.ut.json.SectionTestUtils.createTransformationsJSONObjectWithErrors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by marodrig on 04/09/2014.
@@ -158,6 +159,20 @@ public class TransformationInfoTest {
         JsonSosiesInput input = new JsonSosiesInput(r, p);
         Collection<Transformation> infos = input.read();
         assertEquals(2, TransformationInfo.fromTransformations(infos, input.getLoadMessages()).size());
+    }
+
+    /**
+     * Test the proper calculation of strength
+     */
+    @Test
+    public void testStrength() {
+        List<Transformation> t = TestHelpers.createTransformations(new MockInputProgram());
+        ArrayList<TransformationInfo> infos = new ArrayList<>(
+                TransformationInfo.fromTransformations(t, new ArrayList<String>()));
+        infos.get(0).getTransplants().get(0).setClassification("F1", 5);
+        infos.get(0).getTransplants().get(0).setClassification("F2", 3);
+        infos.get(0).getTransplants().get(1).setClassification("F1", -5);
+        assertTrue(infos.get(0).strength() - 3.0 < 00000000000000000.1);
     }
 
 

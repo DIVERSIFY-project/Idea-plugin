@@ -10,7 +10,7 @@ import spoon.reflect.visitor.filter.TypeFilter;
  *
  * Created by marodrig on 08/10/2014.
  */
-public class StatementByLiteral extends TransformClasifier {
+public class StatementByLiteral extends TransformClassifier {
 
     @Override
     public boolean isUserFilter() {

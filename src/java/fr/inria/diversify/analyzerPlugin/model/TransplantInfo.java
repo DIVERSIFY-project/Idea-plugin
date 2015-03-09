@@ -1,5 +1,6 @@
 package fr.inria.diversify.analyzerPlugin.model;
 
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 import fr.inria.diversify.codeFragment.CodeFragment;
 import fr.inria.diversify.diversification.InputConfiguration;
 import fr.inria.diversify.diversification.InputProgram;
@@ -23,6 +24,7 @@ public class TransplantInfo extends CodePosition {
     private Boolean containsInnocuousCalls = null;
 
     private HashMap<String, Float> classificationMap;
+    private String classifications;
 
     public String getTags() {
         return tags;
@@ -47,6 +49,26 @@ public class TransplantInfo extends CodePosition {
 
     public boolean isVisible() {
         return visibility.equals(Visibility.show);
+    }
+
+    public float strength() {
+        if ( classificationMap == null ) return 0;
+        float r = 0;
+        for (float v : classificationMap.values()) r += v;
+        return r;
+    }
+
+    /**
+     * Get all classifications for showing the property table
+     * @return A coma separated string containing all names of the classifications
+     */
+    public String getClassifications() {
+        if ( classificationMap == null ) return "";
+        StringBuilder sb = new StringBuilder();
+        for ( String s : classificationMap.keySet() ) {
+            if ( classificationMap.get(s) != 0 ) sb.append(s).append(", ");
+        }
+        return sb.toString();
     }
 
 
@@ -103,7 +125,7 @@ public class TransplantInfo extends CodePosition {
      */
     public void setClassification(String functionName, float weight) {
         if (classificationMap == null) {
-            classificationMap = new HashMap<String, Float>();
+            classificationMap = new HashMap<>();
         }
         classificationMap.put(functionName, weight);
     }
@@ -172,7 +194,7 @@ public class TransplantInfo extends CodePosition {
     public void initTransformation(InputConfiguration inputConfiguration) {
 
         //Don't do this again if we already have a transformation
-        if ( getTransformation() != null ) return;
+        if (getTransformation() != null) return;
 
         SourceAccesor srcAccessor = new SourceAccesor();
         TypeAccesor typeAccesor = new TypeAccesor();
@@ -182,14 +204,14 @@ public class TransplantInfo extends CodePosition {
         TransformationInfo parentTP = getTransplantationPoint();
         CodeFragment pot = inputProgram.findCodeFragment(parentTP.getPosition(),
                 parentTP.getSource(), srcAccessor);
-        if ( pot == null ) {
+        if (pot == null) {
             pot = inputProgram.findCodeFragment(parentTP.getPosition(),
                     parentTP.getSpoonType(), typeAccesor);
         }
         if (pot == null) throw new RuntimeException("Unable to find pot");
 
         CodeFragment transplant = null;
-        if ( !getType().equals("delete") ) {
+        if (!getType().equals("delete")) {
             transplant = inputProgram.findCodeFragment(getPosition(), getSource(), srcAccessor);
             if (transplant == null) {
                 transplant = inputProgram.findCodeFragment(parentTP.getPosition(),

@@ -68,6 +68,7 @@ public class TransformationsProperties extends JTable implements com.intellij.op
         DefaultTableModel dtm = new DefaultTableModel(s, 0);
         if (data instanceof TransformationInfo) {
             TransformationInfo rep = (TransformationInfo) data;
+            dtm.addRow(new Object[]{"Strength", rep.strength()});
             dtm.addRow(new Object[]{"Hits", rep.getHits()});
             dtm.addRow(new Object[]{"Test count", rep.getTests().size()});
             dtm.addRow(new Object[]{"Assert count", rep.getAsserts().size()});
@@ -78,11 +79,14 @@ public class TransformationsProperties extends JTable implements com.intellij.op
             dtm.addRow(new Object[]{"Nb of Var Diff", rep.getVarDiff()});
             dtm.addRow(new Object[]{"Nb of Call Diff", rep.getCallDiff()});
             dtm.addRow(new Object[]{"Messages", rep.getLogMessages()});
+
         }
         dtm.addRow(new Object[]{"Source", data.getSource()});
         if (data instanceof TransplantInfo) {
             TransplantInfo t = (TransplantInfo) data;
             dtm.addRow(new Object[]{"Spoon type", t.getSpoonType()});
+            dtm.addRow(new Object[]{"Strength", t.strength()});
+            dtm.addRow(new Object[]{"Classifications", t.getClassifications()});
             dtm.addRow(new Object[]{"Type", t.getType()});
             dtm.addRow(new Object[]{"Variable Map", t.getVariableMap()});
             dtm.addRow(new Object[]{"Tags", t.getTags()});

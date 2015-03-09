@@ -13,7 +13,7 @@ import spoon.reflect.declaration.CtElement;
  * <p/>
  * Created by marodrig on 06/10/2014.
  */
-public class ExceptionByException extends TransformClasifier {
+public class ExceptionByException extends TransformClassifier {
 
     @Override
     public boolean isUserFilter() {
@@ -50,6 +50,6 @@ public class ExceptionByException extends TransformClasifier {
 
     @Override
     public int getWeight() {
-        return WEAK;
+        return USELESS;
     }
 }

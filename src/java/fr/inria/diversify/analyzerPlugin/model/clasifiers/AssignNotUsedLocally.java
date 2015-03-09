@@ -22,7 +22,7 @@ import java.util.List;
  *
  * Created by marodrig on 13/10/2014.
  */
-public class AssignNotUsedLocally extends TransformClasifier {
+public class AssignNotUsedLocally extends TransformClassifier {
 
     //Take into consideration control flow and also not only the deletion but also the replacements!!!!!!
 

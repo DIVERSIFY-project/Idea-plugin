@@ -9,12 +9,7 @@ import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowTransformationsInTree;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.gui.FilterPanel;
-import fr.inria.diversify.analyzerPlugin.gui.TreeTransformations;
-import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
 
 /**
  *

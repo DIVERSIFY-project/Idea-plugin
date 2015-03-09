@@ -16,7 +16,7 @@ import spoon.reflect.declaration.CtElement;
  *
  * Created by marodrig on 07/10/2014.
  */
-public class VarDeclarationAndTPHasDelete extends TransformClasifier {
+public class VarDeclarationAndTPHasDelete extends TransformClassifier {
 
     @Override
     public boolean isUserFilter() {
@@ -55,6 +55,6 @@ public class VarDeclarationAndTPHasDelete extends TransformClasifier {
 
     @Override
     public int getWeight() {
-        return WEAK;
+        return USELESS;
     }
 }

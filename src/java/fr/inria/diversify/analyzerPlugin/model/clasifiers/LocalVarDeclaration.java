@@ -13,7 +13,7 @@ import spoon.reflect.declaration.CtElement;
  * <p/>
  * Created by marodrig on 07/10/2014.
  */
-public class LocalVarDeclaration extends TransformClasifier {
+public class LocalVarDeclaration extends TransformClassifier {
 
     @Override
     public boolean isUserFilter() {

@@ -1,12 +1,12 @@
 package fr.inria.diversify.analyzerPlugin.ut.component;
 
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 
 /**
  * Created by marodrig on 02/02/2015.
  */
-public class ReplaceClassifier extends TransformClasifier {
+public class ReplaceClassifier extends TransformClassifier {
     /**
      * indicate if this class is just user interface commodity filter or if it s a real classification function
      */
@@ -47,6 +47,6 @@ public class ReplaceClassifier extends TransformClasifier {
 
     @Override
     public int getWeight() {
-        return TransformClasifier.WEAK;
+        return TransformClassifier.WEAK;
     }
 }

@@ -2,7 +2,7 @@ package fr.inria.diversify.analyzerPlugin.model.io;
 
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +23,7 @@ public class PluginDataExport {
     private Collection<TransformationInfo> representations;
 
 
-    private Collection<TransformClasifier> clasifiers;
+    private Collection<TransformClassifier> clasifiers;
 
     /**
      * Current representations obtained from the JSON  file
@@ -39,11 +39,11 @@ public class PluginDataExport {
     /**
      * all function classifiers
      */
-    public Collection<TransformClasifier> getClasifiers() {
+    public Collection<TransformClassifier> getClasifiers() {
         return clasifiers;
     }
 
-    public void setClasifiers(Collection<TransformClasifier> clasifiers) {
+    public void setClasifiers(Collection<TransformClassifier> clasifiers) {
         this.clasifiers = clasifiers;
     }
 
@@ -93,7 +93,7 @@ public class PluginDataExport {
         //Collect classifications functions
         JSONObject classMap = new JSONObject();
 
-        for (TransformClasifier c : clasifiers) {
+        for (TransformClassifier c : clasifiers) {
             if (!c.isUserFilter()) {
                 JSONObject cjson = new JSONObject();
                 cjson.put("index", c.getClass().getSimpleName());
@@ -107,7 +107,7 @@ public class PluginDataExport {
         JSONArray repArray = new JSONArray();
         for (TransformationInfo rep : representations) {
             for (TransplantInfo t : rep.getTransplants()) {
-                for (TransformClasifier c : clasifiers) {
+                for (TransformClassifier c : clasifiers) {
                     float v = t.isAlreadyClassified(c.getDescription()) ? t.getClassification(c.getDescription()) : 0;
                     if ( v != 0 && !c.isUserFilter() ) {
                         repArray.put(t.getIndex());

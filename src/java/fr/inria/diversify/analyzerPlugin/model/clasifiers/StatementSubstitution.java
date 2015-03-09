@@ -10,7 +10,7 @@ import spoon.reflect.visitor.filter.TypeFilter;
  * <p/>
  * Created by marodrig on 07/10/2014.
  */
-public abstract class StatementSubstitution extends TransformClasifier {
+public abstract class StatementSubstitution extends TransformClassifier {
 
     protected static TypeFilter blockFilter = new TypeFilter(CtMethod.class);
 

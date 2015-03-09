@@ -8,7 +8,7 @@ import spoon.reflect.declaration.CtElement;
 /**
  * Created by marodrig on 24/10/2014.
  */
-public class ReturnDelete extends TransformClasifier {
+public class ReturnDelete extends TransformClassifier {
     @Override
     public boolean isUserFilter() {
         return false;

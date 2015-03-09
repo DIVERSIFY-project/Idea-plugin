@@ -12,8 +12,8 @@ public class ClassifierFactory {
      * Build all classifiers
      * @return A list with all the classifiers in the package fr.inria.diversify.analyzerPlugin
      */
-    public List<TransformClasifier> buildClassifiers() {
-        ArrayList<TransformClasifier> clasifiers = new ArrayList<TransformClasifier>();
+    public List<TransformClassifier> buildClassifiers() {
+        ArrayList<TransformClassifier> clasifiers = new ArrayList<TransformClassifier>();
 
         //clasifiers.add(new AssignNotUsedLocally());
         //clasifiers.add(new StatementByLiteral());

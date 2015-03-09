@@ -10,6 +10,6 @@ public class TagedStrong extends TagedTransform {
 
     @Override
     public int getWeight() {
-        return 10;
+        return STRONG;
     }
 }

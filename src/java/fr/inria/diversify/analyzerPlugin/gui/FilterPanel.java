@@ -9,15 +9,12 @@ import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.*;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.text.html.ObjectView;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class FilterPanel extends JBList {
 
@@ -114,7 +111,7 @@ public class FilterPanel extends JBList {
         resultList.addElement(new JLabel("Filters:"));
         final DefaultActionGroup filter = new DefaultActionGroup();
 
-        for (TransformClasifier c : getClassifierFactory().buildClassifiers()) {
+        for (TransformClassifier c : getClassifierFactory().buildClassifiers()) {
             resultList.addElement(new ActionCheckBox(new SwitchClasifierAction(c.getClass(), c.getDescription()), true));
         }
     }

@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClasifier;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 import fr.inria.diversify.analyzerPlugin.model.metadata.JsonClassificationInput;
 import fr.inria.diversify.analyzerPlugin.model.metadata.JsonClassificationOutput;
 import fr.inria.diversify.analyzerPlugin.model.metadata.JsonCoverageInput;
@@ -24,8 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -43,12 +41,12 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     /**
      * Constant to assign to the "unclassified" category when filtering
      */
-    public static final Class<? extends TransformClasifier> UNCLASSIFIED = null;
+    public static final Class<? extends TransformClassifier> UNCLASSIFIED = null;
 
     /**
      * All classifiers
      */
-    private List<TransformClasifier> classifiers;
+    private List<TransformClassifier> classifiers;
 
     /**
      * All infos in the project
@@ -68,7 +66,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     /**
      * A dictionary with classifier visibility indexed by class
      */
-    private HashMap<Class<? extends TransformClasifier>, Boolean> visibleClassifiers;
+    private HashMap<Class<? extends TransformClassifier>, Boolean> visibleClassifiers;
 
     /**
      * Indicates if the intersection of classifiers must be shown if one of them hides the classification
@@ -211,7 +209,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      *
      * @param classifierClass Class of the classifier to switch
      */
-    public void switchClassifier(Class<? extends TransformClasifier> classifierClass) {
+    public void switchClassifier(Class<? extends TransformClassifier> classifierClass) {
         visibleClassifiers.put(classifierClass, !visibleClassifiers.get(classifierClass));
     }
 
@@ -220,11 +218,11 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      *
      * @return
      */
-    public List<TransformClasifier> getClassifiers() {
+    public List<TransformClassifier> getClassifiers() {
         if (classifiers == null) {
             classifiers = getClassifierFactory().buildClassifiers();
             visibleClassifiers = new HashMap<>();
-            for (TransformClasifier t : classifiers) {
+            for (TransformClassifier t : classifiers) {
                 visibleClassifiers.put(t.getClass(), true);
             }
         }
@@ -237,7 +235,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      *
      * @return
      */
-    protected HashMap<Class<? extends TransformClasifier>, Boolean> getVisibleClassifiers() {
+    protected HashMap<Class<? extends TransformClassifier>, Boolean> getVisibleClassifiers() {
         if (visibleClassifiers == null) getClassifiers(); //Init visible classifiers
         return visibleClassifiers;
     }
@@ -259,7 +257,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * @param aClass
      * @return
      */
-    public boolean isFilterVisible(Class<? extends TransformClasifier> aClass) {
+    public boolean isFilterVisible(Class<? extends TransformClassifier> aClass) {
 
         if (aClass == null) return unclassifiedVisibility;
 
@@ -272,7 +270,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * @param aClass
      * @param value
      */
-    public void setVisibleClassifiers(Class<? extends TransformClasifier> aClass, boolean value) {
+    public void setVisibleClassifiers(Class<? extends TransformClassifier> aClass, boolean value) {
         if (aClass == null) unclassifiedVisibility = value;
         else getVisibleClassifiers().put(aClass, value);
     }
@@ -285,7 +283,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * Sets all classifications visibility
      */
     public void setAllClassificationsVisibility(boolean value) {
-        for (Class<? extends TransformClasifier> k : getVisibleClassifiers().keySet()) {
+        for (Class<? extends TransformClassifier> k : getVisibleClassifiers().keySet()) {
             setVisibleClassifiers(k, value);
         }
     }
@@ -327,7 +325,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
             for (TransplantInfo transplant : info.getTransplants()) {
                 transplant.setVisibility(TransplantInfo.Visibility.unclassified);
-                for (TransformClasifier c : getClassifiers()) {
+                for (TransformClassifier c : getClassifiers()) {
                     float v;
                     //the only way classification functions modify the score assigned
                     //is by user input, therefore only user filters must be reclassified each time

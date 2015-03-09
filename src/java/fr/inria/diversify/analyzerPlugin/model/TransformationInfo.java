@@ -724,4 +724,12 @@ public class TransformationInfo extends CodePosition {
         }
         return result;
     }
+
+    public float strength() {
+        float result = 0;
+        for ( TransplantInfo v : getTransplants() ) {
+            result = v.strength();
+        }
+        return result;
+    }
 }

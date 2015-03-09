@@ -7,7 +7,7 @@ import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
  * <p/>
  * Created by marodrig on 13/10/2014.
  */
-public class StatementReplace extends TransformClasifier {
+public class StatementReplace extends TransformClassifier {
 
     @Override
     public boolean isUserFilter() {

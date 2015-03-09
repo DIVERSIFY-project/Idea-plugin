@@ -5,7 +5,7 @@ import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 /**
  * Created by marodrig on 27/10/2014.
  */
-public class Fake extends TransformClasifier {
+public class Fake extends TransformClassifier {
     @Override
     public boolean isUserFilter() {
         return false;
@@ -31,6 +31,6 @@ public class Fake extends TransformClasifier {
 
     @Override
     public int getWeight() {
-        return WEAK;
+        return PLAIN_BAD;
     }
 }
