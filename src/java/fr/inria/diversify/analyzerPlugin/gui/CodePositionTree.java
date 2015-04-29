@@ -27,12 +27,12 @@ public class CodePositionTree extends Tree {
     private IDEObjects ideObjects;
 
     public CodePositionTree() {
-        super((TreeModel) getDefaultTreeModel());
+        super(getDefaultTreeModel());
         init();
     }
 
     public CodePositionTree(TreeNode root) {
-        super((TreeModel) (new DefaultTreeModel(root, false)));
+        super(new DefaultTreeModel(root, false));
         init();
     }
 

@@ -16,10 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createInfos;
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformations;
@@ -61,7 +58,7 @@ public class JsonClassificationInputTest {
         input.read();
 
         //Assert
-        HashMap<UUID, TransplantInfo> ti = sectionInput.getTransplantInfos();
+        Map<UUID, TransplantInfo> ti = sectionInput.getTransplantInfos();
         assertEquals("weak", ti.get(TEST_ID_1).getTags());
         assertEquals("strong", ti.get(TEST_ID_2).getTags());
         assertEquals("crazy",  ti.get(TEST_ID_4).getTags());

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -23,7 +24,7 @@ public class JsonClassificationInput extends JsonTestEyeSectionInput {
     }
 
     @Override
-    public void read(HashMap<UUID, Transformation> transformations) {
+    public void read(Map<UUID, Transformation> transformations) {
         super.read(transformations);
         try {
             if ( !getJsonObject().has(JsonClassificationOutput.TAGS) ) return;

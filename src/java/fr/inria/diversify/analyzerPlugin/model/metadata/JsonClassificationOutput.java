@@ -18,6 +18,8 @@ public class JsonClassificationOutput extends JsonSectionOutput {
 
     public static final String TAGS = "tags";
 
+    public static final String STRENGTH = "strength";
+
     private Collection<TransformationInfo> infos;
 
     public JsonClassificationOutput(Collection<TransformationInfo> infos) {
@@ -36,6 +38,14 @@ public class JsonClassificationOutput extends JsonSectionOutput {
             for (TransformationInfo info : infos) {
                 for (TransplantInfo t : info.getTransplants()) {
                     tags.put(t.getTransformation().getIndex().toString(), t.getTags());
+                }
+            }
+
+            JSONObject strength = new JSONObject();
+            outputObject.put(STRENGTH, strength);
+            for (TransformationInfo info : infos) {
+                for (TransplantInfo t : info.getTransplants()) {
+                    strength.put(t.getTransformation().getIndex().toString(), t.strength());
                 }
             }
 

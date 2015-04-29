@@ -807,7 +807,7 @@ public class MainToolWinv0 implements ToolWindowFactory {
         inputConfiguration.getProperty("processor", "fr.inria.diversify.codeFragmentProcessor.StatementProcessor");
         inputConfiguration.getProperty("CodeFragmentClass", "fr.inria.diversify.codeFragment.Statement");
         inputProgram = new InputProgram();
-        inputProgram.setSourceCodeDir(srcDir);
+        inputProgram.setRelativeSourceCodeDir(srcDir);
         inputConfiguration.setInputProgram(inputProgram);
         try {
             MavenDependencyResolver dr = new MavenDependencyResolver();

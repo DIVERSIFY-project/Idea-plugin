@@ -6,10 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.UUID;
+import java.util.*;
 
 import static fr.inria.diversify.analyzerPlugin.model.metadata.JsonCoverageOutput.*;
 
@@ -25,7 +22,7 @@ public class JsonCoverageInput extends JsonTestEyeSectionInput {
     }
 
     @Override
-    public void read(HashMap<UUID, Transformation> transformations) {
+    public void read(Map<UUID, Transformation> transformations) {
         super.read(transformations);
 
         try {

@@ -42,7 +42,7 @@ public class ApplyTransformation extends TestEyeAction {
                 TestEyeProjectComponent c = getComponent(event);
 
                 String basePath = event.getProject().getBasePath();
-                String srcPath = c.getProgram().getSourceCodeDir();
+                String srcPath = c.getProgramSourceCodeDir();
                 //obtain transplant we want to apply
                 TransplantInfo transplant = (TransplantInfo) data;
                 TransformationInfo tp = transplant.getTransplantationPoint();

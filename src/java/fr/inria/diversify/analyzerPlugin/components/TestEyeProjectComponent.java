@@ -31,7 +31,10 @@ import java.util.*;
  */
 public class TestEyeProjectComponent extends AbstractProjectComponent {
 
+
     public static String TEMP_MOD = "/.modBackup";
+
+    public static String SEP = File.separator;
 
     /**
      * Name of the file containing the transformations
@@ -98,6 +101,10 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
         super(project);
     }
 
+    public String getProgramSourceCodeDir() {
+        return getProgram().getProgramDir() + getProgram().getRelativeSourceCodeDir();
+    }
+
     /**
      * Inits the program given the base path of the project
      *
@@ -107,15 +114,15 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     private void initProgram(String basePath) {
         try {
             MavenDependencyResolver dr = new MavenDependencyResolver();
-            dr.DependencyResolver(basePath + "\\pom.xml");
+            dr.DependencyResolver(basePath + SEP + "pom.xml");
         } catch (Exception e) {
             throw new IllegalStateException("Not a maven project, or errors during parsing or maven structure not supported");
         }
         try {
             program = new InputProgram();
             program.setProgramDir(basePath);
-            program.setSourceCodeDir(basePath + "\\src\\main\\java");
-            program.setFactory(new SpoonMetaFactory().buildNewFactory(program.getSourceCodeDir(), 7));
+            program.setRelativeSourceCodeDir(SEP + "src" + SEP + "main" + SEP + "java");
+            program.setFactory(new SpoonMetaFactory().buildNewFactory(getProgramSourceCodeDir(), 7));
         } catch (Exception e) {
             throw new IllegalStateException("Error while indexing program");
         }
@@ -143,7 +150,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
             String s = myProject.getBasePath();
             File f = new File(s + TEMP_MOD);
             if (f.exists()) {
-                Files.walkFileTree(f.toPath(), new RestoreBackupFileVisitor(s + TEMP_MOD, getProgram().getSourceCodeDir()));
+                Files.walkFileTree(f.toPath(), new RestoreBackupFileVisitor(s + TEMP_MOD, getProgramSourceCodeDir()));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -445,6 +452,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
         getLogMessages().addAll(input.getLoadMessages());
     }
 
+
     /**
      * Save all infos including tagging and coverage
      */
@@ -471,7 +479,6 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     }
 
 
-
     public String getTransformationsFilePath() {
         return transformationsFilePath;
     }
@@ -479,4 +486,6 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     public void setTransformationsFilePath(String transformationsFilePath) {
         this.transformationsFilePath = transformationsFilePath;
     }
+
+
 }

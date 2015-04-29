@@ -107,6 +107,7 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
     private JPanel createToolbarPanel() {
         final DefaultActionGroup mainGroup = new DefaultActionGroup();
         mainGroup.add(new LoadTransformationsAction());
+//        mainGroup.add(new LoadOldTransformationsAction());
         mainGroup.add(new LoadEnhancedCoverageAction());
         mainGroup.add(new SaveTransformationsAction());
         final ActionToolbar mainToolBar = getIDEObjects().getActionManager().createActionToolbar(
@@ -120,7 +121,7 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
      * Register all actions that are going to be used by the user
      */
     private void registerActions() {
-        //TODO: Refactor this to a "registrar"
+        //TODO: Refactor this to a "intellij idea registrar"
         TestEyeApplicationComponentImpl comp =
                 (TestEyeApplicationComponentImpl)getIDEObjects().getApplicationComponent();
         comp.setExplorer(this);

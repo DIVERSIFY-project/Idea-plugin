@@ -23,7 +23,9 @@ public class TestEyeComponentTest {
         TestEyeProjectComponent component = new TestEyeProjectComponent(p);
         InputProgram inputProgram = component.getProgram();
         assertNotNull(inputProgram);
-        assertEquals(p.getBasePath() + "\\src\\main\\java", inputProgram.getSourceCodeDir());
-    }
+        String fpath = p.getBasePath() + "\\src\\main\\java";
+        assertEquals(fpath, component.getProgramSourceCodeDir());
+        assertEquals(fpath, inputProgram.getProgramDir() + inputProgram.getRelativeSourceCodeDir());
 
+    }
 }

@@ -50,7 +50,7 @@ public class LoadTransformationsAction extends TestEyeAction {
             logger.info("User selected path: " + c.toString());
 
             //Load the transformations
-            logger.info("Program source code dir: " + c.getProgram().getSourceCodeDir());
+            logger.info("Program source code dir: " + c.getProgramSourceCodeDir());
             logger.info("Program base dir: " + c.getProgram().getProgramDir());
 
             c.loadInfos(path);

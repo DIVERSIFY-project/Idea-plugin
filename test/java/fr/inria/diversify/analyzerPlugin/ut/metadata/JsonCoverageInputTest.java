@@ -16,10 +16,7 @@ import junit.framework.Assert;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createInfos;
 import static fr.inria.diversify.analyzerPlugin.TestHelpers.createTransformations;
@@ -60,7 +57,7 @@ public class JsonCoverageInputTest {
 
         assertEquals(0, input.getLoadMessages().size());
 
-        HashMap<UUID, TransplantInfo> ti = sectionInput.getTransplantInfos();
+        Map<UUID, TransplantInfo> ti = sectionInput.getTransplantInfos();
         assertEquals(4, ti.size());
 
 

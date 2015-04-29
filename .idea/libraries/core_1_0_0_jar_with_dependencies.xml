@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="core-1.0.0-jar-with-dependencies">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/fr/irisa/diversify/core/1.0.0/core-1.0.0-jar-with-dependencies.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/fr/irisa/diversify/core/1.0.0/core-1.0.0-jar-with-dependencies.jar!/" />
+      <root url="file://$PROJECT_DIR$/../sosies-generator/core/src/main/java" />
+    </SOURCES>
+  </library>
+</component>
