@@ -48,12 +48,16 @@ public class ClassifierFactory {
         clasifiers.add(new StatementReplace());
         clasifiers.add(new StatementDelete());
 
-
         //Weak classifiers
         clasifiers.add(new TagedWeak());
         clasifiers.add(new LocalVarDeclaration());
         clasifiers.add(new ExceptionByException());
         clasifiers.add(new Fake());
+
+        clasifiers.add(new DeepFrequentlyTested());
+        clasifiers.add(new DeepSeldomTested());
+        clasifiers.add(new ShallowFrequentlyTested());
+        clasifiers.add(new ShallowSeldomTested());
 
         return clasifiers;
     }

@@ -6,6 +6,7 @@ import fr.inria.diversify.analyzerPlugin.FakeProject;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassificationProperties;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 import fr.inria.diversify.analyzerPlugin.model.orders.AlphabeticallOrder;

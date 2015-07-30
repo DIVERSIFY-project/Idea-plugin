@@ -32,6 +32,7 @@ public class TransformationInfo extends CodePosition {
     private int varDiff;
     private int callDiff;
     private List<String> logMessages;
+    private double meanDepth;
 
     public long getTotalAssertionHits() {
         return totalAssertionHits;
@@ -731,5 +732,14 @@ public class TransformationInfo extends CodePosition {
             result = v.strength();
         }
         return result;
+    }
+
+    public double getMeanDepth() {
+        int md = 0;
+        for (Map.Entry<TestInfo, PertTestCoverageData> t :
+                getTests().entrySet() ) {
+            md += t.getValue().getMeanDepth();
+        }
+        return md / getTests().size();
     }
 }

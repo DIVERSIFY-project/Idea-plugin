@@ -23,6 +23,7 @@ import fr.inria.diversify.analyzerPlugin.actions.reporting.DepthsDistributionAct
 import fr.inria.diversify.analyzerPlugin.actions.reporting.DepthsHistogramAction;
 import fr.inria.diversify.analyzerPlugin.actions.reporting.DepthsReportsAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SearchPosition;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassificationProperties;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 import fr.inria.diversify.analyzerPlugin.model.io.PluginDataExport;
@@ -430,7 +431,8 @@ public class MainToolWinv0 implements ToolWindowFactory {
      * @return A list containing the classifiers
      */
     private List<TransformClassifier> buildClasifiers() {
-        return new ClassifierFactory().buildClassifiers();
+//        return new ClassifierFactory().buildClassifiers(new ClassificationProperties(getInputProgram().compo));
+        return null;
     }
 
     /**

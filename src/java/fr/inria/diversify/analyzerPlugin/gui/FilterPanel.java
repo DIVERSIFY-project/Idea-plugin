@@ -8,6 +8,7 @@ import com.intellij.ui.components.JBList;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.*;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassificationProperties;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 

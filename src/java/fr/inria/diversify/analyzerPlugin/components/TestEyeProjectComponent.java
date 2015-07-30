@@ -5,6 +5,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.project.Project;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
+import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassificationProperties;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 import fr.inria.diversify.analyzerPlugin.model.metadata.JsonClassificationInput;
@@ -95,6 +96,8 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * Errors registered so far
      */
     private List<String> logMessages;
+    private double meanDepth;
+    private int meanNumberOfTest;
 
 
     public TestEyeProjectComponent(Project project) {
@@ -333,6 +336,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
             for (TransplantInfo transplant : info.getTransplants()) {
                 transplant.setVisibility(TransplantInfo.Visibility.unclassified);
                 for (TransformClassifier c : getClassifiers()) {
+                    c.getProperties().setComponent(this);
                     float v;
                     //the only way classification functions modify the score assigned
                     //is by user input, therefore only user filters must be reclassified each time
@@ -488,4 +492,19 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     }
 
 
+    public double getMeanDepth() {
+        double meanDepth = 0;
+        for ( TransformationInfo info : getInfos() ) {
+            meanDepth += info.getMeanDepth();
+        }
+        return meanDepth / getInfos().size();
+    }
+
+    public double getMeanNumberOfTest() {
+        double meanDepth = 0;
+        for ( TransformationInfo info : getInfos() ) {
+            meanDepth += info.getTests().size();
+        }
+        return meanDepth / getInfos().size();
+    }
 }

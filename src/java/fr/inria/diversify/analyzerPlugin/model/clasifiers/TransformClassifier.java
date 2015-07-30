@@ -26,6 +26,19 @@ public abstract class TransformClassifier {
     protected static int USELESS = -5;
     protected static int PLAIN_BAD = -10;
 
+    private ClassificationProperties properties = new ClassificationProperties();
+
+    public ClassificationProperties getProperties() {
+        return properties;
+    }
+
+    /**
+     * Input a series of arbitrary params to the classifiers
+     */
+    public void setProperties(ClassificationProperties properties) {
+        this.properties = properties;
+    }
+
     /**
      * indicate if this class is just user interface commodity filter or if it s a real classification function
      */
