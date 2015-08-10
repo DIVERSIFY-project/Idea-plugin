@@ -23,7 +23,7 @@ public abstract class DepthNumberOfTests extends TransformClassifier {
 
     @Override
     public boolean isUserFilter() {
-        return false;
+        return true;
     }
 
     @Override

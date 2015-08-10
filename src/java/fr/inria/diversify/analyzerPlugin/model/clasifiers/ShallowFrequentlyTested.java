@@ -18,7 +18,7 @@ public  class ShallowFrequentlyTested extends DepthNumberOfTests {
     @Override
     protected boolean canClassify(TransplantInfo transform)
     {
-        double md = medianDepth(transform);
+        double md = transform.getTransplantationPoint().getMeanDepth();
         TestEyeProjectComponent c = getProperties().getComponent();
         return  ( md < c.getMeanDepth() &&  transform.getTransplantationPoint().getTests().size() > c.getMeanNumberOfTest() );
     }
@@ -26,12 +26,12 @@ public  class ShallowFrequentlyTested extends DepthNumberOfTests {
 
     @Override
     protected int calculateValue(TransplantInfo transform) {
-        return 0;
+        return 1;
     }
 
     @Override
     public String getDescription() {
-        return "Shallow frequently seldom tested";
+        return "Shallow frequently tested";
     }
 
     @Override

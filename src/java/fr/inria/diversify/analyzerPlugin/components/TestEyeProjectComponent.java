@@ -196,7 +196,10 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
      * Get the list of all visible Transformation infos attached to this project
      */
     public List<TransformationInfo> getVisibleInfos() {
-        if (visibleInfos == null) visibleInfos = new ArrayList<>(this.infos);
+        if (visibleInfos == null) {
+            if ( this.infos == null ) return new ArrayList<>();
+            visibleInfos = new ArrayList<>(this.infos);
+        }
         return visibleInfos;
     }
 
@@ -324,6 +327,9 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
         if (getVisibleInfos() == null)
             setVisibleInfos(new ArrayList<TransformationInfo>());
         else getVisibleInfos().clear();
+
+        //Don't do anything if the infos are null
+        if (getInfos() == null) return;
 
         int progress = 1;
         for (TransformationInfo info : getInfos()) {
@@ -493,6 +499,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
 
 
     public double getMeanDepth() {
+        if ( getInfos() == null || getInfos().size() == 0 ) return 0.0;
         double meanDepth = 0;
         for ( TransformationInfo info : getInfos() ) {
             meanDepth += info.getMeanDepth();

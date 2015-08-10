@@ -735,9 +735,9 @@ public class TransformationInfo extends CodePosition {
     }
 
     public double getMeanDepth() {
+        if ( getTests() == null || getTests().size() == 0 ) return 0.0;
         int md = 0;
-        for (Map.Entry<TestInfo, PertTestCoverageData> t :
-                getTests().entrySet() ) {
+        for (Map.Entry<TestInfo, PertTestCoverageData> t : getTests().entrySet() ) {
             md += t.getValue().getMeanDepth();
         }
         return md / getTests().size();

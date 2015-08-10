@@ -13,7 +13,19 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="org.jmockit:jmockit:1.14" level="project" />
     <orderEntry type="library" name="0" level="project" />
-    <orderEntry type="library" name="core-1.0.0-jar-with-dependencies" level="project" />
+    <orderEntry type="library" exported="" name="core-1.0.0-jar-with-dependencies" level="project" />
     <orderEntry type="library" name="core-1.0.0-tests" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://C:/Installers/jfreechart-1.0.19.zip!/jfreechart-1.0.19/experimental" />
+          <root url="jar://C:/Installers/jfreechart-1.0.19.zip!/jfreechart-1.0.19/source" />
+          <root url="jar://C:/Installers/jfreechart-1.0.19.zip!/jfreechart-1.0.19/swt" />
+          <root url="jar://C:/Installers/jfreechart-1.0.19.zip!/jfreechart-1.0.19/tests" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

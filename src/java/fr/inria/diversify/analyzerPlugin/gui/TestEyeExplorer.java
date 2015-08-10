@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.IDEObjectsImpl;
 import fr.inria.diversify.analyzerPlugin.actions.SaveTransformationsAction;
+import fr.inria.diversify.analyzerPlugin.actions.display.ShowScatterPlotAction;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadEnhancedCoverageAction;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
@@ -110,6 +111,7 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
 //        mainGroup.add(new LoadOldTransformationsAction());
         mainGroup.add(new LoadEnhancedCoverageAction());
         mainGroup.add(new SaveTransformationsAction());
+        mainGroup.add(new ShowScatterPlotAction());
         final ActionToolbar mainToolBar = getIDEObjects().getActionManager().createActionToolbar(
                 ActionPlaces.ANT_EXPLORER_TOOLBAR, mainGroup, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());

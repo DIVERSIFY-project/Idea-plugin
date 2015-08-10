@@ -10,20 +10,20 @@ public  class DeepFrequentlyTested extends DepthNumberOfTests {
 
     @Override
     public boolean isUserFilter() {
-        return false;
+        return true;
     }
 
     @Override
     protected boolean canClassify(TransplantInfo transform)
     {
-        double md = medianDepth(transform);
+        double md = transform.getTransplantationPoint().getMeanDepth();
         TestEyeProjectComponent c = getProperties().getComponent();
         return  ( md > c.getMeanDepth() &&  transform.getTransplantationPoint().getTests().size() > c.getMeanNumberOfTest() );
     }
 
     @Override
     protected int calculateValue(TransplantInfo transform) {
-        return 0;
+        return 1;
     }
 
     @Override
