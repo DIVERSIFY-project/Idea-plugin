@@ -1,5 +1,9 @@
 package fr.inria.diversify.analyzerPlugin;
 
+import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.popup.Balloon;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.ui.awt.RelativePoint;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.model.AssertInfo;
 import fr.inria.diversify.analyzerPlugin.model.PertTestCoverageData;
@@ -18,6 +22,7 @@ import mockit.Verifications;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -75,6 +80,19 @@ public class TestHelpers {
     public static void verifyHardComplain() {
         new Verifications() {{
             JOptionPane.showMessageDialog(null, anyString, anyString, JOptionPane.ERROR_MESSAGE);
+        }};
+    }
+
+    /**
+     * Verify tht a complain action was called
+     */
+    public static void verifySoftComplain() {
+        new Verifications() {{
+            JBPopupFactory.getInstance()
+                    .createHtmlTextBalloonBuilder(anyString, MessageType.WARNING, null)
+                    .setFadeoutTime(10)
+                    .createBalloon()
+                    .show(RelativePoint.fromScreen(new Point(0,0)), Balloon.Position.atRight);
         }};
     }
 

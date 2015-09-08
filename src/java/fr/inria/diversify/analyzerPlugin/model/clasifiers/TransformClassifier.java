@@ -1,5 +1,7 @@
 package fr.inria.diversify.analyzerPlugin.model.clasifiers;
 
+import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
+import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtElement;
@@ -8,6 +10,7 @@ import spoon.reflect.visitor.QueryVisitor;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.reflect.code.CtInvocationImpl;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +29,25 @@ public abstract class TransformClassifier {
     protected static int USELESS = -5;
     protected static int PLAIN_BAD = -10;
 
-    private ClassificationProperties properties = new ClassificationProperties();
+    private ClassificationProperties properties;
 
-    public ClassificationProperties getProperties() {
-        return properties;
+    /**
+     * Action to configure the classifier
+     */
+    private TestEyeAction configureAction = null;
+
+    /**
+     * Actions to perform before the classification
+     */
+    public void beforeClassify(){
+
     }
 
     /**
-     * Input a series of arbitrary params to the classifiers
+     * Actions to perform after the classification
      */
-    public void setProperties(ClassificationProperties properties) {
-        this.properties = properties;
+    public void afterClassification() {
+
     }
 
     /**
@@ -159,5 +170,27 @@ public abstract class TransformClassifier {
         QueryVisitor<CtElement> assignQuery = new QueryVisitor<CtElement>(assignFilter);
         assignQuery.scan(e);
         return assignQuery.getResult();
+    }
+
+    protected void setProperties(ClassificationProperties props) {
+        this.properties = props;
+    }
+
+    /**
+     * Action to call in order to configure the classifier
+     * @return An action to be invoked in order to configure the classifier
+     */
+    public ClassificationProperties getProperties() {
+        if ( this.properties == null ) this.properties = new DefaultClassificationProperties();
+        this.properties.setClassifier(this);
+        return this.properties;
+    }
+
+    public TestEyeAction getConfigureAction() {
+        return configureAction;
+    }
+
+    public void setConfigureAction(TestEyeAction configureAction) {
+        this.configureAction = configureAction;
     }
 }

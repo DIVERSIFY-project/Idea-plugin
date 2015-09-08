@@ -26,7 +26,7 @@ public class FilterAndSortAction extends TestEyeAction {
         final TreeTransformations tree = event.getData(TreeTransformations.TEST_EYE_TREE_TRANSFORMATIONS);
 
         ProgressManager.getInstance().run(new Task.Backgroundable(event.getProject(),
-                "Sorting and filtering (This will be done only once)...") {
+                "Sorting and filtering...") {
             public void onSuccess() {
                 super.onSuccess();
                 tryExecute(ShowTransformationsInTree.class, event);

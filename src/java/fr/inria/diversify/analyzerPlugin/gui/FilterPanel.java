@@ -6,9 +6,9 @@ import com.intellij.ui.PopupHandler;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
+import fr.inria.diversify.analyzerPlugin.IDEObjectsImpl;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.*;
-import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassificationProperties;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.ClassifierFactory;
 import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
 
@@ -30,10 +30,11 @@ public class FilterPanel extends JBList {
     /**
      * A custom checkbox containin an action
      */
-    public class ActionCheckBox extends JBCheckBox {
+    public static class ActionCheckBox extends JBCheckBox {
+
         public TestEyeAction action;
 
-        public ActionCheckBox(TestEyeAction action, boolean checked) {
+        public ActionCheckBox(TestEyeAction action,  boolean checked) {
             super();
             this.action = action;
             setText(action.toString());
@@ -46,7 +47,7 @@ public class FilterPanel extends JBList {
      */
     public void setShowIntersectionNoTriggerEvent(boolean value) {
         DefaultListModel model = (DefaultListModel) getModel();
-        ActionCheckBox c = (ActionCheckBox)model.elementAt(SHOW_INTERSECTION_INDEX);
+        ActionCheckBox c = (ActionCheckBox) model.elementAt(SHOW_INTERSECTION_INDEX);
         c.setSelected(value);
         repaint();
     }
@@ -58,6 +59,7 @@ public class FilterPanel extends JBList {
 
     public FilterPanel(ClassifierFactory factory) {
         classifierFactory = factory;
+        setIdeObject(new IDEObjectsImpl());
         setCellRenderer(new CellRenderer());
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         installCheckBoxMouseListener();
@@ -69,8 +71,9 @@ public class FilterPanel extends JBList {
         this(new ClassifierFactory());
     }
 
+
     public ClassifierFactory getClassifierFactory() {
-        if ( classifierFactory == null ) classifierFactory = new ClassifierFactory();
+        if (classifierFactory == null) classifierFactory = new ClassifierFactory();
         return classifierFactory;
     }
 
@@ -92,10 +95,10 @@ public class FilterPanel extends JBList {
 
     private void setAllSelected(boolean b) {
         DefaultListModel model = (DefaultListModel) getModel();
-        for ( int i = 0; i < model.size(); i++ ) {
-            if ( model.elementAt(i) instanceof ActionCheckBox ) {
-                ActionCheckBox c = (ActionCheckBox)model.elementAt(i);
-                if ( c.action != null ) {
+        for (int i = 0; i < model.size(); i++) {
+            if (model.elementAt(i) instanceof ActionCheckBox) {
+                ActionCheckBox c = (ActionCheckBox) model.elementAt(i);
+                if (c.action != null) {
                     c.setSelected(b);
                 }
             }
@@ -110,11 +113,9 @@ public class FilterPanel extends JBList {
         setModel(resultList);
         resultList.addElement(new ActionCheckBox(new HideShowIntersectionAction(this), false));
         resultList.addElement(new JLabel("Filters:"));
-        final DefaultActionGroup filter = new DefaultActionGroup();
 
-        for (TransformClassifier c : getClassifierFactory().buildClassifiers()) {
-            resultList.addElement(new ActionCheckBox(new SwitchClasifierAction(c.getClass(), c.getDescription()), true));
-        }
+        for (TransformClassifier c : getClassifierFactory().buildClassifiers())
+            resultList.addElement(new ActionCheckBox(new SwitchClasifierAction(c), true));
     }
 
     /**
@@ -122,14 +123,13 @@ public class FilterPanel extends JBList {
      */
     private void installCheckBoxMouseListener() {
         MouseAdapter listener = new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON1 || !e.getComponent().isEnabled() ) return;
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1 || !e.getComponent().isEnabled()) return;
                 int index = locationToIndex(e.getPoint());
                 if (index != -1 && getModel().getElementAt(index) instanceof ActionCheckBox) {
                     ActionCheckBox checkbox = (ActionCheckBox) getModel().getElementAt(index);
                     checkbox.setSelected(!checkbox.isSelected());
                     ideObjects.getActionManager().tryToExecute(checkbox.action, e, e.getComponent(), null, true);
-
                 }
                 repaint();
             }
@@ -142,14 +142,17 @@ public class FilterPanel extends JBList {
      * Installs the popup
      */
     private void installPopup() {
-
-        FilterPanel me = this;
-
         final PopupHandler popupHandler = new PopupHandler() {
             public void invokePopup(Component comp, int x, int y) {
                 final DefaultActionGroup popupGroup = new DefaultActionGroup();
-                popupGroup.add(new HideAllClasifierAction((FilterPanel)comp));
-                popupGroup.add(new ShowAllClasifierAction((FilterPanel)comp));
+                popupGroup.add(new HideAllClasifierAction((FilterPanel) comp));
+                popupGroup.add(new ShowAllClasifierAction((FilterPanel) comp));
+
+                int index = locationToIndex(new Point(x, y));
+                ActionCheckBox checkbox = (ActionCheckBox) getModel().getElementAt(index);
+                SwitchClasifierAction action = (SwitchClasifierAction)checkbox.action;
+                popupGroup.add(new ShowClassifierProperties(action.getClassifierClass()));
+
                 ActionPopupMenu popupMenu = ideObjects.getActionManager().createActionPopupMenu(
                         FilterPanel.class.getName(), popupGroup);
                 if (popupMenu != null) {

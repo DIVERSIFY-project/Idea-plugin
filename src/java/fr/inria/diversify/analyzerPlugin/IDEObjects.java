@@ -15,5 +15,7 @@ public interface IDEObjects {
 
     ActionManager getActionManager();
 
+    TestEyeProjectComponent getProjectComponent();
+
     TestEyeApplicationComponent getApplicationComponent();
 }

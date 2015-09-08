@@ -550,7 +550,9 @@ public class TransformationInfo extends CodePosition {
      */
     private String getVariableMapStr(Map<String, String> v) {
         StringBuilder sb = new StringBuilder("[");
-        if (v != null) for (Map.Entry<String, String> k : v.entrySet()) sb.append("; " + k + "->" + v);
+        if (v != null)
+            for (Map.Entry<String, String> k : v.entrySet())
+                sb.append("; " + k.getKey() + "->" + k.getValue());
         sb.append("]");
         return sb.toString();
     }

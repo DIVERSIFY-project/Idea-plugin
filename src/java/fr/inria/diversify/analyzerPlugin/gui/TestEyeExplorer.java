@@ -10,7 +10,10 @@ import fr.inria.diversify.analyzerPlugin.actions.SaveTransformationsAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.ShowScatterPlotAction;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadEnhancedCoverageAction;
 import fr.inria.diversify.analyzerPlugin.actions.loading.LoadTransformationsAction;
+import fr.inria.diversify.analyzerPlugin.actions.reporting.OneShotSaveLatexAction;
+import fr.inria.diversify.analyzerPlugin.actions.reporting.SaveLatexAction;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponentImpl;
+import fr.inria.diversify.analyzerPlugin.model.io.DialogSavePathProvider;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -112,6 +115,8 @@ public class TestEyeExplorer extends SimpleToolWindowPanel {
         mainGroup.add(new LoadEnhancedCoverageAction());
         mainGroup.add(new SaveTransformationsAction());
         mainGroup.add(new ShowScatterPlotAction());
+        mainGroup.add(new SaveLatexAction(treeTransformations, new DialogSavePathProvider()));
+        mainGroup.add(new OneShotSaveLatexAction(treeTransformations, new DialogSavePathProvider()));
         final ActionToolbar mainToolBar = getIDEObjects().getActionManager().createActionToolbar(
                 ActionPlaces.ANT_EXPLORER_TOOLBAR, mainGroup, true);
         final JPanel buttonsPanel = new JPanel(new BorderLayout());

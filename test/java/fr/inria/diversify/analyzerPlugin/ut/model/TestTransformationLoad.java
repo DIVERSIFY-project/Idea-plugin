@@ -1,4 +1,4 @@
-package fr.inria.diversify.analyzerPlugin.it.load;
+package fr.inria.diversify.analyzerPlugin.ut.model;
 
 import org.junit.Test;
 

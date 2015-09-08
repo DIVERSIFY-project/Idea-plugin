@@ -2,6 +2,7 @@ package fr.inria.diversify.analyzerPlugin.components;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import com.intellij.openapi.project.Project;
 import fr.inria.diversify.analyzerPlugin.model.TransformationInfo;
 import fr.inria.diversify.analyzerPlugin.model.TransplantInfo;
@@ -98,6 +99,8 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
     private List<String> logMessages;
     private double meanDepth;
     private int meanNumberOfTest;
+    private TransformationInfo selectedTransformation;
+    private TransplantInfo selectedTransplant;
 
 
     public TestEyeProjectComponent(Project project) {
@@ -226,6 +229,14 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
         visibleClassifiers.put(classifierClass, !visibleClassifiers.get(classifierClass));
     }
 
+
+    public <T> T getClassiferByClass(Class<T> classifierClass) {
+        for ( TransformClassifier c : getClassifiers() ) {
+            if (c.getClass().getCanonicalName().equals(classifierClass.getCanonicalName())) return (T)c;
+        }
+        return null;
+    }
+
     /**
      * Get the list of all classifiers
      *
@@ -236,6 +247,7 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
             classifiers = getClassifierFactory().buildClassifiers();
             visibleClassifiers = new HashMap<>();
             for (TransformClassifier t : classifiers) {
+
                 visibleClassifiers.put(t.getClass(), true);
             }
         }
@@ -315,6 +327,13 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
         sort();
     }
 
+    /**
+     * Filter and sort all infos
+     */
+    public void filterAndSort() {
+        filter(new ProgressIndicatorBase());
+        sort();
+    }
 
     /**
      * Filter the transformations by the visible classifiers
@@ -343,6 +362,8 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
                 transplant.setVisibility(TransplantInfo.Visibility.unclassified);
                 for (TransformClassifier c : getClassifiers()) {
                     c.getProperties().setComponent(this);
+                    //c.getProperties().setClassifier(c);
+
                     float v;
                     //the only way classification functions modify the score assigned
                     //is by user input, therefore only user filters must be reclassified each time
@@ -513,5 +534,23 @@ public class TestEyeProjectComponent extends AbstractProjectComponent {
             meanDepth += info.getTests().size();
         }
         return meanDepth / getInfos().size();
+    }
+
+
+    public TransformationInfo getSelectedTransformation() {
+        return selectedTransformation;
+    }
+
+    public void setSelectedTransformation(TransformationInfo selectedTransformation) {
+        this.selectedTransformation = selectedTransformation;
+    }
+
+    public TransplantInfo getSelectedTransplant() {
+        return selectedTransplant;
+    }
+
+    public void setSelectedTransplant(TransplantInfo selectedTransplant) {
+        this.selectedTransplant = selectedTransplant;
+        setSelectedTransformation(selectedTransplant.getTransplantationPoint());
     }
 }

@@ -27,5 +27,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="org.xerial:sqlite-jdbc:3.8.11" level="project" />
   </component>
 </module>

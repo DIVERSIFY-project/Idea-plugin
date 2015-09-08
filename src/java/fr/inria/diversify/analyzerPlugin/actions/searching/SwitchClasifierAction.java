@@ -11,11 +11,15 @@ import fr.inria.diversify.analyzerPlugin.model.clasifiers.TransformClassifier;
  */
 public class SwitchClasifierAction extends TestEyeAction {
 
+    public Class<? extends TransformClassifier> getClassifierClass() {
+        return classifierClass;
+    }
+
     private final Class<? extends TransformClassifier> classifierClass;
 
-    public SwitchClasifierAction(Class<? extends TransformClassifier> klass, String description) {
-        super(description, description, IconUtil.getAddIcon());
-        this.classifierClass = klass;
+    public SwitchClasifierAction(TransformClassifier classifier) {
+        super(classifier.getDescription(), classifier.getDescription(), IconUtil.getAddIcon());
+        this.classifierClass = classifier.getClass();
     }
 
     @Override

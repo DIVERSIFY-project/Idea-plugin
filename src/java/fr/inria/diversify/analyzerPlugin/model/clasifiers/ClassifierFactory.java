@@ -20,6 +20,9 @@ public class ClassifierFactory {
         //clasifiers.add(new SingleStatementSubstitution());
         //clasifiers.add(new DeleteSubstitution());
 
+        //Query
+        clasifiers.add(new QueryExtendedCoverage());
+
         //Strong classifiers
         clasifiers.add(new TagedStrong());
         clasifiers.add(new InnocuousMethodCallAdd());

@@ -59,11 +59,15 @@ public abstract class TestEyeAction extends AnAction {
      */
     protected void softComplain(JComponent component, String message, Exception e) {
         if (e != null) message += e.getMessage();
-        JBPopupFactory.getInstance()
-                .createHtmlTextBalloonBuilder("Warning: " + message, MessageType.WARNING, null)
-                .setFadeoutTime(7500)
-                .createBalloon()
-                .show(RelativePoint.getCenterOf(component), Balloon.Position.atRight);
+        try {
+            JBPopupFactory.getInstance()
+                    .createHtmlTextBalloonBuilder("Warning: " + message, MessageType.WARNING, null)
+                    .setFadeoutTime(7500)
+                    .createBalloon()
+                    .show(RelativePoint.getCenterOf(component), Balloon.Position.atRight);
+        } catch (Exception ex ) {
+            hardComplain(message, e);
+        }
     }
 
     /**
@@ -76,6 +80,7 @@ public abstract class TestEyeAction extends AnAction {
         String s = message + " " +
                 (e.getMessage() == null || e.getMessage().isEmpty() ? e.getClass().getSimpleName() : e.getMessage());
         JOptionPane.showMessageDialog(null, s, "Error: " + e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
     }
 
     /**
@@ -101,4 +106,6 @@ public abstract class TestEyeAction extends AnAction {
         if ( ideObjects == null ) setIdeObjects(new IDEObjectsImpl());
         return ideObjects;
     }
+
+
 }

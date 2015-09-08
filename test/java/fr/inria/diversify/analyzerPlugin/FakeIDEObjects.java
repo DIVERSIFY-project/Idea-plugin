@@ -3,6 +3,7 @@ package fr.inria.diversify.analyzerPlugin;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import fr.inria.diversify.analyzerPlugin.components.TestEyeApplicationComponent;
+import fr.inria.diversify.analyzerPlugin.components.TestEyeProjectComponent;
 import fr.inria.diversify.analyzerPlugin.gui.TestEyeExplorer;
 
 import java.util.HashMap;
@@ -17,6 +18,11 @@ public class FakeIDEObjects implements IDEObjects {
     @Override
     public ActionManager getActionManager() {
         return new FakeActionManager();
+    }
+
+    @Override
+    public TestEyeProjectComponent getProjectComponent() {
+        return null;
     }
 
     @Override

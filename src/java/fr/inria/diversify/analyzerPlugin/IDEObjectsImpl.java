@@ -33,5 +33,9 @@ public class IDEObjectsImpl implements IDEObjects {
         return ApplicationManager.getApplication().getComponent(TestEyeApplicationComponentImpl.class);
     }
 
+    public TestEyeProjectComponent getProjectComponent() {
+        return ProjectManager.getInstance().getDefaultProject().getComponent(TestEyeProjectComponent.class);
+    }
+
 
 }

@@ -60,7 +60,7 @@ public class LoadEnhancedCoverageActionTest {
     }
 
     /**
-     * Test the proper loading of the transformations.
+     * Test that when something goes wrong the action complains
      */
     @Test
     public void testComplain(@Mocked final FileChooser anyChooser,

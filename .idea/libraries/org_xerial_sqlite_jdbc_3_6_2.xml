@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="org.xerial:sqlite-jdbc:3.6.2" type="repository">
+    <properties maven-id="org.xerial:sqlite-jdbc:3.6.2" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.6.2/sqlite-jdbc-3.6.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/xerial/thirdparty/nestedvm/1.0/nestedvm-1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/xerial/thirdparty/sqlitejdbc-nested/3.6.2/sqlitejdbc-nested-3.6.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/xerial/thirdparty/jdbc-api/1.4/jdbc-api-1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -82,6 +82,7 @@ public class TransformationsProperties extends JTable implements com.intellij.op
 
         }
         dtm.addRow(new Object[]{"Source", data.getSource()});
+        dtm.addRow(new Object[]{"Position", data.getPosition()});
         if (data instanceof TransplantInfo) {
             TransplantInfo t = (TransplantInfo) data;
             dtm.addRow(new Object[]{"Spoon type", t.getSpoonType()});

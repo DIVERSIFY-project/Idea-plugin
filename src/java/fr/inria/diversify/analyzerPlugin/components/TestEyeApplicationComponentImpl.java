@@ -7,15 +7,15 @@ import com.intellij.openapi.components.ApplicationComponent;
 import fr.inria.diversify.analyzerPlugin.IDEObjects;
 import fr.inria.diversify.analyzerPlugin.actions.TestEyeAction;
 import fr.inria.diversify.analyzerPlugin.actions.display.*;
+import fr.inria.diversify.analyzerPlugin.actions.reporting.SaveLatexAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.FilterAndSortAction;
 import fr.inria.diversify.analyzerPlugin.actions.searching.SeekCodeTransformation;
 import fr.inria.diversify.analyzerPlugin.gui.TestEyeExplorer;
 import org.jetbrains.annotations.NotNull;
 
 /**
- *
  * Register all actions and serves as a middle man between interacting actions
- *
+ * <p/>
  * Created by marodrig on 02/02/2015.
  */
 public class TestEyeApplicationComponentImpl implements ApplicationComponent, TestEyeApplicationComponent {
@@ -59,8 +59,9 @@ public class TestEyeApplicationComponentImpl implements ApplicationComponent, Te
 
     private void registerAction(String id, TestEyeAction action) {
         ActionManager m = ideObjects.getActionManager();
-        m.registerAction(id, action);
         action.setIdeObjects(ideObjects);
+        if (m.getAction(id) != null) m.unregisterAction(id);
+        m.registerAction(id, action);
     }
 
     @Override
@@ -88,6 +89,7 @@ public class TestEyeApplicationComponentImpl implements ApplicationComponent, Te
         registerAction(PLUG_NAME_PREFIX + ShowErrorsAction.class.getSimpleName(),
                 new ShowErrorsAction(explorer.getLstErrors()));
 
+
     }
 
     /**
@@ -97,7 +99,7 @@ public class TestEyeApplicationComponentImpl implements ApplicationComponent, Te
      * @param event       Event to pass on to the action
      */
     @Override
-    public void tryExecute(Class<?> actionClass, AnActionEvent event)  {
+    public void tryExecute(Class<?> actionClass, AnActionEvent event) {
         AnAction a = getAction(event, actionClass);
         a.actionPerformed(event);
 
